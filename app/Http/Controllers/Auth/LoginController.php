@@ -45,7 +45,7 @@ class LoginController extends Controller
             DB::commit();
 
             return $this->ok('Connexion réussie', [
-                'user' => $user,
+                'user' => $user->only('id', 'first_name', 'last_name', 'email'),
                 'token' => $token
             ]);
         } catch (ValidationException $e) {

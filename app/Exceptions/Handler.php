@@ -3,6 +3,9 @@
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -35,6 +38,39 @@ class Handler extends ExceptionHandler
         'password',
         'password_confirmation',
     ];
+
+    /**
+     * Handle validation exceptions for API routes
+     *
+     * @param Request $request
+     * @param ValidationException $exception
+     * @return JsonResponse
+     */
+    protected function invalidJson($request, ValidationException $exception): JsonResponse
+    {
+        return response()->json([
+            'message' => 'Données invalides',
+            'errors' => $exception->errors(),
+        ], 422);
+    }
+
+    /**
+     * Render an exception into an HTTP response
+     *
+     * @param Request $request
+     * @param Throwable $e
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @throws Throwable
+     */
+    public function render($request, Throwable $e)
+    {
+        // Check if the request is for an API route and the exception is a validation exception
+        if ($request->is('api/*') && $e instanceof ValidationException) {
+            return $this->invalidJson($request, $e);
+        }
+
+        return parent::render($request, $e);
+    }
 
     /**
      * Register the exception handling callbacks for the application.

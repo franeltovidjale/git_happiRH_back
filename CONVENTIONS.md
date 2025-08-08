@@ -1,5 +1,6 @@
-# HappyHR Development Conventions
-
+# HappyHR Development Conventions (API)
+All code must be written in API context
+Always follow laravel convention by default
 ## Controller Creation
 Place controllers in the appropriate directory based on the functionality:
 - **Admin** → `app/Http/Controllers/Admin/`
@@ -21,6 +22,7 @@ Place routes in the appropriate file based on the functionality:
 - **Admin** → `routes/admin.php`
 - **Employer** → `routes/employer.php`
 - **Employee** → `routes/employee.php`
+  or api.php
 
 ## Validation Request Creation
 Place validation requests in the appropriate file based on the functionality:
@@ -46,3 +48,5 @@ Place validation requests in the appropriate file based on the functionality:
 ### Documentation
 - Add PHPDoc comments for all public methods and properties
 - Include parameter types and return types in documentation 
+
+## Always focus on the asked task

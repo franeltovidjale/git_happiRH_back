@@ -14,10 +14,10 @@ use Laravel\Sanctum\HasApiTokens;
  * Represents a user in the HappyHR system
  *
  * @property int $id
- * @property string $first_name
- * @property string $last_name
+ * @property string|null $first_name
+ * @property string|null $last_name
  * @property string|null $phone
- * @property string $email
+ * @property string $email unique
  * @property \Illuminate\Support\Carbon|null $email_verified_at
  * @property string $password
  * @property string|null $remember_token
@@ -69,6 +69,6 @@ class User extends Authenticatable
      */
     public function getFullNameAttribute(): string
     {
-        return $this->first_name . ' ' . $this->last_name;
+        return "{$this->first_name} {$this->last_name}";
     }
 }

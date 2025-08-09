@@ -50,3 +50,6 @@ Place validation requests in the appropriate file based on the functionality:
 - Include parameter types and return types in documentation 
 
 ## Always focus on the asked task
+
+## Default
+- When app name is required use : config('app.name') or env('APP_NAME')

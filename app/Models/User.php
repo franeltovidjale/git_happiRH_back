@@ -20,9 +20,13 @@ use Laravel\Sanctum\HasApiTokens;
  * @property string $email unique
  * @property \Illuminate\Support\Carbon|null $email_verified_at
  * @property string $password
+ * @property string $type User type: admin|normal|employer|employee
+ * @property bool $is_deletable
  * @property string|null $remember_token
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ *
+ * @property-read string $full_name
  */
 class User extends Authenticatable
 {
@@ -40,6 +44,7 @@ class User extends Authenticatable
         'email',
         'password',
         'email_verified_at',
+        'is_deletable',
     ];
 
     /**
@@ -60,6 +65,7 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
+        'is_deletable' => 'boolean',
     ];
 
     /**

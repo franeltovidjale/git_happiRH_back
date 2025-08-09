@@ -43,7 +43,8 @@ Place validation requests in the appropriate file based on the functionality:
 
 ### Fillable Properties
 - Always add `$fillable` properties to models
-- Include comprehensive PHPDoc comments for auto-completion
+- Include comprehensive PHPDoc comments for auto-completion (fillable, scope, relation, getter)
+
 
 ### Documentation
 - Add PHPDoc comments for all public methods and properties

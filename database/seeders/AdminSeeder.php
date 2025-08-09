@@ -29,6 +29,8 @@ class AdminSeeder extends Seeder
                     'phone' => '+1234567890',
                     'password' => Hash::make('password123'),
                     'email_verified_at' => now(),
+                    'type' => 'admin',
+                    'is_deletable' => false,
                 ]);
             } else {
                 $this->command->info('Admin user already exists.');

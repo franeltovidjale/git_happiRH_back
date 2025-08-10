@@ -1,73 +1,63 @@
-Todo — Add Experience Model, Migration & Update Employee Model
-1. Create Experience Model
+Todo — Add Polymorphic Document Model & Migration
+1. Create Document Model
 
-    Location: app/Models/Experience.php
+    Location: app/Models/Document.php
 
     Fillable:
 
-        enterprise_id
+        key (document identifier, e.g. letter_of_nomination)
 
-        employee_id
+        path (file storage path)
 
-        job_title (Titre du poste)
+        active (boolean)
 
-        sector (Secteur d’activité de l’entreprise)
+        scope (private, public)
 
-        company_name (Nom de l’entreprise)
+    Add morph relationship:
 
-        start_date (Période de travail — début)
+public function documentable()
+{
+    return $this->morphTo();
+}
 
-        end_date (Période de travail — fin, nullable)
+    Add PHPDoc for each property & relationship.
 
-        responsibilities (Responsabilités, nullable)
-
-    Add PHPDoc for properties & relationships.
-
-    Define employee() relationship → belongsTo Employee.
-
-    Define enterprise() relationship → belongsTo Enterprise.
-
-2. Create Migration create_experiences_table
+2. Create Migration create_documents_table
 
     Location: database/migrations/
 
-    Table: experiences
+    Table: documents
 
     Columns:
 
         id → primary key
 
-        enterprise_id → foreignId → constrained to enterprises → cascade on delete
+        documentable_id → morphId
 
-        employee_id → foreignId → constrained to employees → cascade on delete
+        documentable_type → morphType
 
-        job_title → string
+        key → string
 
-        sector → string
+        path → string, nullable
 
-        company_name → string
+        active → boolean, default 1
 
-        start_date → date
-
-        end_date → date, nullable
-
-        responsibilities → text, nullable
+        scope → enum: ['private', 'public']
 
         timestamps → default
 
 3. Update Employee Model
 
-    Location: app/Models/Employee.php
-
     Add:
 
-public function experiences()
+public function documents()
 {
-    return $this->hasMany(Experience::class);
+    return $this->morphMany(Document::class, 'documentable');
 }
 
-    Add PHPDoc for experiences relationship.
+    Add PHPDoc for documents.
 
 4. Artisan Commands
 
-php artisan make:model Experience -m
+php artisan make:model Document -m
+

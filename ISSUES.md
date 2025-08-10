@@ -1,0 +1,4 @@
+- Implement middleware for each type
+- Add fields missed on users (from figma)
+- Add profile table (employer, employee)
+- Add google login

@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * User Model
@@ -76,5 +78,15 @@ class User extends Authenticatable
     public function getFullNameAttribute(): string
     {
         return "{$this->first_name} {$this->last_name}";
+    }
+
+    public function employee(): HasOne
+    {
+        return $this->hasOne(Employee::class, 'user_id');
+    }
+
+    public function employees(): HasMany
+    {
+        return $this->hasMany(Employee::class, 'employer_id');
     }
 }

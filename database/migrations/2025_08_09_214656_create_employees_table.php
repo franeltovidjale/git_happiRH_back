@@ -45,6 +45,22 @@ return new class extends Migration
             $table->date('joining_date')->nullable();
             $table->foreignId('location_id')->nullable()->constrained('locations')->cascadeOnDelete();
 
+            // Banking fields
+            $table->string('bank_account_number')->nullable()->after('zip_code');
+            $table->string('bank_name')->nullable()->after('bank_account_number');
+            $table->string('pan_number')->nullable()->after('bank_name');
+            $table->string('ifsc_code')->nullable()->after('pan_number');
+
+            // Salary and Payment fields
+            $table->string('salary_basis')->nullable();
+            $table->date('effective_date')->nullable();
+            $table->decimal('monthly_salary_amount', 10, 2)->nullable();
+            $table->string('type_of_payment')->nullable();
+            $table->decimal('billing_rate', 10, 2)->nullable();
+
+            // Job Information
+            $table->enum('job_type', ['remote', 'hybrid', 'in-office'])->nullable();
+
             $table->timestamps();
         });
     }

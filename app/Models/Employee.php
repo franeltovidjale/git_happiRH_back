@@ -25,6 +25,16 @@ use Illuminate\Support\Str;
  * @property string|null $city
  * @property string|null $state
  * @property string|null $zip_code
+ * @property string|null $bank_account_number
+ * @property string|null $bank_name
+ * @property string|null $pan_number
+ * @property string|null $ifsc_code
+ * @property string|null $salary_basis
+ * @property \Carbon\Carbon|null $effective_date
+ * @property float|null $monthly_salary_amount
+ * @property string|null $type_of_payment
+ * @property float|null $billing_rate
+ * @property string|null $job_type
  * @property string $employee_id
  * @property string|null $username
  * @property string $role
@@ -61,6 +71,16 @@ class Employee extends Model
         'city',
         'state',
         'zip_code',
+        'bank_account_number',
+        'bank_name',
+        'pan_number',
+        'ifsc_code',
+        'salary_basis',
+        'effective_date',
+        'monthly_salary_amount',
+        'type_of_payment',
+        'billing_rate',
+        'job_type',
         'employee_id',
         'username',
         'role',
@@ -77,6 +97,9 @@ class Employee extends Model
         'active' => 'boolean',
         'birth_date' => 'date',
         'joining_date' => 'date',
+        'effective_date' => 'date',
+        'monthly_salary_amount' => 'decimal:2',
+        'billing_rate' => 'decimal:2',
     ];
 
     /**

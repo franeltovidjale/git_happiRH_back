@@ -53,6 +53,17 @@ class UpdateEmployeeRequest extends FormRequest
             'state' => 'nullable|string|max:255',
             'zip_code' => 'nullable|string|max:20',
             'active' => 'boolean',
+
+            // Professional fields
+            'username' => [
+                'nullable',
+                'string',
+                Rule::unique('employees', 'username')->ignore($employeeId)
+            ],
+            'role' => 'required|string|max:255',
+            'designation' => 'nullable|string|max:255',
+            'joining_date' => 'required|date',
+            'location_id' => 'nullable|exists:locations,id',
         ];
     }
 
@@ -84,6 +95,15 @@ class UpdateEmployeeRequest extends FormRequest
             'state.max' => 'L\'état ne peut pas dépasser 255 caractères',
             'zip_code.max' => 'Le code postal ne peut pas dépasser 20 caractères',
             'active.boolean' => 'Le statut actif doit être vrai ou faux',
+
+            // Professional messages
+            'username.unique' => 'Ce nom d\'utilisateur est déjà utilisé',
+            'role.required' => 'Le rôle est obligatoire',
+            'role.max' => 'Le rôle ne peut pas dépasser 255 caractères',
+            'designation.max' => 'La désignation ne peut pas dépasser 255 caractères',
+            'joining_date.required' => 'La date d\'embauche est obligatoire',
+            'joining_date.date' => 'La date d\'embauche doit être une date valide',
+            'location_id.exists' => 'L\'emplacement sélectionné n\'existe pas',
         ];
     }
 }

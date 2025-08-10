@@ -55,6 +55,7 @@ class EmployeeController extends Controller
             $employee = Employee::create([
                 'user_id' => $user->id,
                 'enterprise_id' => $request->enterprise_id,
+                'location_id' => $request->location_id,
                 'active' => $request->active ?? true,
                 'birth_date' => $request->birth_date,
                 'marital_status' => $request->marital_status,
@@ -64,6 +65,10 @@ class EmployeeController extends Controller
                 'city' => $request->city,
                 'state' => $request->state,
                 'zip_code' => $request->zip_code,
+                'username' => $request->username,
+                'role' => $request->role,
+                'designation' => $request->designation,
+                'joining_date' => $request->joining_date,
             ]);
 
             Mail::to($user->email)->send(new EmployeeRegisteredMail(
@@ -76,7 +81,7 @@ class EmployeeController extends Controller
 
             DB::commit();
 
-            $employee->load(['user', 'enterprise']);
+            $employee->load(['user', 'enterprise', 'location']);
 
             return $this->created('Employé créé avec succès', $employee);
         } catch (\Exception $e) {
@@ -138,11 +143,16 @@ class EmployeeController extends Controller
                 'state' => $request->state,
                 'zip_code' => $request->zip_code,
                 'active' => $request->active,
+                'username' => $request->username,
+                'role' => $request->role,
+                'designation' => $request->designation,
+                'joining_date' => $request->joining_date,
+                'location_id' => $request->location_id,
             ]);
 
             DB::commit();
 
-            $employee->load(['user', 'enterprise']);
+            $employee->load(['user', 'enterprise', 'location']);
 
             return $this->ok('Employé mis à jour avec succès', $employee);
         } catch (\Exception $e) {

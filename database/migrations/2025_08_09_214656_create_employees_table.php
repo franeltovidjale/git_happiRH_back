@@ -37,6 +37,14 @@ return new class extends Migration
             $table->string('state')->nullable();
             $table->string('zip_code')->nullable();
 
+            // Professional fields
+            $table->string('employee_id')->unique();
+            $table->string('username')->unique()->nullable();
+            $table->string('role');
+            $table->string('designation')->nullable();
+            $table->date('joining_date')->nullable();
+            $table->foreignId('location_id')->nullable()->constrained('locations')->cascadeOnDelete();
+
             $table->timestamps();
         });
     }

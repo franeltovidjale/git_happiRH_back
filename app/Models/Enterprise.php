@@ -22,6 +22,8 @@ use Illuminate\Support\Str;
  *
  * @property-read User $owner
  * @property-read \Illuminate\Database\Eloquent\Collection|Employee[] $employees
+ * @property-read \Illuminate\Database\Eloquent\Collection|Department[] $departments
+ * @property-read \Illuminate\Database\Eloquent\Collection|Location[] $locations
  */
 class Enterprise extends Model
 {
@@ -95,5 +97,25 @@ class Enterprise extends Model
     public function employees(): HasMany
     {
         return $this->hasMany(Employee::class);
+    }
+
+    /**
+     * Get the departments of the enterprise.
+     *
+     * @return HasMany
+     */
+    public function departments(): HasMany
+    {
+        return $this->hasMany(Department::class);
+    }
+
+    /**
+     * Get the locations of the enterprise.
+     *
+     * @return HasMany
+     */
+    public function locations(): HasMany
+    {
+        return $this->hasMany(Location::class);
     }
 }

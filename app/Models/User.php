@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * User Model
@@ -14,15 +16,22 @@ use Laravel\Sanctum\HasApiTokens;
  * Represents a user in the HappyHR system
  *
  * @property int $id
+ * @property string|null $photo
  * @property string|null $first_name
  * @property string|null $last_name
  * @property string|null $phone
  * @property string $email unique
  * @property \Illuminate\Support\Carbon|null $email_verified_at
  * @property string $password
+ * @property string $type User type: admin|normal|employer|employee
+ * @property bool $is_deletable
  * @property string|null $remember_token
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ *
+ * @property-read string $full_name
+ * @property-read Employee|null $employee
+ * @property-read \Illuminate\Database\Eloquent\Collection|Employee[] $employees
  */
 class User extends Authenticatable
 {
@@ -34,12 +43,14 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
+        'photo',
         'first_name',
         'last_name',
         'phone',
         'email',
         'password',
         'email_verified_at',
+        'is_deletable',
     ];
 
     /**
@@ -60,6 +71,7 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
+        'is_deletable' => 'boolean',
     ];
 
     /**
@@ -70,5 +82,25 @@ class User extends Authenticatable
     public function getFullNameAttribute(): string
     {
         return "{$this->first_name} {$this->last_name}";
+    }
+
+    /**
+     * Get the employee record associated with the user.
+     *
+     * @return HasOne
+     */
+    public function employee(): HasOne
+    {
+        return $this->hasOne(Employee::class, 'user_id');
+    }
+
+    /**
+     * Get the employees managed by this user (if employer).
+     *
+     * @return HasMany
+     */
+    public function employees(): HasMany
+    {
+        return $this->hasMany(Employee::class, 'employer_id');
     }
 }

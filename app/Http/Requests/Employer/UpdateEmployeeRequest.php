@@ -2,12 +2,19 @@
 
 namespace App\Http\Requests\Employer;
 
+use App\Models\Employee;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
-class StoreEmployeeRequest extends FormRequest
+/**
+ * Update Employee Request
+ */
+class UpdateEmployeeRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
+     *
+     * @return bool
      */
     public function authorize(): bool
     {
@@ -21,13 +28,20 @@ class StoreEmployeeRequest extends FormRequest
      */
     public function rules(): array
     {
+        $employeeId = $this->route('employee');
+        $userId = Employee::find($employeeId)?->user_id;
+
         return [
             // User-related fields
             'first_name' => 'required|string|max:100',
             'last_name' => 'required|string|max:100',
-            'email' => 'required|email|unique:users,email',
             'phone' => 'required|string|max:20',
-            'enterprise_id' => 'required|exists:enterprises,id',
+            'email' => [
+                'required',
+                'email',
+                'max:255',
+                Rule::unique('users', 'email')->ignore($userId)
+            ],
 
             // Employee-specific fields
             'birth_date' => 'nullable|date',
@@ -55,13 +69,11 @@ class StoreEmployeeRequest extends FormRequest
             'first_name.max' => 'Le prénom ne peut pas dépasser 100 caractères',
             'last_name.required' => 'Le nom est obligatoire',
             'last_name.max' => 'Le nom ne peut pas dépasser 100 caractères',
+            'phone.required' => 'Le téléphone est obligatoire',
+            'phone.max' => 'Le téléphone ne peut pas dépasser 20 caractères',
             'email.required' => 'L\'adresse email est obligatoire',
             'email.email' => 'L\'adresse email doit être valide',
             'email.unique' => 'Cette adresse email est déjà utilisée',
-            'phone.required' => 'Le téléphone est obligatoire',
-            'phone.max' => 'Le téléphone ne peut pas dépasser 20 caractères',
-            'enterprise_id.required' => 'L\'entreprise est obligatoire',
-            'enterprise_id.exists' => 'L\'entreprise sélectionnée n\'existe pas',
 
             // Employee-specific messages
             'birth_date.date' => 'La date de naissance doit être une date valide',

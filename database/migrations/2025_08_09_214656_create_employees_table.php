@@ -27,6 +27,16 @@ return new class extends Migration
                 ->nullable()
                 ->constrained('enterprises')
                 ->cascadeOnDelete();
+
+            $table->date('birth_date')->nullable();
+            $table->enum('marital_status', ['single', 'married', 'divorced', 'widowed'])->nullable();
+            $table->enum('gender', ['male', 'female', 'other'])->nullable();
+            $table->string('nationality')->nullable();
+            $table->text('address')->nullable();
+            $table->string('city')->nullable();
+            $table->string('state')->nullable();
+            $table->string('zip_code')->nullable();
+
             $table->timestamps();
         });
     }

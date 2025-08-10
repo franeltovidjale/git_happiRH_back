@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Employer;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Employer\StoreEmployeeRequest;
+use App\Http\Requests\Employer\UpdateEmployeeRequest;
 use App\Mail\EmployeeRegisteredMail;
 use App\Models\Employee;
 use App\Models\Enterprise;
@@ -55,6 +56,14 @@ class EmployeeController extends Controller
                 'user_id' => $user->id,
                 'enterprise_id' => $request->enterprise_id,
                 'active' => $request->active ?? true,
+                'birth_date' => $request->birth_date,
+                'marital_status' => $request->marital_status,
+                'gender' => $request->gender,
+                'nationality' => $request->nationality,
+                'address' => $request->address,
+                'city' => $request->city,
+                'state' => $request->state,
+                'zip_code' => $request->zip_code,
             ]);
 
             Mail::to($user->email)->send(new EmployeeRegisteredMail(
@@ -93,6 +102,53 @@ class EmployeeController extends Controller
         } catch (\Exception $e) {
             logger()->error($e);
             return $this->notFound('Employé introuvable');
+        }
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(UpdateEmployeeRequest $request, string $id): JsonResponse
+    {
+        try {
+            $enterpriseIds = Enterprise::where('owner_id', auth()->id())->pluck('id');
+
+            $employee = Employee::with(['user', 'enterprise'])
+                ->whereIn('enterprise_id', $enterpriseIds)
+                ->findOrFail($id);
+
+            DB::beginTransaction();
+
+            // Update user-related fields
+            $employee->user->update([
+                'first_name' => $request->first_name,
+                'last_name' => $request->last_name,
+                'phone' => $request->phone,
+                'email' => $request->email,
+            ]);
+
+            // Update employee-specific fields
+            $employee->update([
+                'birth_date' => $request->birth_date,
+                'marital_status' => $request->marital_status,
+                'gender' => $request->gender,
+                'nationality' => $request->nationality,
+                'address' => $request->address,
+                'city' => $request->city,
+                'state' => $request->state,
+                'zip_code' => $request->zip_code,
+                'active' => $request->active,
+            ]);
+
+            DB::commit();
+
+            $employee->load(['user', 'enterprise']);
+
+            return $this->ok('Employé mis à jour avec succès', $employee);
+        } catch (\Exception $e) {
+            DB::rollback();
+            logger()->error($e);
+            return $this->serverError('Erreur lors de la mise à jour de l\'employé');
         }
     }
 

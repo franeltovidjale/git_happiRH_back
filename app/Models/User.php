@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * Represents a user in the HappyHR system
  *
  * @property int $id
+ * @property string|null $photo
  * @property string|null $first_name
  * @property string|null $last_name
  * @property string|null $phone
@@ -29,6 +30,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property \Illuminate\Support\Carbon|null $updated_at
  *
  * @property-read string $full_name
+ * @property-read Employee|null $employee
+ * @property-read \Illuminate\Database\Eloquent\Collection|Employee[] $employees
  */
 class User extends Authenticatable
 {
@@ -40,6 +43,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
+        'photo',
         'first_name',
         'last_name',
         'phone',
@@ -80,11 +84,21 @@ class User extends Authenticatable
         return "{$this->first_name} {$this->last_name}";
     }
 
+    /**
+     * Get the employee record associated with the user.
+     *
+     * @return HasOne
+     */
     public function employee(): HasOne
     {
         return $this->hasOne(Employee::class, 'user_id');
     }
 
+    /**
+     * Get the employees managed by this user (if employer).
+     *
+     * @return HasMany
+     */
     public function employees(): HasMany
     {
         return $this->hasMany(Employee::class, 'employer_id');

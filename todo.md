@@ -1,77 +1,55 @@
-Fields from the form
-Photo de profil (profile photo) – image upload field
+TODO: Update Without Overwriting Existing Fields
+1. users table
+Ensure these columns exist, but do not overwrite if they already exist:
 
-Prénom (first name) – string, required
+photo → string, nullable (path to file)
 
-Nom (last name) – string, required
+first_name → string, max 100, required
 
-Numéro de téléphone mobile (mobile phone number) – string, required, max length
+last_name → string, max 100, required
 
-Email Address – string, email format, required, unique
+phone → string, max 20, required, unique if business logic requires
 
-Date de naissance (birth date) – date, nullable
+email → string, max 255, required, unique
 
-État civil (marital status) – enum or string, nullable
 
-Genre (gender) – enum or string, nullable
+1. employees table
+Keep existing structure — do not duplicate photo, first_name, last_name, phone, or email.
 
-Nationalité (nationality) – string, nullable
+Add only these fields if they don’t exist:
 
-Adresse (address) – text or string, nullable
+birth_date → date, nullable
 
-Ville (city) – string, nullable
+marital_status → string or enum, nullable
 
-État (state) – string, nullable
+gender → string or enum, nullable
 
-Code ZIP (zip code) – string, nullable
+nationality → string, nullable
 
-TODO: Update Employee Model, Migration, and Related Features
-Update Employee model
+address → string or text, nullable
 
-Add/modify attributes:
+city → string, nullable
 
-profile_photo (nullable, string or file path)
+state → string, nullable
 
-first_name (string, required, max 100)
+zip_code → string, nullable
 
-last_name (string, required, max 100)
+3. Relationships
+In Employee model:
 
-phone_number (string, required, unique if needed, max 20)
+Ensure employee belongs to a User (belongsTo(User::class)).
 
-email (string, required, unique, max 255)
+In User model:
 
-birth_date (date, nullable)
+Ensure user has one Employee (hasOne(Employee::class)).
 
-marital_status (enum/string, nullable)
+4. Controllers & Validation
+For forms where an employer edits employee info:
 
-gender (enum/string, nullable)
+Split validation:
 
-nationality (string, nullable)
+User-related fields → validate & update users table.
 
-address (string/text, nullable)
+Employee-related fields → validate & update employees table.
 
-city (string, nullable)
-
-state (string, nullable)
-
-zip_code (string, nullable)
-
-Update employees migration
-
-Add the new columns with appropriate data types and constraints.
-
-Remove/rename old columns if they are replaced.
-
-Ensure database indexes for fields like email and phone_number if needed.
-
-Update related features
-
-Controllers: Adjust store, update, and validation rules to handle new/modified fields.
-
-Forms & Requests: Update request validation classes.
-
-Views: Ensure the new fields are displayed and editable.
-
-File Handling: Implement profile photo upload & storage logic (using Laravel Storage).
-
-API (if any): Update resource transformers to include new fields.
+Ensure file uploads (for photo) update the users table, not employees.

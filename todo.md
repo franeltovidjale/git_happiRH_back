@@ -1,141 +1,63 @@
-1. Update employees Table Migration
-Add the following columns:
+Todo — Add Polymorphic Document Model & Migration
+1. Create Document Model
 
-employee_id — string, unique.
+    Location: app/Models/Document.php
 
-username — string, unique if needed.
+    Fillable:
 
-role — string (represents role).
+        key (document identifier, e.g. letter_of_nomination)
 
-designation — string?.
- 
-joining_date — date.
- 
+        path (file storage path)
 
-1. Create departments Table Migration
-Fields:
+        active (boolean)
 
-id — primary key.
+        scope (private, public)
 
-enterprise_id — foreign key to enterprises table.
+    Add morph relationship:
 
-name — string, required.
+public function documentable()
+{
+    return $this->morphTo();
+}
 
-active — boolean, default true.
+    Add PHPDoc for each property & relationship.
 
-slug — string, unique per enterprise_id.
+2. Create Migration create_documents_table
 
-Timestamps.
+    Location: database/migrations/
 
-Relationship: A department belongs to an enterprise.
+    Table: documents
 
-1. Create Pivot Table department_employee
-Fields:
+    Columns:
 
-department_id — foreign key to departments table.
+        id → primary key
 
-employee_id — foreign key to employees table.
+        documentable_id → morphId
 
-Timestamps (optional).
+        documentable_type → morphType
 
-Relationship: Many-to-many between employees and departments.
+        key → string
 
-4. Create locations Table Migration
-Purpose: Store enterprise office locations.
+        path → string, nullable
 
-Fields:
+        active → boolean, default 1
 
-id — primary key.
+        scope → enum: ['private', 'public']
 
-enterprise_id — foreign key to enterprises table.
+        timestamps → default
 
-name — string, required.
+3. Update Employee Model
 
-active — boolean, default true.
+    Add:
 
-slug — string, unique per enterprise_id.
+public function documents()
+{
+    return $this->morphMany(Document::class, 'documentable');
+}
 
-Timestamps.
+    Add PHPDoc for documents.
 
-Relationship: A location belongs to an enterprise, and an employee can be linked to one location.
+4. Artisan Commands
 
-1. Create working_days Table Migration
-Purpose: Store detailed working day schedules per employee.
+php artisan make:model Document -m
 
-Fields:
-
-id — primary key.
-
-employee_id — unsigned big integer, foreign key to employees table.
-
-weekday — string or enum (monday…sunday).
-
-start_hour — time.
-
-end_hour — time.
-
-active — boolean, default true.
-
-Timestamps.
-
-Relationship: A working day belongs to one employee.
-
-6. Update Models
-Employee:
-
-departments() → many-to-many.
-
-location() → belongsTo Location.
-
-workingDays() → hasMany WorkingDay.
-
-Department:
-
-enterprise() → belongsTo Enterprise.
-
-employees() → many-to-many.
-
-Location:
-
-enterprise() → belongsTo Enterprise.
-
-employees() → hasMany Employee.
-
-WorkingDay:
-
-employee() → belongsTo Employee.
-
-7. Create Controllers (API Context Only)
-Employer/DepartmentController: CRUD for departments within enterprise.
-
-Employer/LocationController: CRUD for locations within enterprise.
-
-Employer/WorkingDayController: CRUD for working days per employee.
-
-All controllers must:
-
-Use base controller methods for API responses.
-
-Contain no validation (validation handled in FormRequest classes).
-
-Wrap critical DB operations in transactions.
-
-Use try–catch for error handling and log exceptions.
-
-8. Create Form Request Classes 
-
-9. Routes
-Add routes to:
-
-routes/employer.php for all employer-controlled endpoints (departments, locations, working days, professional info).
-
-Follow slug-based naming for routes.
-
-10. Validation Rules
-Department: name required, active boolean, enterprise_id exists, slug unique per enterprise.
-
-Location: name required, active boolean, enterprise_id exists, slug unique per enterprise.
-
-WorkingDay: employee_id exists, weekday required (enum), start_hour and end_hour required, active boolean.
-
-Employee Professional Info: employee_id unique, username unique if provided, employee_type required, designation optional, working_days JSON optional, joining_date date optional, office_location_id exists.

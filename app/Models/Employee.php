@@ -48,6 +48,8 @@ use Illuminate\Support\Str;
  * @property-read Location|null $location
  * @property-read \Illuminate\Database\Eloquent\Collection|Department[] $departments
  * @property-read \Illuminate\Database\Eloquent\Collection|WorkingDay[] $workingDays
+ * @property-read \Illuminate\Database\Eloquent\Collection|Experience[] $experiences
+ * @property-read \Illuminate\Database\Eloquent\Collection|Document[] $documents
  */
 class Employee extends Model
 {
@@ -178,5 +180,25 @@ class Employee extends Model
     public function workingDays(): HasMany
     {
         return $this->hasMany(WorkingDay::class, 'employee_id');
+    }
+
+    /**
+     * Get the experiences for the employee.
+     *
+     * @return HasMany
+     */
+    public function experiences(): HasMany
+    {
+        return $this->hasMany(Experience::class);
+    }
+
+    /**
+     * Get the documents for the employee.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     */
+    public function documents()
+    {
+        return $this->morphMany(Document::class, 'documentable');
     }
 }

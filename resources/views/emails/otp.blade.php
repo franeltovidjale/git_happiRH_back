@@ -57,7 +57,7 @@
         <p>Bonjour {{ $firstName }},</p>
         @endif
 
-        <p>Votre code de vérification :</p>
+        <p>Votre code de {{ $purpose }} :</p>
 
         <div class="otp-code">{{ $otpCode }}</div>
 

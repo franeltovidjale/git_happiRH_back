@@ -39,7 +39,7 @@ class SettingSeeder extends Seeder
                 'editable' => true,
             ],
             [
-                'key' => 'authEnableOtp',
+                'key' => 'authEnabledOtp',
                 'value' => '1',
                 'type' => 'boolean',
                 'label' => 'Enable OTP Login',
@@ -48,10 +48,10 @@ class SettingSeeder extends Seeder
             ],
             [
                 'key' => 'signingCodeRequired',
-                'value' => '0',
+                'value' => '1',
                 'type' => 'boolean',
                 'label' => 'Require Signing Code',
-                'description' => 'Require signing code for sensitive actions',
+                'description' => 'Employee must enter a signing code  before registering',
                 'editable' => true,
             ],
             [

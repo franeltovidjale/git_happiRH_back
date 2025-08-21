@@ -1,5 +1,6 @@
 # HappyHR Development Conventions
- 
+Always follow SOLID principe
+Always follow DRY principe
 Always follow laravel convention by default
 Always use base controller method for sending api response
 ## Controller Creation

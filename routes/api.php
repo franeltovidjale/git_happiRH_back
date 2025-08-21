@@ -19,6 +19,8 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 
 Route::post('/register', [RegisterController::class, 'register']);
 Route::post('/login', [LoginController::class, 'login']);
+Route::post('/login/verify-otp', [LoginController::class, 'verifyByOtp']);
+Route::post('/login/resend-otp', [LoginController::class, 'resendLoginOtp']);
 Route::post('/logout', [LoginController::class, 'logout'])->middleware('auth:sanctum');
 
 // Forgot Password Routes

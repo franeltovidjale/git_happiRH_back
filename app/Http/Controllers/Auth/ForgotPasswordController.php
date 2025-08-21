@@ -57,7 +57,12 @@ class ForgotPasswordController extends Controller
             ]);
 
             // Send OTP email
-            Mail::to($email)->send(new OtpMail($otp->code, $user->first_name));
+            Mail::to($email)->send(new OtpMail(
+                $otp->code,
+                $user->first_name,
+                'Code de réinitialisation',
+                'réinitialisation de mot de passe'
+            ));
 
             DB::commit();
 
@@ -142,7 +147,12 @@ class ForgotPasswordController extends Controller
             ]);
 
             // Send OTP email
-            Mail::to($email)->send(new OtpMail($otp->code, $user->first_name));
+            Mail::to($email)->send(new OtpMail(
+                $otp->code,
+                $user->first_name,
+                'Code de réinitialisation',
+                'réinitialisation de mot de passe'
+            ));
 
             DB::commit();
 

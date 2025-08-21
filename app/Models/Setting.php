@@ -32,7 +32,7 @@ class Setting extends Model
         'logoPath',
         'appName',
         'authPasswordRequired',
-        'authEnableOtp',
+        'authEnabledOtp',
         'signingCodeRequired',
         'autoLogoutDelay',
         'notifOnProjetUpdated',

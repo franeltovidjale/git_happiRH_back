@@ -4,9 +4,9 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\RegisterRequest;
+use App\Models\Member;
 use App\Models\Enterprise;
 use App\Models\User;
-use App\Models\Employee;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
@@ -21,9 +21,6 @@ class RegisterController extends Controller
 {
     /**
      * Handle user registration
-     *
-     * @param RegisterRequest $request
-     * @return JsonResponse
      */
     public function register(RegisterRequest $request): JsonResponse
     {
@@ -33,13 +30,11 @@ class RegisterController extends Controller
             $userData = $request->validated();
             $userData['password'] = Hash::make($userData['password']);
 
+            $requestType = $userData['type'] == 'employer' ? Member::TYPE_OWNER : Member::TYPE_EMPLOYEE;
+            $userData['type'] = 'user';
             $user = User::create($userData);
 
-            if ($userData['type'] === 'employer') {
-                $this->createEmployer($user, $userData);
-            } else {
-                $this->createEmployee($user, $userData['enterprise_code']);
-            }
+            $this->createMember($user, $userData, $requestType);
 
             event(new Registered($user));
             DB::commit();
@@ -49,51 +44,43 @@ class RegisterController extends Controller
             ]);
         } catch (\Exception $e) {
             DB::rollback();
+
             return $this->serverError('Erreur lors de la création du compte', null, $e->getMessage());
         }
     }
 
     /**
      * Create an employee record
-     *
-     * @param User $user
-     * @param string $enterpriseCode
-     * @return void
      */
-    private function createEmployee(User $user, string $enterpriseCode): void
+    private function createMember(User $user, array $userData, ?string $type = null): void
     {
-        $enterprise = Enterprise::where('code', $enterpriseCode)->first();
+        $enterprise = Enterprise::where('code', $userData['enterprise_code'] ?? 0)->first();
 
-        if (!$enterprise) {
+        if ($type === Member::TYPE_EMPLOYEE && ! $enterprise) {
             throw new \Exception('Entreprise non trouvée');
         }
 
-        Employee::create([
+        $enterprise ??= $this->createEnterprise($user, $userData);
+
+
+        Member::create([
             'user_id' => $user->id,
-            'employer_id' => $enterprise->owner_id,
             'enterprise_id' => $enterprise->id,
-            'role' => 'employee',
+            'type' => $type,
+            'status' => Member::STATUS_REQUESTED,
+            'status_by' => $user->id,
+            'status_date' => now(),
+            'status_stories' =>   encodeModelStatusStory(
+                Member::STATUS_REQUESTED,
+                'Membre créé et en attente de validation',
+                $user->id
+            ),
         ]);
     }
 
-    /**
-     * Create an employer record and enterprise
-     *
-     * @param User $user
-     * @param array $userData
-     * @return void
-     */
-    private function createEmployer(User $user, array $userData): void
-    {
-        $enterprise = $this->createEnterprise($user, $userData);
-    }
 
     /**
      * Create an enterprise
-     *
-     * @param User $user
-     * @param array $userData
-     * @return Enterprise
      */
     private function createEnterprise(User $user, array $userData): Enterprise
     {

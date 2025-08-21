@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property int $id
- * @property int $employee_id
+ * @property int $member_id
  * @property string $job_title
  * @property string $sector
  * @property string $company_name
@@ -16,14 +16,14 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $responsibilities
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
- * @property-read \App\Models\Employee $employee
+ * @property-read \App\Models\Member $member
  */
 class Experience extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'employee_id',
+        'member_id',
         'job_title',
         'sector',
         'company_name',
@@ -36,12 +36,4 @@ class Experience extends Model
         'start_date' => 'date',
         'end_date' => 'date',
     ];
-
-    /**
-     * Get the employee that owns the experience.
-     */
-    public function employee()
-    {
-        return $this->belongsTo(Employee::class);
-    }
 }

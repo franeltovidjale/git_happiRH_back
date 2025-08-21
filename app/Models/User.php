@@ -4,11 +4,12 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * User Model
@@ -25,13 +26,15 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string $password
  * @property string $type User type: admin|normal|employer|employee
  * @property bool $is_deletable
+ * @property int|null $active_enterprise_id
  * @property string|null $remember_token
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- *
  * @property-read string $full_name
- * @property-read Employee|null $employee
- * @property-read \Illuminate\Database\Eloquent\Collection|Employee[] $employees
+ * @property-read Enterprise|null $activeEnterprise
+ * @property-read \Illuminate\Database\Eloquent\Collection|Enterprise[] $enterprises
+ * @property-read \Illuminate\Database\Eloquent\Collection|Member[] $members
+ * @property-read \Illuminate\Database\Eloquent\Collection|Enterprise[] $memberEnterprises
  */
 class User extends Authenticatable
 {
@@ -51,6 +54,7 @@ class User extends Authenticatable
         'password',
         'email_verified_at',
         'is_deletable',
+        'active_enterprise_id',
     ];
 
     /**
@@ -76,8 +80,6 @@ class User extends Authenticatable
 
     /**
      * Get the user's full name
-     *
-     * @return string
      */
     public function getFullNameAttribute(): string
     {
@@ -85,22 +87,35 @@ class User extends Authenticatable
     }
 
     /**
-     * Get the employee record associated with the user.
-     *
-     * @return HasOne
+     * Get the active enterprise for this user.
      */
-    public function employee(): HasOne
+    public function activeEnterprise(): BelongsTo
     {
-        return $this->hasOne(Employee::class, 'user_id');
+        return $this->belongsTo(Enterprise::class, 'active_enterprise_id');
     }
 
     /**
-     * Get the employees managed by this user (if employer).
-     *
-     * @return HasMany
+     * Get all memberships for this user.
      */
-    public function employees(): HasMany
+    public function members(): HasMany
     {
-        return $this->hasMany(Employee::class, 'employer_id');
+        return $this->hasMany(Member::class);
+    }
+
+    /**
+     * Get all enterprises where this user is a member (employee or owner).
+     */
+    public function enterprises(): BelongsToMany
+    {
+        return $this->belongsToMany(Enterprise::class, 'members')
+            ->withTimestamps();
+    }
+
+    /**
+     * Get enterprises owned by this user.
+     */
+    public function myEnterprises(): HasMany
+    {
+        return $this->hasMany(Enterprise::class, 'owner_id');
     }
 }

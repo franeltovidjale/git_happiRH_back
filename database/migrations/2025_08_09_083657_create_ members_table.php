@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Member;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -11,35 +12,24 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('employees', function (Blueprint $table) {
+        Schema::create('members', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')
-                ->constrained('users')
-                ->cascadeOnDelete();
-            $table->foreignId('employer_id')
-                ->constrained('users')
-                ->cascadeOnDelete();
-
-            $table->boolean('active')->default(true);
-
-            $table->foreignId('enterprise_id')
-                ->nullable()
-                ->constrained('enterprises')
-                ->cascadeOnDelete();
+            $table->foreignId('enterprise_id')->constrained('enterprises');
+            $table->foreignId('user_id')->constrained('users');
+            $table->string('type')->default(Member::TYPE_EMPLOYEE);
+            $table->string('status')->default(value: Member::STATUS_REQUESTED);
+            $table->string('username')->unique()->nullable();
+            $table->string('code')->unique();
 
             $table->date('birth_date')->nullable();
-            $table->enum('marital_status', ['single', 'married', 'divorced', 'widowed'])->nullable();
-            $table->enum('gender', ['male', 'female', 'other'])->nullable();
+            $table->string('marital_status')->default(Member::MARITAL_STATUS_SINGLE);
+
             $table->string('nationality')->nullable();
             $table->text('address')->nullable();
             $table->string('city')->nullable();
             $table->string('state')->nullable();
             $table->string('zip_code')->nullable();
 
-            // Professional fields
-            $table->string('employee_id')->unique();
-            $table->string('username')->unique()->nullable();
-            $table->string('role');
             $table->string('designation')->nullable();
             $table->date('joining_date')->nullable();
             $table->foreignId('location_id')->nullable()->constrained('locations')->cascadeOnDelete();
@@ -58,11 +48,17 @@ return new class extends Migration
             $table->decimal('billing_rate', 10, 2)->nullable();
 
             // Job Information
-            $table->enum('job_type', ['remote', 'hybrid', 'in-office'])->nullable();
+            $table->string('job_type')->nullable();
 
-            $table->softDeletes();
-            $table->unique(['enterprise_id', 'employee_id']);
+            $table->string('status_note')->nullable();
+            $table->dateTime('status_date')->nullable();
+            $table->foreignId('status_by')
+                ->constrained('users')
+                ->cascadeOnDelete();
 
+            $table->json('status_stories')->nullable();
+
+            $table->unique(['enterprise_id', 'user_id']);
             $table->timestamps();
         });
     }
@@ -72,6 +68,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('employees');
+        Schema::dropIfExists('members');
     }
 };

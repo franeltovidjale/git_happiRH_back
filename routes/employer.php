@@ -1,18 +1,18 @@
 <?php
 
-use App\Http\Controllers\Employer\EmployeeController;
-use App\Http\Controllers\Employer\EnterpriseController;
-use App\Http\Controllers\Employer\DepartmentController;
-use App\Http\Controllers\Employer\LocationController;
-use App\Http\Controllers\Employer\WorkingDayController;
+use App\Http\Controllers\Api\DepartmentController;
+use App\Http\Controllers\Api\EmployeeController;
+use App\Http\Controllers\Api\EnterpriseController;
+use App\Http\Controllers\Api\LocationController;
+use App\Http\Controllers\Api\ProfileController;
+use App\Http\Controllers\Api\WorkingDayController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware(['auth:sanctum', 'employer'])->group(function () {
-    Route::apiResource('employees', EmployeeController::class);
-    Route::apiResource('enterprises', EnterpriseController::class);
-    Route::post('enterprises/{enterprise}/detach-employee', [EnterpriseController::class, 'detachEmployee'])->name('enterprises.detach-employee');
+Route::prefix("employer")->group(function () {
+    Route::middleware(['auth:sanctum'])->group(function () {
+        Route::get('profile', [ProfileController::class, 'show'])->name('profile.show');
+        Route::post('set-active-enterprise', [ProfileController::class, 'setActiveEnterprise'])->name('set-active-enterprise');
+    });
 
-    Route::apiResource('departments', DepartmentController::class);
-    Route::apiResource('locations', LocationController::class);
-    Route::apiResource('working-days', WorkingDayController::class);
+    Route::middleware(['auth:sanctum', 'active.enterprise', 'employer'])->group(function () {});
 });

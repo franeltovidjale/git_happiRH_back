@@ -32,10 +32,9 @@ use Illuminate\Support\Str;
  * @property array|null $status_stories
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
- *
  * @property-read User $owner
  * @property-read Sector|null $sector
- * @property-read \Illuminate\Database\Eloquent\Collection|Employee[] $employees
+ * @property-read \Illuminate\Database\Eloquent\Collection|Member[] $members
  * @property-read \Illuminate\Database\Eloquent\Collection|Department[] $departments
  * @property-read \Illuminate\Database\Eloquent\Collection|Location[] $locations
  */
@@ -44,7 +43,9 @@ class Enterprise extends Model
     use HasFactory;
 
     public const STATUS_PENDING = 'pending';
+
     public const STATUS_ACTIVE = 'active';
+
     public const STATUS_INACTIVE = 'inactive';
 
     public const STATUS_STORIES = [
@@ -109,8 +110,6 @@ class Enterprise extends Model
 
     /**
      * Generate a unique alphanumeric code for the enterprise.
-     *
-     * @return string
      */
     protected static function generateUniqueCode(): string
     {
@@ -123,28 +122,15 @@ class Enterprise extends Model
 
     /**
      * Get the owner of the enterprise.
-     *
-     * @return BelongsTo
      */
     public function owner(): BelongsTo
     {
         return $this->belongsTo(User::class, 'owner_id');
     }
 
-    /**
-     * Get the employees of the enterprise.
-     *
-     * @return HasMany
-     */
-    public function employees(): HasMany
-    {
-        return $this->hasMany(Employee::class);
-    }
 
     /**
      * Get the departments of the enterprise.
-     *
-     * @return HasMany
      */
     public function departments(): HasMany
     {
@@ -153,8 +139,6 @@ class Enterprise extends Model
 
     /**
      * Get the locations of the enterprise.
-     *
-     * @return HasMany
      */
     public function locations(): HasMany
     {
@@ -163,8 +147,6 @@ class Enterprise extends Model
 
     /**
      * Get the sector of the enterprise.
-     *
-     * @return BelongsTo
      */
     public function sector(): BelongsTo
     {
@@ -173,15 +155,18 @@ class Enterprise extends Model
 
     /**
      * Get the logo URL attribute.
-     *
-     * @return string
      */
     public function getLogoAttribute($value): string
     {
-        if (!empty($value)) {
+        if (! empty($value)) {
             return asset('storage/' . $value);
         }
 
         return asset('empty-image.png');
+    }
+
+    public function members(): HasMany
+    {
+        return $this->hasMany(Member::class);
     }
 }

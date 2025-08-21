@@ -1,13 +1,14 @@
 <?php
 
-namespace App\Http\Controllers\Employer;
+namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Employer\StoreEmployeeRequest;
 use App\Http\Requests\Employer\UpdateEmployeeRequest;
+use App\Http\Resources\EmployeeResource;
 use App\Mail\EmployeeRegisteredMail;
-use App\Models\Employee;
 use App\Models\Enterprise;
+use App\Models\Member;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
@@ -22,13 +23,9 @@ class EmployeeController extends Controller
      */
     public function index(): JsonResponse
     {
-        $enterpriseIds = Enterprise::where('owner_id', auth()->id())->pluck('id');
+        $employees = $this->getActiveEnterprise()->load('members.user');
 
-        $employees = Employee::with(['user', 'enterprise'])
-            ->whereIn('enterprise_id', $enterpriseIds)
-            ->get();
-
-        return $this->ok('Liste des employés récupérée avec succès', $employees);
+        return $this->ok('Liste des employés récupérée avec succès', EmployeeResource::collection($employees));
     }
 
     /**
@@ -52,14 +49,14 @@ class EmployeeController extends Controller
                 'is_deletable' => true,
             ]);
 
-            $employee = Employee::create([
+            $member = Member::create([
                 'user_id' => $user->id,
                 'enterprise_id' => $request->enterprise_id,
+                'type' => Member::TYPE_EMPLOYEE,
+                'status' => Member::STATUS_ACTIVE,
                 'location_id' => $request->location_id,
-                'active' => $request->active ?? true,
                 'birth_date' => $request->birth_date,
                 'marital_status' => $request->marital_status,
-                'gender' => $request->gender,
                 'nationality' => $request->nationality,
                 'address' => $request->address,
                 'city' => $request->city,
@@ -76,9 +73,10 @@ class EmployeeController extends Controller
                 'billing_rate' => $request->billing_rate,
                 'job_type' => $request->job_type,
                 'username' => $request->username,
-                'role' => $request->role,
                 'designation' => $request->designation,
                 'joining_date' => $request->joining_date,
+                'status_by' => auth()->id(),
+                'status_date' => now(),
             ]);
 
             Mail::to($user->email)->send(new EmployeeRegisteredMail(
@@ -91,9 +89,9 @@ class EmployeeController extends Controller
 
             DB::commit();
 
-            $employee->load(['user', 'enterprise', 'location']);
+            $member->load(['user', 'enterprise', 'location']);
 
-            return $this->created('Employé créé avec succès', $employee);
+            return $this->created('Employé créé avec succès', new EmployeeResource($member));
         } catch (\Exception $e) {
             DB::rollback();
             logger()->error($e);
@@ -107,13 +105,13 @@ class EmployeeController extends Controller
     public function show(string $id): JsonResponse
     {
         try {
-            $enterpriseIds = Enterprise::where('owner_id', auth()->id())->pluck('id');
+            $enterprise = $this->getActiveEnterprise();
 
-            $employee = Employee::with(['user', 'enterprise'])
-                ->whereIn('enterprise_id', $enterpriseIds)
+            $member = Member::with(['user', 'enterprise'])
+                ->where('enterprise_id', $enterprise->id)
                 ->findOrFail($id);
 
-            return $this->ok('Employé récupéré avec succès', $employee);
+            return $this->ok('Employé récupéré avec succès', new EmployeeResource($member));
         } catch (\Exception $e) {
             logger()->error($e);
             return $this->notFound('Employé introuvable');
@@ -126,27 +124,26 @@ class EmployeeController extends Controller
     public function update(UpdateEmployeeRequest $request, string $id): JsonResponse
     {
         try {
-            $enterpriseIds = Enterprise::where('owner_id', auth()->id())->pluck('id');
+            $enterprise = $this->getActiveEnterprise();
 
-            $employee = Employee::with(['user', 'enterprise'])
-                ->whereIn('enterprise_id', $enterpriseIds)
+            $member = Member::with(['user', 'enterprise'])
+                ->where('enterprise_id', $enterprise->id)
                 ->findOrFail($id);
 
             DB::beginTransaction();
 
             // Update user-related fields
-            $employee->user->update([
+            $member->user->update([
                 'first_name' => $request->first_name,
                 'last_name' => $request->last_name,
                 'phone' => $request->phone,
                 'email' => $request->email,
             ]);
 
-            // Update employee-specific fields
-            $employee->update([
+            // Update member-specific fields
+            $member->update([
                 'birth_date' => $request->birth_date,
                 'marital_status' => $request->marital_status,
-                'gender' => $request->gender,
                 'nationality' => $request->nationality,
                 'address' => $request->address,
                 'city' => $request->city,
@@ -162,9 +159,7 @@ class EmployeeController extends Controller
                 'type_of_payment' => $request->type_of_payment,
                 'billing_rate' => $request->billing_rate,
                 'job_type' => $request->job_type,
-                'active' => $request->active,
                 'username' => $request->username,
-                'role' => $request->role,
                 'designation' => $request->designation,
                 'joining_date' => $request->joining_date,
                 'location_id' => $request->location_id,
@@ -172,9 +167,9 @@ class EmployeeController extends Controller
 
             DB::commit();
 
-            $employee->load(['user', 'enterprise', 'location']);
+            $member->load(['user', 'enterprise', 'location']);
 
-            return $this->ok('Employé mis à jour avec succès', $employee);
+            return $this->ok('Employé mis à jour avec succès', new EmployeeResource($member));
         } catch (\Exception $e) {
             DB::rollback();
             logger()->error($e);
@@ -190,13 +185,13 @@ class EmployeeController extends Controller
         try {
             DB::beginTransaction();
 
-            $enterpriseIds = Enterprise::where('owner_id', auth()->id())->pluck('id');
+            $enterprise = $this->getActiveEnterprise();
 
-            $employee = Employee::whereIn('enterprise_id', $enterpriseIds)
+            $member = Member::where('enterprise_id', $enterprise->id)
                 ->findOrFail($id);
 
-            $user = $employee->user;
-            $employee->delete();
+            $user = $member->user;
+            $member->delete();
             $user->delete();
 
             DB::commit();

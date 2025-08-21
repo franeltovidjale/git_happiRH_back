@@ -11,14 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('department_employee', function (Blueprint $table) {
+        Schema::create('department_member', function (Blueprint $table) {
             $table->id();
             $table->foreignId('department_id')->constrained('departments')->cascadeOnDelete();
-            $table->foreignId('employee_id')->constrained('employees')->cascadeOnDelete();
+            $table->foreignId('member_id')->constrained('members')->cascadeOnDelete();
             $table->timestamps();
 
             // Prevent duplicate assignments
-            $table->unique(['department_id', 'employee_id']);
+            $table->unique(['department_id', 'member_id']);
         });
     }
 
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('department_employee');
+        Schema::dropIfExists('department_member');
     }
 };

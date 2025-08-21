@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * WorkingDay Model
  *
  * @property int $id
- * @property int $employee_id
+ * @property int $member_id
  * @property string $weekday
  * @property string $start_hour
  * @property string $end_hour
@@ -18,7 +18,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
  *
- * @property-read Employee $employee
+ * @property-read Member $member
  */
 class WorkingDay extends Model
 {
@@ -30,7 +30,7 @@ class WorkingDay extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'employee_id',
+        'member_id',
         'weekday',
         'start_hour',
         'end_hour',
@@ -49,12 +49,12 @@ class WorkingDay extends Model
     ];
 
     /**
-     * Get the employee that owns the working day.
+     * Get the member that owns the working day.
      *
      * @return BelongsTo
      */
-    public function employee(): BelongsTo
+    public function member(): BelongsTo
     {
-        return $this->belongsTo(Employee::class, 'employee_id');
+        return $this->belongsTo(Member::class, 'member_id');
     }
 }

@@ -27,3 +27,5 @@ Route::post('/logout', [LoginController::class, 'logout'])->middleware('auth:san
 Route::post('/forgot-password/check-email', [ForgotPasswordController::class, 'checkEmail']);
 Route::post('/forgot-password/resend-otp', [ForgotPasswordController::class, 'resendOtp']);
 Route::post('/forgot-password/change-password', [ForgotPasswordController::class, 'changePassword']);
+
+require_once __DIR__ . '/employer.php';

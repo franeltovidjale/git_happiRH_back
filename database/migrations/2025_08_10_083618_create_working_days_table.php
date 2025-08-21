@@ -13,14 +13,14 @@ return new class extends Migration
     {
         Schema::create('working_days', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('employee_id')->constrained('employees')->cascadeOnDelete();
+            $table->foreignId('member_id')->constrained('members')->cascadeOnDelete();
             $table->enum('weekday', ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']);
             $table->time('start_hour');
             $table->time('end_hour');
             $table->boolean('active')->default(true);
             $table->timestamps();
 
-            $table->unique(['employee_id', 'weekday']);
+            $table->unique(['member_id', 'weekday']);
         });
     }
 

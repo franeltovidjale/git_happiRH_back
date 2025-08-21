@@ -2,14 +2,38 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Enterprise;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
-use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Routing\Controller as BaseController;
 
 class Controller extends BaseController
 {
     use AuthorizesRequests, ValidatesRequests;
+
+    /**
+     * Get the active enterprise for the authenticated user
+     */
+    protected function getActiveEnterprise(?Request $request = null): ?Enterprise
+    {
+        $request ??= request();
+        $user = $request->user();
+
+
+        if (! $user || ! $user->active_enterprise_id) {
+            return null;
+        }
+
+        // Check if the enterprise is already loaded in the request (from middleware)
+        if ($request->has('active_enterprise')) {
+            return $request->get('active_enterprise');
+        }
+
+        // Load the enterprise if not already loaded
+        return Enterprise::find($user->active_enterprise_id);
+    }
 
     protected function badRequest($message = 'Requête invalide', $data = null, $error = null, $responseCode = null): JsonResponse
     {
@@ -17,7 +41,7 @@ class Controller extends BaseController
             'success' => false,
             'message' => $message,
             'data' => $data,
-            'error' => $error
+            'error' => $error,
         ], $responseCode ?? 400);
     }
 
@@ -27,7 +51,7 @@ class Controller extends BaseController
             'success' => false,
             'message' => $message,
             'data' => $data,
-            'error' => $error
+            'error' => $error,
         ], $responseCode ?? 409);
     }
 
@@ -37,7 +61,7 @@ class Controller extends BaseController
             'success' => false,
             'message' => $message,
             'data' => $data,
-            'error' => $error
+            'error' => $error,
         ], $responseCode ?? 422);
     }
 
@@ -47,7 +71,7 @@ class Controller extends BaseController
             'success' => true,
             'message' => $message,
             'data' => $data,
-            'error' => $error
+            'error' => $error,
         ], $responseCode ?? 201);
     }
 
@@ -57,7 +81,7 @@ class Controller extends BaseController
             'success' => true,
             'message' => $message,
             'data' => $data,
-            'error' => $error
+            'error' => $error,
         ], $responseCode ?? 200);
     }
 
@@ -67,7 +91,7 @@ class Controller extends BaseController
             'success' => false,
             'message' => $message,
             'data' => $data,
-            'error' => $error
+            'error' => $error,
         ], $responseCode ?? 500);
     }
 
@@ -77,7 +101,7 @@ class Controller extends BaseController
             'success' => false,
             'message' => $message,
             'data' => $data,
-            'error' => $error
+            'error' => $error,
         ], $responseCode ?? 404);
     }
 
@@ -87,7 +111,7 @@ class Controller extends BaseController
             'success' => false,
             'message' => $message,
             'data' => $data,
-            'error' => $error
+            'error' => $error,
         ], $responseCode ?? 401);
     }
 
@@ -97,7 +121,7 @@ class Controller extends BaseController
             'success' => false,
             'message' => $message,
             'data' => $data,
-            'error' => $error
+            'error' => $error,
         ], $responseCode ?? 403);
     }
 
@@ -107,7 +131,7 @@ class Controller extends BaseController
             'success' => true,
             'message' => $message,
             'data' => $data,
-            'error' => $error
+            'error' => $error,
         ], $responseCode ?? 204);
     }
 }

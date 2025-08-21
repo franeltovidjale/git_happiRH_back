@@ -18,7 +18,7 @@ return new class extends Migration
             $table->boolean('active')->default(true);
             $table->string('code')->unique();
             $table->foreignId('owner_id')->constrained('users')->cascadeOnDelete();
-            $table->foreignId('sector_id')->constrained('sectors')->cascadeOnDelete();
+            $table->foreignId('sector_id')->nullable()->constrained('sectors')->cascadeOnDelete();
             $table->string('status')->default('pending');
             $table->string('status_note')->nullable();
             $table->dateTime('status_date')->nullable();

@@ -17,7 +17,7 @@ use Illuminate\Support\Str;
  * @property bool $active
  * @property string $code
  * @property int $owner_id
- * @property int $sector_id
+ * @property int|null $sector_id
  * @property string $country_code
  * @property string|null $address
  * @property string|null $logo
@@ -34,7 +34,7 @@ use Illuminate\Support\Str;
  * @property \Carbon\Carbon $updated_at
  *
  * @property-read User $owner
- * @property-read Sector $sector
+ * @property-read Sector|null $sector
  * @property-read \Illuminate\Database\Eloquent\Collection|Employee[] $employees
  * @property-read \Illuminate\Database\Eloquent\Collection|Department[] $departments
  * @property-read \Illuminate\Database\Eloquent\Collection|Location[] $locations

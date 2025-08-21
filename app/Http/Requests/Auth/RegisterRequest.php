@@ -36,6 +36,9 @@ class RegisterRequest extends FormRequest
             'password' => 'required|string|min:8',
             'type' => 'required|string|in:employer,employee',
             'enterprise_code' => 'required_if:type,employee|string|exists:enterprises,code',
+            'enterprise_name' => 'required_if:type,employer|string|max:100',
+            'sector_id' => 'required_if:type,employer|exists:sectors,id',
+            'country_code' => 'required_if:type,employer|string|exists:countries,code',
         ];
     }
 
@@ -57,6 +60,11 @@ class RegisterRequest extends FormRequest
             'type.in' => 'Le type d\'utilisateur doit être employer ou employee',
             'enterprise_code.required_if' => 'Le code d\'entreprise est obligatoire pour un employé',
             'enterprise_code.exists' => 'Le code d\'entreprise n\'existe pas',
+            'enterprise_name.required_if' => 'Le nom de l\'entreprise est obligatoire pour un employeur',
+            'sector_id.required_if' => 'Le secteur d\'activité est obligatoire pour un employeur',
+            'sector_id.exists' => 'Le secteur sélectionné n\'existe pas',
+            'country_code.required_if' => 'Le pays est obligatoire pour un employeur',
+            'country_code.exists' => 'Le pays sélectionné n\'existe pas',
         ];
     }
 }

@@ -22,6 +22,20 @@ class CountrySeeder extends Seeder
                 'lang' => 'fr',
             ],
             [
+                'name' => 'Côte d\'Ivoire',
+                'flag' => 'flags/ci.png',
+                'code' => 'CI',
+                'active' => true,
+                'lang' => 'fr',
+            ],
+            [
+                'name' => 'Togo',
+                'flag' => 'flags/tg.png',
+                'code' => 'TG',
+                'active' => true,
+                'lang' => 'fr',
+            ],
+            [
                 'name' => 'United States',
                 'flag' => 'flags/us.png',
                 'code' => 'US',
@@ -83,6 +97,20 @@ class CountrySeeder extends Seeder
                 'code' => 'CH',
                 'active' => true,
                 'lang' => 'de',
+            ],
+            [
+                'name' => 'Bénin',
+                'flag' => 'flags/bj.png',
+                'code' => 'BJ',
+                'active' => true,
+                'lang' => 'fr',
+            ],
+            [
+                'name' => 'Burkina Faso',
+                'flag' => 'flags/bf.png',
+                'code' => 'BF',
+                'active' => true,
+                'lang' => 'fr',
             ],
         ];
 

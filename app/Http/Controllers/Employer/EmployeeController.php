@@ -23,9 +23,10 @@ class EmployeeController extends Controller
      */
     public function index(): JsonResponse
     {
-        $employees = $this->getActiveEnterprise()->load('members.user');
+        $enterprise = $this->getActiveEnterprise();
+        $members = $enterprise->members()->where('type', Member::TYPE_EMPLOYEE)->with('user')->get();
 
-        return $this->ok('Liste des employés récupérée avec succès', EmployeeResource::collection($employees));
+        return $this->ok('Liste des employés récupérée avec succès', EmployeeResource::collection($members));
     }
 
     /**

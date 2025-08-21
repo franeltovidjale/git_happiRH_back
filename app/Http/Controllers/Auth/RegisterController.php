@@ -70,7 +70,9 @@ class RegisterController extends Controller
 
         Employee::create([
             'user_id' => $user->id,
+            'employer_id' => $enterprise->owner_id,
             'enterprise_id' => $enterprise->id,
+            'role' => 'employee',
         ]);
     }
 

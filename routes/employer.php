@@ -1,11 +1,6 @@
 <?php
 
-use App\Http\Controllers\Api\DepartmentController;
-use App\Http\Controllers\Api\EmployeeController;
-use App\Http\Controllers\Api\EnterpriseController;
-use App\Http\Controllers\Api\LocationController;
-use App\Http\Controllers\Api\ProfileController;
-use App\Http\Controllers\Api\WorkingDayController;
+use App\Http\Controllers\Employer\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix("employer")->group(function () {

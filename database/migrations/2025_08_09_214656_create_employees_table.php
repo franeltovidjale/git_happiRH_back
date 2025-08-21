@@ -15,8 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')
                 ->constrained('users')
-                ->cascadeOnDelete()
-                ->unique();
+                ->cascadeOnDelete();
             $table->foreignId('employer_id')
                 ->constrained('users')
                 ->cascadeOnDelete();
@@ -60,6 +59,9 @@ return new class extends Migration
 
             // Job Information
             $table->enum('job_type', ['remote', 'hybrid', 'in-office'])->nullable();
+
+            $table->softDeletes();
+            $table->unique(['enterprise_id', 'employee_id']);
 
             $table->timestamps();
         });

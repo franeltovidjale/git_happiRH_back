@@ -39,3 +39,31 @@ if (!function_exists('getSettings')) {
         return $result;
     }
 }
+
+if (!function_exists('encodeModelStatusStory')) {
+    function encodeModelStatusStory(string $status, ?string $note, int $statusBy): array
+    {
+        return [
+            'date' => now(),
+            'note' => $note,
+            'status' => $status,
+            'status_by' => $statusBy
+        ];
+    }
+}
+
+if (!function_exists('decodeModelStatusStory')) {
+    function decodeModelStatusStory(?array $statusStory): array
+    {
+        if (!$statusStory) {
+            return [];
+        }
+
+        return [
+            'date' => $statusStory['date'] ?? null,
+            'note' => $statusStory['note'] ?? null,
+            'status' => $statusStory['status'] ?? null,
+            'status_by' => $statusStory['status_by'] ?? null
+        ];
+    }
+}

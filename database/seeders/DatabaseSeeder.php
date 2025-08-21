@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
             SettingSeeder::class,
             CountrySeeder::class,
             LangueSeeder::class,
+            SectorSeeder::class,
         ]);
     }
 }

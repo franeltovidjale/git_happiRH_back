@@ -18,6 +18,23 @@ return new class extends Migration
             $table->boolean('active')->default(true);
             $table->string('code')->unique();
             $table->foreignId('owner_id')->constrained('users')->cascadeOnDelete();
+            $table->foreignId('sector_id')->constrained('sectors')->cascadeOnDelete();
+            $table->string('status')->default('pending');
+            $table->string('status_note')->nullable();
+            $table->dateTime('status_date')->nullable();
+            $table->foreignId('status_by')->constrained('users')->cascadeOnDelete();
+            $table->json('status_stories')->nullable();
+
+            $table->string('address')->nullable();
+            $table->text('logo')->nullable();
+            $table->string('zip_code')->nullable();
+            $table->string('email')->nullable();
+            $table->string('phone')->nullable();
+            $table->string('website')->nullable();
+
+            $table->string('country_code');
+            $table->foreign('country_code')->references('code')->on('countries')->cascadeOnDelete();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

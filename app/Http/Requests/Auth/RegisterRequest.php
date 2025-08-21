@@ -34,6 +34,8 @@ class RegisterRequest extends FormRequest
             'phone' => 'nullable|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8',
+            'type' => 'required|string|in:employer,employee',
+            'enterprise_code' => 'required_if:type,employee|string|exists:enterprises,code',
         ];
     }
 
@@ -50,6 +52,11 @@ class RegisterRequest extends FormRequest
             'email.unique' => 'Cette adresse email est déjà utilisée',
             'password.required' => 'Le mot de passe est obligatoire',
             'password.min' => 'Le mot de passe doit contenir au moins 8 caractères',
+            'type.required' => 'Le type d\'utilisateur est obligatoire',
+            'type.string' => 'Le type d\'utilisateur doit être une chaîne de caractères',
+            'type.in' => 'Le type d\'utilisateur doit être employer ou employee',
+            'enterprise_code.required_if' => 'Le code d\'entreprise est obligatoire pour un employé',
+            'enterprise_code.exists' => 'Le code d\'entreprise n\'existe pas',
         ];
     }
 }

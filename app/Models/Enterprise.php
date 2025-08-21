@@ -17,10 +17,24 @@ use Illuminate\Support\Str;
  * @property bool $active
  * @property string $code
  * @property int $owner_id
+ * @property int $sector_id
+ * @property string $country_code
+ * @property string|null $address
+ * @property string|null $logo
+ * @property string|null $zip_code
+ * @property string|null $email
+ * @property string|null $phone
+ * @property string|null $website
+ * @property string $status
+ * @property string|null $status_note
+ * @property \Carbon\Carbon|null $status_date
+ * @property int $status_by
+ * @property array|null $status_stories
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
  *
  * @property-read User $owner
+ * @property-read Sector $sector
  * @property-read \Illuminate\Database\Eloquent\Collection|Employee[] $employees
  * @property-read \Illuminate\Database\Eloquent\Collection|Department[] $departments
  * @property-read \Illuminate\Database\Eloquent\Collection|Location[] $locations
@@ -28,6 +42,16 @@ use Illuminate\Support\Str;
 class Enterprise extends Model
 {
     use HasFactory;
+
+    public const STATUS_PENDING = 'pending';
+    public const STATUS_ACTIVE = 'active';
+    public const STATUS_INACTIVE = 'inactive';
+
+    public const STATUS_STORIES = [
+        self::STATUS_PENDING => self::STATUS_PENDING,
+        self::STATUS_ACTIVE => self::STATUS_ACTIVE,
+        self::STATUS_INACTIVE => self::STATUS_INACTIVE,
+    ];
 
     /**
      * The attributes that are mass assignable.
@@ -40,6 +64,19 @@ class Enterprise extends Model
         'active',
         'code',
         'owner_id',
+        'sector_id',
+        'country_code',
+        'address',
+        'logo',
+        'zip_code',
+        'email',
+        'phone',
+        'website',
+        'status',
+        'status_note',
+        'status_date',
+        'status_by',
+        'status_stories',
     ];
 
     /**
@@ -49,6 +86,11 @@ class Enterprise extends Model
      */
     protected $casts = [
         'active' => 'boolean',
+        'country_code' => 'string',
+        'status' => 'string',
+        'status_date' => 'datetime',
+        'status_by' => 'integer',
+        'status_stories' => 'array',
     ];
 
     /**
@@ -117,5 +159,29 @@ class Enterprise extends Model
     public function locations(): HasMany
     {
         return $this->hasMany(Location::class);
+    }
+
+    /**
+     * Get the sector of the enterprise.
+     *
+     * @return BelongsTo
+     */
+    public function sector(): BelongsTo
+    {
+        return $this->belongsTo(Sector::class, 'sector_id');
+    }
+
+    /**
+     * Get the logo URL attribute.
+     *
+     * @return string
+     */
+    public function getLogoAttribute($value): string
+    {
+        if (!empty($value)) {
+            return asset('storage/' . $value);
+        }
+
+        return asset('empty-image.png');
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\RegisterRequest;
+use App\Models\Enterprise;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\JsonResponse;
@@ -42,5 +43,10 @@ class RegisterController extends Controller
             DB::rollback();
             return $this->serverError('Erreur lors de la création du compte', null, $e->getMessage());
         }
+    }
+
+    private function createEmployee(User $data, string $enterpriseCode): void
+    {
+        $enterprise = Enterprise::where('code', $enterpriseCode)->first();
     }
 }

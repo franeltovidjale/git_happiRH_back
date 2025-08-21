@@ -1,5 +1,5 @@
-# HappyHR Development Conventions (API)
-All code must be written in API context
+# HappyHR Development Conventions
+ 
 Always follow laravel convention by default
 Always use base controller method for sending api response
 ## Controller Creation
@@ -7,9 +7,9 @@ Place controllers in the appropriate directory based on the functionality:
 - **Admin** → `app/Http/Controllers/Admin/`
 - **Employer** → `app/Http/Controllers/Employer/`
 - **Employee** → `app/Http/Controllers/Employee/`
-Never put validation in controller
-Always add controller to the corresponding route file
-General controllers can be placed in the main controllers directory.
+Never put validation in controller, always use Request Class validation
+- Add controller to the corresponding route file
+- General controllers can be placed in the main controllers directory.
 
 
 ### Database Transactions

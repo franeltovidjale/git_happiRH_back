@@ -2,17 +2,14 @@
 
 namespace App\Http\Requests\Employer;
 
+use App\Models\Department;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
-/**
- * Store Department Request
- */
 class StoreDepartmentRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
-     *
-     * @return bool
      */
     public function authorize(): bool
     {
@@ -26,10 +23,26 @@ class StoreDepartmentRequest extends FormRequest
      */
     public function rules(): array
     {
+        $enterpriseId = auth()->user()->active_enterprise_id;
+
         return [
-            'enterprise_id' => 'required|exists:enterprises,id',
             'name' => 'required|string|max:255',
             'active' => 'boolean',
+            'slug' => [
+                'nullable',
+                'string',
+                'max:255',
+                Rule::unique('departments')->where(function ($query) use ($enterpriseId) {
+                    return $query->where('enterprise_id', $enterpriseId);
+                }),
+            ],
+            'late_penalty' => 'boolean',
+            'work_model' => 'required|in:' . implode(',', Department::WORK_MODEL_OPTIONS),
+            'meeting_participation_score' => 'boolean',
+            'attendance_score' => 'boolean',
+            'overtime_recording_score' => 'nullable|string|max:255',
+            'overtime_clocking_score' => 'nullable|string|max:255',
+            'supervisor_id' => 'nullable|integer|exists:members,id',
         ];
     }
 
@@ -41,11 +54,20 @@ class StoreDepartmentRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'enterprise_id.required' => 'Enterprise is required',
-            'enterprise_id.exists' => 'Selected enterprise does not exist',
-            'name.required' => 'Department name is required',
-            'name.max' => 'Department name cannot exceed 255 characters',
-            'active.boolean' => 'Active status must be true or false',
+            'name.required' => 'Le nom du département est obligatoire',
+            'name.max' => 'Le nom du département ne peut pas dépasser 255 caractères',
+            'active.boolean' => 'Le statut actif doit être vrai ou faux',
+            'slug.unique' => 'Ce slug est déjà utilisé dans cette entreprise',
+            'slug.max' => 'Le slug ne peut pas dépasser 255 caractères',
+            'late_penalty.boolean' => 'La pénalité de retard doit être vrai ou faux',
+            'work_model.required' => 'Le modèle de travail est obligatoire',
+            'work_model.in' => 'Le modèle de travail doit être remote, hybrid ou in-office',
+            'meeting_participation_score.boolean' => 'Le score de participation aux réunions doit être vrai ou faux',
+            'attendance_score.boolean' => 'Le score de présence doit être vrai ou faux',
+            'overtime_recording_score.max' => 'Le score d\'enregistrement des heures supplémentaires ne peut pas dépasser 255 caractères',
+            'overtime_clocking_score.max' => 'Le score de pointage des heures supplémentaires ne peut pas dépasser 255 caractères',
+            'supervisor_id.integer' => 'L\'ID du superviseur doit être un nombre entier',
+            'supervisor_id.exists' => 'Le superviseur sélectionné n\'existe pas',
         ];
     }
 }

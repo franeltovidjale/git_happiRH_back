@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Str;
 
 /**
@@ -75,6 +76,7 @@ class Member extends Model
 
     public const TYPE_OWNER = 'owner';
 
+    public const TYPE_HUMAN_RESOURCE = 'human-resource';
     /**
      * Marital status constants
      */
@@ -195,5 +197,15 @@ class Member extends Model
     public function statusBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'status_by');
+    }
+
+    /**
+     * Get the departments that the member belongs to.
+     *
+     * @return BelongsToMany<Department, Member>
+     */
+    public function departments(): BelongsToMany
+    {
+        return $this->belongsToMany(Department::class, 'department_member');
     }
 }

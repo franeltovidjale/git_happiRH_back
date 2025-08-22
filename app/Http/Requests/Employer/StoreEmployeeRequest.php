@@ -27,7 +27,6 @@ class StoreEmployeeRequest extends FormRequest
             'last_name' => 'required|string|max:100',
             'email' => 'required|email|unique:users,email',
             'phone' => 'required|string|max:20',
-            'enterprise_id' => 'required|exists:enterprises,id',
 
             // Employee-specific fields
             'birth_date' => 'nullable|date',
@@ -46,6 +45,7 @@ class StoreEmployeeRequest extends FormRequest
             'designation' => 'nullable|string|max:255',
             'joining_date' => 'required|date',
             'location_id' => 'nullable|exists:locations,id',
+            'department_id' => 'required|exists:departments,id',
 
             // Banking fields
             'bank_account_number' => 'nullable|string|max:50',
@@ -83,10 +83,6 @@ class StoreEmployeeRequest extends FormRequest
             'email.unique' => 'Cette adresse email est déjà utilisée',
             'phone.required' => 'Le téléphone est obligatoire',
             'phone.max' => 'Le téléphone ne peut pas dépasser 20 caractères',
-            'enterprise_id.required' => 'L\'entreprise est obligatoire',
-            'enterprise_id.exists' => 'L\'entreprise sélectionnée n\'existe pas',
-
-            // Employee-specific messages
             'birth_date.date' => 'La date de naissance doit être une date valide',
             'marital_status.in' => 'Le statut marital doit être single, married, divorced ou widowed',
             'gender.in' => 'Le genre doit être male, female ou other',
@@ -104,6 +100,8 @@ class StoreEmployeeRequest extends FormRequest
             'joining_date.required' => 'La date d\'embauche est obligatoire',
             'joining_date.date' => 'La date d\'embauche doit être une date valide',
             'location_id.exists' => 'L\'emplacement sélectionné n\'existe pas',
+            'department_id.required' => 'Le département est obligatoire',
+            'department_id.exists' => 'Le département sélectionné n\'existe pas',
 
             // Banking messages
             'bank_account_number.max' => 'Le numéro de compte bancaire ne peut pas dépasser 50 caractères',

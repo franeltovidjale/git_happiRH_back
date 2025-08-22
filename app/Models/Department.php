@@ -16,15 +16,39 @@ use Illuminate\Support\Str;
  * @property string $name
  * @property bool $active
  * @property string $slug
+ * @property bool $late_penalty
+ * @property string $work_model
+ * @property bool $meeting_participation_score
+ * @property bool $attendance_score
+ * @property string|null $overtime_recording_score
+ * @property string|null $overtime_clocking_score
+ * @property int|null $supervisor_id
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
  *
  * @property-read Enterprise $enterprise
- * @property-read \Illuminate\Database\Eloquent\Collection|Employee[] $employees
+ * @property-read \Illuminate\Database\Eloquent\Collection|Member[] $members
+ * @property-read Member|null $supervisor
  */
 class Department extends Model
 {
     use HasFactory;
+
+    /**
+     * Work model constants
+     */
+    public const WORK_MODEL_REMOTE = 'remote';
+    public const WORK_MODEL_HYBRID = 'hybrid';
+    public const WORK_MODEL_IN_OFFICE = 'in-office';
+
+    /**
+     * Work model options
+     */
+    public const WORK_MODEL_OPTIONS = [
+        self::WORK_MODEL_REMOTE => self::WORK_MODEL_REMOTE,
+        self::WORK_MODEL_HYBRID => self::WORK_MODEL_HYBRID,
+        self::WORK_MODEL_IN_OFFICE => self::WORK_MODEL_IN_OFFICE,
+    ];
 
     /**
      * The attributes that are mass assignable.
@@ -36,6 +60,13 @@ class Department extends Model
         'name',
         'active',
         'slug',
+        'late_penalty',
+        'work_model',
+        'meeting_participation_score',
+        'attendance_score',
+        'overtime_recording_score',
+        'overtime_clocking_score',
+        'supervisor_id',
     ];
 
     /**
@@ -45,6 +76,9 @@ class Department extends Model
      */
     protected $casts = [
         'active' => 'boolean',
+        'late_penalty' => 'boolean',
+        'meeting_participation_score' => 'boolean',
+        'attendance_score' => 'boolean',
     ];
 
     /**
@@ -93,12 +127,22 @@ class Department extends Model
     }
 
     /**
-     * Get the employees that belong to the department.
+     * Get the members that belong to the department.
      *
      * @return BelongsToMany
      */
-    public function employees(): BelongsToMany
+    public function members(): BelongsToMany
     {
-        return $this->belongsToMany(Employee::class, 'department_employee');
+        return $this->belongsToMany(Member::class, 'department_member');
+    }
+
+    /**
+     * Get the supervisor of the department.
+     *
+     * @return BelongsTo
+     */
+    public function supervisor(): BelongsTo
+    {
+        return $this->belongsTo(Member::class, 'supervisor_id');
     }
 }

@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Employer;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Employer\ChangeEmployeeStatusRequest;
 use App\Http\Requests\Employer\StoreEmployeeRequest;
 use App\Http\Requests\Employer\UpdateEmployeeRequest;
 use App\Http\Resources\EmployeeResource;
 use App\Mail\EmployeeRegisteredMail;
+use App\Mail\EmployeeStatusChangedMail;
 use App\Models\Member;
 use App\Models\MemberAddress;
 use App\Models\MemberBanking;
@@ -14,12 +16,13 @@ use App\Models\MemberContactPerson;
 use App\Models\MemberEmployment;
 use App\Models\MemberSalary;
 use App\Models\User;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 
 class EmployeeController extends Controller
 {
@@ -219,13 +222,11 @@ class EmployeeController extends Controller
                 );
             }
 
-
-
             // Update or create banking information only if provided
             $bankingData = array_filter($request->only(['bank_account_number', 'bank_name', 'pan_number', 'ifsc_code']));
 
             if (! empty($bankingData)) {
-                if (!$member->banking) {
+                if (! $member->banking) {
                     $request->validate([
                         'bank_account_number' => 'required',
                         'bank_name' => 'required',
@@ -288,6 +289,75 @@ class EmployeeController extends Controller
     }
 
     /**
+     * Change the status of the specified employee.
+     */
+    public function changeStatus(ChangeEmployeeStatusRequest $request, string $id): JsonResponse
+    {
+        try {
+            $enterprise = $this->getActiveEnterprise();
+
+            /**
+             * @var Member
+             */
+            $member = Member::with(['user', 'enterprise'])
+                ->where('enterprise_id', $enterprise->id)
+                ->findOrFail($id);
+
+            DB::beginTransaction();
+
+            // Get current status for logging
+            $oldStatus = $member->status;
+            $newStatus = $request->status;
+            if ($newStatus === $oldStatus) {
+                return $this->ok('Le statut de l\'employé est déjà ' . $newStatus);
+            }
+
+            // Update member status
+            $member->update([
+                'status' => $newStatus,
+                'status_note' => $request->status_note,
+                'status_by' => auth()->id(),
+                'status_date' => now(),
+            ]);
+
+            // Add to status stories
+            $statusStories = $member->status_stories ?? [];
+            $statusStories[] = [
+                'status' => $newStatus,
+                'note' => $request->status_note,
+                'changed_by' => auth()->id(),
+                'changed_at' => now()->toISOString(),
+                'previous_status' => $oldStatus,
+            ];
+
+            $member->update(['status_stories' => $statusStories]);
+
+            DB::commit();
+
+            $member->load(['user', 'enterprise']);
+
+            Mail::to($member->user->email)->send(new EmployeeStatusChangedMail(
+                $oldStatus,
+                $newStatus,
+                $request->status_note
+            ));
+
+            return $this->ok(
+                "Statut de l'employé changé de {$oldStatus} vers {$newStatus} avec succès",
+                new EmployeeResource($member)
+            );
+        } catch (\Exception $e) {
+            DB::rollback();
+            if ($e instanceof ModelNotFoundException) {
+                return $this->notFound('Employé introuvable');
+            }
+            logger()->error($e);
+
+            return $this->serverError('Erreur lors du changement de statut de l\'employé: ' . $e->getMessage());
+        }
+    }
+
+    /**
      * Remove the specified resource from storage.
      */
     public function destroy(string $id): JsonResponse
@@ -311,7 +381,11 @@ class EmployeeController extends Controller
             DB::rollback();
             logger()->error($e);
 
-            return $this->serverError('Erreur lors de la suppression de l\'employé');
+            if ($e instanceof ModelNotFoundException) {
+                return $this->notFound('Employé introuvable');
+            }
+
+            return $this->serverError('Impossible de supprimer l\'employé actuellement');
         }
     }
 }

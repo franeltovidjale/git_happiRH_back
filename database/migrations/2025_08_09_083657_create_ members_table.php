@@ -43,6 +43,7 @@ return new class extends Migration
 
             // Constraints
             $table->unique(['enterprise_id', 'user_id']);
+            $table->softDeletes();
             $table->timestamps();
         });
     }

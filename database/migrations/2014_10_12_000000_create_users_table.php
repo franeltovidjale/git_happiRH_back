@@ -24,6 +24,7 @@ return new class extends Migration
             $table->boolean('is_deletable')->default(true);
             $table->enum('gender', ['male', 'female', 'other'])->nullable();
             $table->foreignId('active_enterprise_id')->nullable();
+            $table->softDeletes();
             $table->rememberToken();
             $table->timestamps();
         });

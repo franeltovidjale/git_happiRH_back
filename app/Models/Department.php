@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 
 /**
@@ -25,20 +26,21 @@ use Illuminate\Support\Str;
  * @property int|null $supervisor_id
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
- *
  * @property-read Enterprise $enterprise
  * @property-read \Illuminate\Database\Eloquent\Collection|Member[] $members
  * @property-read Member|null $supervisor
  */
 class Department extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     /**
      * Work model constants
      */
     public const WORK_MODEL_REMOTE = 'remote';
+
     public const WORK_MODEL_HYBRID = 'hybrid';
+
     public const WORK_MODEL_IN_OFFICE = 'in-office';
 
     /**
@@ -97,10 +99,6 @@ class Department extends Model
 
     /**
      * Generate a unique slug for the department.
-     *
-     * @param string $name
-     * @param int $enterpriseId
-     * @return string
      */
     protected static function generateUniqueSlug(string $name, int $enterpriseId): string
     {
@@ -109,7 +107,7 @@ class Department extends Model
         $counter = 1;
 
         while (static::where('enterprise_id', $enterpriseId)->where('slug', $slug)->exists()) {
-            $slug = $baseSlug . '-' . $counter;
+            $slug = $baseSlug.'-'.$counter;
             $counter++;
         }
 
@@ -118,8 +116,6 @@ class Department extends Model
 
     /**
      * Get the enterprise that owns the department.
-     *
-     * @return BelongsTo
      */
     public function enterprise(): BelongsTo
     {
@@ -128,8 +124,6 @@ class Department extends Model
 
     /**
      * Get the members that belong to the department.
-     *
-     * @return BelongsToMany
      */
     public function members(): BelongsToMany
     {
@@ -138,8 +132,6 @@ class Department extends Model
 
     /**
      * Get the supervisor of the department.
-     *
-     * @return BelongsTo
      */
     public function supervisor(): BelongsTo
     {

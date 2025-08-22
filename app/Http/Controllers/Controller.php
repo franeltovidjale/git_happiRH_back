@@ -35,13 +35,13 @@ class Controller extends BaseController
         return Enterprise::find($user->active_enterprise_id);
     }
 
-    protected function badRequest($message = 'Requête invalide', $data = null, $error = null, $responseCode = null): JsonResponse
+    protected function badRequest($message = 'Requête invalide', $data = null, $errors = null, $responseCode = null): JsonResponse
     {
         return response()->json([
             'success' => false,
             'message' => $message,
             'data' => $data,
-            'error' => $error,
+            'errors' => $errors,
         ], $responseCode ?? 400);
     }
 

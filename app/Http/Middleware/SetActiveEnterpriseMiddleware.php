@@ -2,8 +2,6 @@
 
 namespace App\Http\Middleware;
 
-use App\Models\Employee;
-use App\Models\Enterprise;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,6 +16,7 @@ class SetActiveEnterpriseMiddleware
     public function handle(Request $request, Closure $next): Response
     {
         $user = $request->user();
+
 
         if (! $user) {
             return response()->json([
@@ -34,7 +33,7 @@ class SetActiveEnterpriseMiddleware
         }
 
         // Verify the enterprise exists and is active
-        $enterprise = Enterprise::find($user->active_enterprise_id);
+        $enterprise = $user->activeEnterprise;
 
         if (! $enterprise) {
             return response()->json([
@@ -43,41 +42,10 @@ class SetActiveEnterpriseMiddleware
             ], 403);
         }
 
-        if (! $enterprise->active) {
-            return response()->json([
-                'message' => 'L\'entreprise active est désactivée.',
-                'error' => 'enterprise_inactive',
-            ], 403);
-        }
-
-        // Check user access to this specific enterprise
-        $hasAccess = false;
-
-        // Check if user is owner of this enterprise
-        if ($enterprise->owner_id === $user->id) {
-            $hasAccess = true;
-        }
-
-        // Check if user is employee in this enterprise
-        if (! $hasAccess) {
-            $employeeRecord = Employee::where('user_id', $user->id)
-                ->where('enterprise_id', $enterprise->id)
-                ->first();
-
-            if ($employeeRecord && $employeeRecord->active) {
-                $hasAccess = true;
-            }
-        }
-
-        if (! $hasAccess) {
-            return response()->json([
-                'message' => 'Vous n\'avez pas accès à cette entreprise.',
-                'error' => 'unauthorized_enterprise_access',
-            ], 403);
-        }
-
         // Add enterprise information to the request for use in controllers
-        $request->merge(['active_enterprise' => $enterprise]);
+        $request->merge(['active_enterprise_id' => $enterprise->id]);
+
+        $request->attributes->add(['active_enterprise' => $enterprise]);
 
         return $next($request);
     }

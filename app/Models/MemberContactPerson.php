@@ -10,6 +10,8 @@ class MemberContactPerson extends Model
 {
     use HasFactory;
 
+    protected $table = 'member_contact_persons';
+
     protected $fillable = [
         'member_id',
         'full_name',

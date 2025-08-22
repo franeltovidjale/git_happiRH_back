@@ -18,7 +18,7 @@ return new class extends Migration
             $table->boolean('active')->default(true);
             $table->string('slug');
             $table->boolean('late_penalty')->default(false);
-            $table->enum('work_model', ['remote', 'hybrid', 'in-office'])->default('in-office');
+            $table->string('work_model')->default('in-office');
             $table->boolean('meeting_participation_score')->default(false);
             $table->boolean('attendance_score')->default(false);
             $table->string('overtime_recording_score')->nullable();

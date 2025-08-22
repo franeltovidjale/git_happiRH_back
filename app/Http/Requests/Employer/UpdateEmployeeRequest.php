@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests\Employer;
 
-use App\Models\Employee;
+use App\Models\Member;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -13,8 +13,6 @@ class UpdateEmployeeRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
-     *
-     * @return bool
      */
     public function authorize(): bool
     {
@@ -28,8 +26,8 @@ class UpdateEmployeeRequest extends FormRequest
      */
     public function rules(): array
     {
-        $employeeId = $this->route('employee');
-        $userId = Employee::find($employeeId)?->user_id;
+        $memberId = $this->route('employee');
+        $userId = Member::find($memberId)?->user_id;
 
         return [
             // User-related fields
@@ -40,46 +38,55 @@ class UpdateEmployeeRequest extends FormRequest
                 'required',
                 'email',
                 'max:255',
-                Rule::unique('users', 'email')->ignore($userId)
+                Rule::unique('users', 'email')->ignore($userId),
             ],
 
-            // Employee-specific fields
-            'birth_date' => 'nullable|date',
+            // Personal Information
+            'birth_date' => [
+                'nullable',
+                'date',
+                'before_or_equal:'.now()->subYears(18)->format('Y-m-d'),
+            ],
             'marital_status' => 'nullable|in:single,married,divorced,widowed',
             'gender' => 'nullable|in:male,female,other',
             'nationality' => 'nullable|string|max:255',
+
+            // Address Information
             'address' => 'nullable|string',
             'city' => 'nullable|string|max:255',
             'state' => 'nullable|string|max:255',
             'zip_code' => 'nullable|string|max:20',
-            'active' => 'boolean',
 
-            // Professional fields
+            // Professional Information
             'username' => [
                 'nullable',
                 'string',
-                Rule::unique('employees', 'username')->ignore($employeeId)
+                Rule::unique('members', 'username')->ignore($memberId),
             ],
             'role' => 'required|string|max:255',
             'designation' => 'nullable|string|max:255',
             'joining_date' => 'required|date',
             'location_id' => 'nullable|exists:locations,id',
 
-            // Banking fields
+            // Employment Information
+            'contract_type' => 'nullable|in:cdi,cdd,permanent',
+            'job_type' => 'nullable|in:remote,hybrid,in-office',
+
+            // Banking Information
             'bank_account_number' => 'nullable|string|max:50',
             'bank_name' => 'nullable|string|max:255',
             'pan_number' => 'nullable|string|max:20',
             'ifsc_code' => 'nullable|string|max:20',
 
-            // Salary and Payment fields
+            // Salary and Payment Information
             'salary_basis' => 'nullable|string|max:100',
             'effective_date' => 'nullable|date',
             'monthly_salary_amount' => 'nullable|numeric|min:0|max:99999999.99',
             'type_of_payment' => 'nullable|string|max:100',
             'billing_rate' => 'nullable|numeric|min:0|max:99999999.99',
 
-            // Job Information
-            'job_type' => 'nullable|in:remote,hybrid,in-office',
+            // Status
+            'active' => 'boolean',
         ];
     }
 
@@ -102,17 +109,19 @@ class UpdateEmployeeRequest extends FormRequest
             'email.email' => 'L\'adresse email doit être valide',
             'email.unique' => 'Cette adresse email est déjà utilisée',
 
-            // Employee-specific messages
+            // Personal Information messages
             'birth_date.date' => 'La date de naissance doit être une date valide',
+            'birth_date.before_or_equal' => 'L\'employé doit avoir au moins 18 ans',
             'marital_status.in' => 'Le statut marital doit être single, married, divorced ou widowed',
             'gender.in' => 'Le genre doit être male, female ou other',
             'nationality.max' => 'La nationalité ne peut pas dépasser 255 caractères',
+
+            // Address Information messages
             'city.max' => 'La ville ne peut pas dépasser 255 caractères',
             'state.max' => 'L\'état ne peut pas dépasser 255 caractères',
             'zip_code.max' => 'Le code postal ne peut pas dépasser 20 caractères',
-            'active.boolean' => 'Le statut actif doit être vrai ou faux',
 
-            // Professional messages
+            // Professional Information messages
             'username.unique' => 'Ce nom d\'utilisateur est déjà utilisé',
             'role.required' => 'Le rôle est obligatoire',
             'role.max' => 'Le rôle ne peut pas dépasser 255 caractères',
@@ -121,13 +130,17 @@ class UpdateEmployeeRequest extends FormRequest
             'joining_date.date' => 'La date d\'embauche doit être une date valide',
             'location_id.exists' => 'L\'emplacement sélectionné n\'existe pas',
 
-            // Banking messages
+            // Employment Information messages
+            'contract_type.in' => 'Le type de contrat doit être cdi, cdd ou permanent',
+            'job_type.in' => 'Le type de travail doit être remote, hybrid ou in-office',
+
+            // Banking Information messages
             'bank_account_number.max' => 'Le numéro de compte bancaire ne peut pas dépasser 50 caractères',
             'bank_name.max' => 'Le nom de la banque ne peut pas dépasser 255 caractères',
             'pan_number.max' => 'Le numéro PAN ne peut pas dépasser 20 caractères',
             'ifsc_code.max' => 'Le code IFSC ne peut pas dépasser 20 caractères',
 
-            // Salary and Payment messages
+            // Salary and Payment Information messages
             'salary_basis.max' => 'La base de salaire ne peut pas dépasser 100 caractères',
             'effective_date.date' => 'La date d\'effet doit être une date valide',
             'monthly_salary_amount.numeric' => 'Le montant du salaire mensuel doit être un nombre',
@@ -138,8 +151,8 @@ class UpdateEmployeeRequest extends FormRequest
             'billing_rate.min' => 'Le taux de facturation doit être positif',
             'billing_rate.max' => 'Le taux de facturation ne peut pas dépasser 99,999,999.99',
 
-            // Job Information messages
-            'job_type.in' => 'Le type de travail doit être remote, hybrid ou in-office',
+            // Status messages
+            'active.boolean' => 'Le statut actif doit être vrai ou faux',
         ];
     }
 }

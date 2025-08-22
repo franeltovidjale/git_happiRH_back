@@ -25,29 +25,55 @@ class EmployeeResource extends JsonResource
             'birth_date' => $this->birth_date,
             'marital_status' => $this->marital_status,
             'nationality' => $this->nationality,
-            'address' => $this->address,
-            'city' => $this->city,
-            'state' => $this->state,
-            'zip_code' => $this->zip_code,
             'designation' => $this->designation,
             'joining_date' => $this->joining_date,
             'location_id' => $this->location_id,
-            'bank_account_number' => $this->bank_account_number,
-            'bank_name' => $this->bank_name,
-            'pan_number' => $this->pan_number,
-            'ifsc_code' => $this->ifsc_code,
-            'salary_basis' => $this->salary_basis,
-            'effective_date' => $this->effective_date,
-            'monthly_salary_amount' => $this->monthly_salary_amount,
-            'type_of_payment' => $this->type_of_payment,
-            'billing_rate' => $this->billing_rate,
-            'job_type' => $this->job_type,
             'status_note' => $this->status_note,
             'status_date' => $this->status_date,
             'status_by' => $this->status_by,
             'status_stories' => $this->status_stories,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
+
+            // Address information
+            'address' => $this->whenLoaded('address', function () {
+                return [
+                    'address' => $this->address->address,
+                    'city' => $this->address->city,
+                    'state' => $this->address->state,
+                    'zip_code' => $this->address->zip_code,
+                ];
+            }),
+
+            // Banking information
+            'banking' => $this->whenLoaded('banking', function () {
+                return [
+                    'bank_account_number' => $this->banking->bank_account_number,
+                    'bank_name' => $this->banking->bank_name,
+                    'pan_number' => $this->banking->pan_number,
+                    'ifsc_code' => $this->banking->ifsc_code,
+                ];
+            }),
+
+            // Salary information
+            'salary' => $this->whenLoaded('salary', function () {
+                return [
+                    'salary_basis' => $this->salary->salary_basis,
+                    'effective_date' => $this->salary->effective_date,
+                    'monthly_salary_amount' => $this->salary->monthly_salary_amount,
+                    'type_of_payment' => $this->salary->type_of_payment,
+                    'billing_rate' => $this->salary->billing_rate,
+                ];
+            }),
+
+            // Employment information
+            'employment' => $this->whenLoaded('employment', function () {
+                return [
+                    'job_type' => $this->employment->job_type,
+                    'contract_type' => $this->employment->contract_type,
+                ];
+            }),
+
             'user' => [
                 'id' => $this->user->id,
                 'first_name' => $this->user->first_name,

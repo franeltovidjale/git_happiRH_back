@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests\Employer;
 
-use App\Models\Department;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -37,7 +36,7 @@ class StoreDepartmentRequest extends FormRequest
                 }),
             ],
             'late_penalty' => 'boolean',
-            'work_model' => 'required|in:' . implode(',', Department::WORK_MODEL_OPTIONS),
+            'work_model' => 'required|string|max:255',
             'meeting_participation_score' => 'boolean',
             'attendance_score' => 'boolean',
             'overtime_recording_score' => 'nullable|string|max:255',
@@ -61,7 +60,7 @@ class StoreDepartmentRequest extends FormRequest
             'slug.max' => 'Le slug ne peut pas dépasser 255 caractères',
             'late_penalty.boolean' => 'La pénalité de retard doit être vrai ou faux',
             'work_model.required' => 'Le modèle de travail est obligatoire',
-            'work_model.in' => 'Le modèle de travail doit être remote, hybrid ou in-office',
+            'work_model.max' => 'Le modèle de travail ne peut pas dépasser 255 caractères',
             'meeting_participation_score.boolean' => 'Le score de participation aux réunions doit être vrai ou faux',
             'attendance_score.boolean' => 'Le score de présence doit être vrai ou faux',
             'overtime_recording_score.max' => 'Le score d\'enregistrement des heures supplémentaires ne peut pas dépasser 255 caractères',

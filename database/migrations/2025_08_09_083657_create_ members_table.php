@@ -14,50 +14,34 @@ return new class extends Migration
     {
         Schema::create('members', function (Blueprint $table) {
             $table->id();
+
+            // Foreign keys
             $table->foreignId('enterprise_id')->constrained('enterprises');
             $table->foreignId('user_id')->constrained('users');
+            $table->foreignId('location_id')->nullable()->constrained('locations')->cascadeOnDelete();
+            $table->foreignId('status_by')->constrained('users')->cascadeOnDelete();
+
+            // Core member information
             $table->string('type')->default(Member::TYPE_EMPLOYEE);
-            $table->string('status')->default(value: Member::STATUS_REQUESTED);
+            $table->string('status')->default(Member::STATUS_REQUESTED);
             $table->string('username')->unique()->nullable();
             $table->string('code')->unique();
 
+            // Personal information
             $table->date('birth_date')->nullable();
-            $table->string('marital_status')->default(Member::MARITAL_STATUS_SINGLE);
-
+            $table->string('marital_status')->nullable();
             $table->string('nationality')->nullable();
-            $table->text('address')->nullable();
-            $table->string('city')->nullable();
-            $table->string('state')->nullable();
-            $table->string('zip_code')->nullable();
 
+            // Professional information
             $table->string('designation')->nullable();
             $table->date('joining_date')->nullable();
-            $table->foreignId('location_id')->nullable()->constrained('locations')->cascadeOnDelete();
 
-            // Banking fields
-            $table->string('bank_account_number')->nullable();
-            $table->string('bank_name')->nullable();
-            $table->string('pan_number')->nullable();
-            $table->string('ifsc_code')->nullable();
-
-            // Salary and Payment fields
-            $table->string('salary_basis')->nullable();
-            $table->date('effective_date')->nullable();
-            $table->decimal('monthly_salary_amount', 10, 2)->nullable();
-            $table->string('type_of_payment')->nullable();
-            $table->decimal('billing_rate', 10, 2)->nullable();
-
-            // Job Information
-            $table->string('job_type')->nullable();
-
+            // Status tracking
             $table->string('status_note')->nullable();
             $table->dateTime('status_date')->nullable();
-            $table->foreignId('status_by')
-                ->constrained('users')
-                ->cascadeOnDelete();
-
             $table->json('status_stories')->nullable();
 
+            // Constraints
             $table->unique(['enterprise_id', 'user_id']);
             $table->timestamps();
         });

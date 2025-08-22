@@ -40,7 +40,7 @@ class SettingSeeder extends Seeder
             ],
             [
                 'key' => 'authEnabledOtp',
-                'value' => '1',
+                'value' => '0',
                 'type' => 'boolean',
                 'label' => 'Enable OTP Login',
                 'description' => 'Enable OTP-based login functionality',

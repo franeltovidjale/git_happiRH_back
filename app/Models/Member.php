@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Str;
 
 /**
@@ -24,23 +25,9 @@ use Illuminate\Support\Str;
  * @property \Carbon\Carbon|null $birth_date
  * @property string $marital_status
  * @property string|null $nationality
- * @property string|null $address
- * @property string|null $city
- * @property string|null $state
- * @property string|null $zip_code
  * @property string|null $designation
  * @property \Carbon\Carbon|null $joining_date
  * @property int|null $location_id
- * @property string|null $bank_account_number
- * @property string|null $bank_name
- * @property string|null $pan_number
- * @property string|null $ifsc_code
- * @property string|null $salary_basis
- * @property \Carbon\Carbon|null $effective_date
- * @property float|null $monthly_salary_amount
- * @property string|null $type_of_payment
- * @property float|null $billing_rate
- * @property string|null $job_type
  * @property string|null $status_note
  * @property \Carbon\Carbon|null $status_date
  * @property int $status_by
@@ -51,6 +38,10 @@ use Illuminate\Support\Str;
  * @property-read User $user
  * @property-read Location|null $location
  * @property-read User $statusBy
+ * @property-read MemberAddress|null $address
+ * @property-read MemberBanking|null $banking
+ * @property-read MemberSalary|null $salary
+ * @property-read MemberEmployment|null $employment
  */
 class Member extends Model
 {
@@ -77,6 +68,7 @@ class Member extends Model
     public const TYPE_OWNER = 'owner';
 
     public const TYPE_HUMAN_RESOURCE = 'human-resource';
+
     /**
      * Marital status constants
      */
@@ -112,23 +104,9 @@ class Member extends Model
         'birth_date',
         'marital_status',
         'nationality',
-        'address',
-        'city',
-        'state',
-        'zip_code',
         'designation',
         'joining_date',
         'location_id',
-        'bank_account_number',
-        'bank_name',
-        'pan_number',
-        'ifsc_code',
-        'salary_basis',
-        'effective_date',
-        'monthly_salary_amount',
-        'type_of_payment',
-        'billing_rate',
-        'job_type',
         'status_note',
         'status_date',
         'status_by',
@@ -143,10 +121,7 @@ class Member extends Model
     protected $casts = [
         'birth_date' => 'date',
         'joining_date' => 'date',
-        'effective_date' => 'date',
         'status_date' => 'datetime',
-        'monthly_salary_amount' => 'decimal:2',
-        'billing_rate' => 'decimal:2',
         'status_stories' => 'array',
     ];
 
@@ -207,5 +182,45 @@ class Member extends Model
     public function departments(): BelongsToMany
     {
         return $this->belongsToMany(Department::class, 'department_member');
+    }
+
+    /**
+     * Get the address information for the member.
+     *
+     * @return HasOne<MemberAddress>
+     */
+    public function address(): HasOne
+    {
+        return $this->hasOne(MemberAddress::class);
+    }
+
+    /**
+     * Get the banking information for the member.
+     *
+     * @return HasOne<MemberBanking>
+     */
+    public function banking(): HasOne
+    {
+        return $this->hasOne(MemberBanking::class);
+    }
+
+    /**
+     * Get the salary information for the member.
+     *
+     * @return HasOne<MemberSalary>
+     */
+    public function salary(): HasOne
+    {
+        return $this->hasOne(MemberSalary::class);
+    }
+
+    /**
+     * Get the employment information for the member.
+     *
+     * @return HasOne<MemberEmployment>
+     */
+    public function employment(): HasOne
+    {
+        return $this->hasOne(MemberEmployment::class);
     }
 }

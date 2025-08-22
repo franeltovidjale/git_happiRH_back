@@ -4,7 +4,6 @@ namespace App\Http\Requests\Employer;
 
 use App\Models\Member;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 /**
  * Update Employee Request
@@ -34,18 +33,12 @@ class UpdateEmployeeRequest extends FormRequest
             'first_name' => 'required|string|max:100',
             'last_name' => 'required|string|max:100',
             'phone' => 'required|string|max:20',
-            'email' => [
-                'required',
-                'email',
-                'max:255',
-                Rule::unique('users', 'email')->ignore($userId),
-            ],
 
             // Personal Information
             'birth_date' => [
                 'nullable',
                 'date',
-                'before_or_equal:'.now()->subYears(18)->format('Y-m-d'),
+                'before_or_equal:' . now()->subYears(18)->format('Y-m-d'),
             ],
             'marital_status' => 'nullable|in:single,married,divorced,widowed',
             'gender' => 'nullable|in:male,female,other',
@@ -61,7 +54,7 @@ class UpdateEmployeeRequest extends FormRequest
             'username' => [
                 'nullable',
                 'string',
-                Rule::unique('members', 'username')->ignore($memberId),
+                'unique:members,username,' . $memberId,
             ],
             'role' => 'required|string|max:255',
             'designation' => 'nullable|string|max:255',
@@ -87,6 +80,10 @@ class UpdateEmployeeRequest extends FormRequest
 
             // Status
             'active' => 'boolean',
+
+            // Contact Information
+            'contact_person_full_name' => 'nullable|string|max:255',
+            'contact_person_phone' => 'nullable|string|max:20',
         ];
     }
 
@@ -105,9 +102,6 @@ class UpdateEmployeeRequest extends FormRequest
             'last_name.max' => 'Le nom ne peut pas dépasser 100 caractères',
             'phone.required' => 'Le téléphone est obligatoire',
             'phone.max' => 'Le téléphone ne peut pas dépasser 20 caractères',
-            'email.required' => 'L\'adresse email est obligatoire',
-            'email.email' => 'L\'adresse email doit être valide',
-            'email.unique' => 'Cette adresse email est déjà utilisée',
 
             // Personal Information messages
             'birth_date.date' => 'La date de naissance doit être une date valide',
@@ -153,6 +147,10 @@ class UpdateEmployeeRequest extends FormRequest
 
             // Status messages
             'active.boolean' => 'Le statut actif doit être vrai ou faux',
+
+            // Contact Information messages
+            'contact_person_full_name.max' => 'Le nom complet du contact ne peut pas dépasser 255 caractères',
+            'contact_person_phone.max' => 'Le téléphone du contact ne peut pas dépasser 20 caractères',
         ];
     }
 }

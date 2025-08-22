@@ -70,8 +70,8 @@ class StoreEmployeeRequest extends FormRequest
             'billing_rate' => 'nullable|numeric|min:0|max:99999999.99',
 
             // Contact Information
-            'contact_person' => 'nullable|string|max:255',
-            'contact_person_email' => 'nullable|email',
+            'contact_person_full_name' => 'nullable|string|max:255',
+            'contact_person_phone' => 'nullable|string|max:20',
 
             // Status
             'active' => 'boolean',
@@ -145,8 +145,8 @@ class StoreEmployeeRequest extends FormRequest
             'billing_rate.max' => 'Le taux de facturation ne peut pas dépasser 99,999,999.99',
 
             // Contact Information messages
-            'contact_person.max' => 'La personne de contact ne peut pas dépasser 255 caractères',
-            'contact_person_email.email' => 'L\'email de la personne de contact doit être valide',
+            'contact_person_full_name.max' => 'Le nom complet de la personne de contact ne peut pas dépasser 255 caractères',
+            'contact_person_phone.max' => 'Le téléphone de la personne de contact ne peut pas dépasser 20 caractères',
 
             // Status messages
             'active.boolean' => 'Le statut actif doit être vrai ou faux',

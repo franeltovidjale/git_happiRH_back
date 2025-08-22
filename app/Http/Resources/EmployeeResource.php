@@ -34,6 +34,7 @@ class EmployeeResource extends JsonResource
             'status_stories' => $this->status_stories,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
+            'full_name' => "{$this->user->first_name} {$this->user->last_name}",
 
             // Address information
             'address' => $this->whenLoaded('address', function () {
@@ -71,6 +72,14 @@ class EmployeeResource extends JsonResource
                 return [
                     'job_type' => $this->employment->job_type,
                     'contract_type' => $this->employment->contract_type,
+                ];
+            }),
+
+            // Contact Person information
+            'contact_person' => $this->whenLoaded('contactPerson', function () {
+                return [
+                    'full_name' => $this->contactPerson->full_name,
+                    'phone' => $this->contactPerson->phone,
                 ];
             }),
 

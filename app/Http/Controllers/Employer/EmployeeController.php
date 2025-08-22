@@ -10,6 +10,7 @@ use App\Mail\EmployeeRegisteredMail;
 use App\Models\Member;
 use App\Models\MemberAddress;
 use App\Models\MemberBanking;
+use App\Models\MemberContactPerson;
 use App\Models\MemberEmployment;
 use App\Models\MemberSalary;
 use App\Models\User;
@@ -115,6 +116,15 @@ class EmployeeController extends Controller
                 ]);
             }
 
+            // Create contact person information
+            if ($request->filled(['contact_person_full_name', 'contact_person_phone'])) {
+                MemberContactPerson::create([
+                    'member_id' => $member->id,
+                    'full_name' => $request->contact_person_full_name,
+                    'phone' => $request->contact_person_phone,
+                ]);
+            }
+
             Mail::to($user->email)->send(new EmployeeRegisteredMail(
                 $user->first_name,
                 $user->last_name,
@@ -125,7 +135,7 @@ class EmployeeController extends Controller
 
             DB::commit();
 
-            $member->load(['user', 'enterprise', 'location', 'address', 'banking', 'salary', 'employment']);
+            $member->load(['user', 'enterprise', 'location', 'address', 'banking', 'salary', 'employment', 'contactPerson']);
 
             return $this->created('Employé créé avec succès', new EmployeeResource($member));
         } catch (\Exception $e) {
@@ -147,7 +157,7 @@ class EmployeeController extends Controller
         try {
             $enterprise = $this->getActiveEnterprise();
 
-            $member = Member::with(['user', 'enterprise', 'address', 'banking', 'salary', 'employment'])
+            $member = Member::with(['user', 'enterprise', 'address', 'banking', 'salary', 'employment', 'contactPerson'])
                 ->where('enterprise_id', $enterprise->id)
                 ->findOrFail($id);
 
@@ -166,8 +176,10 @@ class EmployeeController extends Controller
     {
         try {
             $enterprise = $this->getActiveEnterprise();
-
-            $member = Member::with(['user', 'enterprise', 'address', 'banking', 'salary', 'employment'])
+            /**
+             * @var Member
+             */
+            $member = Member::with(['user', 'enterprise', 'address', 'banking', 'salary', 'employment', 'contactPerson'])
                 ->where('enterprise_id', $enterprise->id)
                 ->findOrFail($id);
 
@@ -178,7 +190,6 @@ class EmployeeController extends Controller
                 'first_name' => $request->first_name,
                 'last_name' => $request->last_name,
                 'phone' => $request->phone,
-                'email' => $request->email,
             ]);
 
             // Update member-specific fields
@@ -243,9 +254,20 @@ class EmployeeController extends Controller
                 );
             }
 
+            // Update or create contact person information
+            if ($request->filled(['contact_person_full_name', 'contact_person_phone'])) {
+                $member->contactPerson()->updateOrCreate(
+                    ['member_id' => $member->id],
+                    [
+                        'full_name' => $request->contact_person_full_name,
+                        'phone' => $request->contact_person_phone,
+                    ]
+                );
+            }
+
             DB::commit();
 
-            $member->load(['user', 'enterprise', 'location', 'address', 'banking', 'salary', 'employment']);
+            $member->load(['user', 'enterprise', 'location', 'address', 'banking', 'salary', 'employment', 'contactPerson']);
 
             return $this->ok('Employé mis à jour avec succès', new EmployeeResource($member));
         } catch (\Exception $e) {

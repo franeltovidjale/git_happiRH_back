@@ -223,4 +223,14 @@ class Member extends Model
     {
         return $this->hasOne(MemberEmployment::class);
     }
+
+    /**
+     * Get the contact person information for the member.
+     *
+     * @return HasOne<MemberContactPerson>
+     */
+    public function contactPerson(): HasOne
+    {
+        return $this->hasOne(MemberContactPerson::class);
+    }
 }

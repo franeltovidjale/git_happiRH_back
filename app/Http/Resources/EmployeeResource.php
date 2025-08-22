@@ -20,22 +20,33 @@ class EmployeeResource extends JsonResource
             'enterprise_id' => $this->enterprise_id,
             'type' => $this->type,
             'status' => $this->status,
-            'username' => $this->username,
             'code' => $this->code,
             'birth_date' => $this->birth_date,
             'marital_status' => $this->marital_status,
             'nationality' => $this->nationality,
-            'designation' => $this->designation,
-            'joining_date' => $this->joining_date,
+            'role' => $this->role,
             'location_id' => $this->location_id,
             'status_note' => $this->status_note,
             'status_date' => $this->status_date,
             'status_by' => $this->status_by,
             'status_stories' => $this->status_stories,
             'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
             'full_name' => "{$this->user->first_name} {$this->user->last_name}",
-
+            'profession' => [
+                'code' => $this->code,
+                'designation' => $this->role,
+                'username' => $this->username,
+                'joining_date' => $this->joining_date,
+                'email' => $this->user->email,
+            ],
+            'departments' => $this->whenLoaded('departments', function () {
+                return $this->departments->map(function ($department) {
+                    return [
+                        'id' => $department->id,
+                        'name' => $department->name,
+                    ];
+                });
+            }),
             // Address information
             'address' => $this->whenLoaded('address', function () {
                 return [
@@ -114,6 +125,17 @@ class EmployeeResource extends JsonResource
                     'state' => $this->location->state,
                     'zip_code' => $this->location->zip_code,
                 ];
+            }),
+            'work_days' => $this->whenLoaded('workDays', function () {
+                return $this->workDays->map(function ($workDay) {
+                    return [
+                        'id' => $workDay->id,
+                        'weekday' => $workDay->weekday,
+                        'start_hour' => $workDay->start_hour,
+                        'end_hour' => $workDay->end_hour,
+                        'active' => $workDay->active,
+                    ];
+                });
             }),
         ];
     }

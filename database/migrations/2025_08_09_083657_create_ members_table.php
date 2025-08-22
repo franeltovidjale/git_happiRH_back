@@ -33,7 +33,7 @@ return new class extends Migration
             $table->string('nationality')->nullable();
 
             // Professional information
-            $table->string('designation')->nullable();
+            $table->string('role')->nullable();
             $table->date('joining_date')->nullable();
 
             // Status tracking

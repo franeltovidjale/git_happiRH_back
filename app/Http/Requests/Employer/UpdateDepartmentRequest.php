@@ -4,6 +4,7 @@ namespace App\Http\Requests\Employer;
 
 use App\Models\Department;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 
 class UpdateDepartmentRequest extends FormRequest
@@ -27,7 +28,23 @@ class UpdateDepartmentRequest extends FormRequest
         $departmentId = $this->route('department');
 
         return [
-            'name' => 'required|string|max:255',
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+                function ($attribute, $value, $fail) use ($enterpriseId, $departmentId) {
+                    $slug = Str::slug($value);
+
+                    $exists = Department::where('enterprise_id', $enterpriseId)
+                        ->where('id', '!=', $departmentId)
+                        ->where('slug', $slug)
+                        ->exists();
+
+                    if ($exists) {
+                        $fail('Un département avec ce nom existe déjà dans cette entreprise');
+                    }
+                },
+            ],
             'active' => 'boolean',
             'slug' => [
                 'nullable',

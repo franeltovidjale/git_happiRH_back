@@ -12,7 +12,7 @@ describe('MemberResource Tests', function () {
         $member->status = 'active';
         $member->username = 'john_doe';
         $member->code = 'EMP001';
-        $member->designation = 'Developer';
+        $member->role = 'Developer';
         $member->joining_date = '2023-01-15';
 
         $resource = new MemberResource($member);
@@ -24,7 +24,7 @@ describe('MemberResource Tests', function () {
         expect($data)->toHaveKey('status');
         expect($data)->toHaveKey('username');
         expect($data)->toHaveKey('code');
-        expect($data)->toHaveKey('designation');
+        expect($data)->toHaveKey('role');
         expect($data)->toHaveKey('joining_date');
 
         expect($data['id'])->toBe(1);
@@ -33,7 +33,7 @@ describe('MemberResource Tests', function () {
         expect($data['status'])->toBe('active');
         expect($data['username'])->toBe('john_doe');
         expect($data['code'])->toBe('EMP001');
-        expect($data['designation'])->toBe('Developer');
+        expect($data['role'])->toBe('Developer');
     });
 
     it('includes user data when user relation is loaded', function () {
@@ -44,7 +44,7 @@ describe('MemberResource Tests', function () {
         $member->status = 'active';
         $member->username = 'john_doe';
         $member->code = 'EMP001';
-        $member->designation = 'Developer';
+        $member->role = 'Developer';
 
         // Mock user relation
         $member->setRelation('user', (object) [
@@ -80,7 +80,7 @@ describe('MemberResource Tests', function () {
         $member->status = 'active';
         $member->username = 'john_doe';
         $member->code = 'EMP001';
-        $member->designation = 'Developer';
+        $member->role = 'Developer';
 
         $resource = new MemberResource($member);
 

@@ -10,6 +10,7 @@ use App\Models\Department;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class DepartmentController extends Controller
 {
@@ -43,11 +44,13 @@ class DepartmentController extends Controller
 
             $enterprise = $this->getActiveEnterprise();
 
+            $slug = Str::slug($request->name);
+
             $department = Department::create([
                 'enterprise_id' => $enterprise->id,
                 'name' => $request->name,
                 'active' => $request->boolean('active', true),
-                'slug' => $request->slug,
+                'slug' => $slug,
                 'late_penalty' => $request->boolean('late_penalty', false),
                 'work_model' => $request->work_model,
                 'meeting_participation_score' => $request->boolean('meeting_participation_score', false),

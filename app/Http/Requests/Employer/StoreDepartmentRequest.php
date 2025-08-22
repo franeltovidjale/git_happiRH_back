@@ -25,16 +25,23 @@ class StoreDepartmentRequest extends FormRequest
         $enterpriseId = auth()->user()->active_enterprise_id;
 
         return [
-            'name' => 'required|string|max:255',
-            'active' => 'boolean',
-            'slug' => [
-                'nullable',
+            'name' => [
+                'required',
                 'string',
                 'max:255',
-                Rule::unique('departments')->where(function ($query) use ($enterpriseId) {
-                    return $query->where('enterprise_id', $enterpriseId);
-                }),
+                function ($attribute, $value, $fail) use ($enterpriseId) {
+                    $slug = \Illuminate\Support\Str::slug($value);
+
+                    $exists = \App\Models\Department::where('enterprise_id', $enterpriseId)
+                        ->where('slug', $slug)
+                        ->exists();
+
+                    if ($exists) {
+                        $fail('Un département avec ce nom existe déjà dans cette entreprise');
+                    }
+                },
             ],
+            'active' => 'boolean',
             'late_penalty' => 'boolean',
             'work_model' => 'required|string|max:255',
             'meeting_participation_score' => 'boolean',
@@ -55,6 +62,7 @@ class StoreDepartmentRequest extends FormRequest
         return [
             'name.required' => 'Le nom du département est obligatoire',
             'name.max' => 'Le nom du département ne peut pas dépasser 255 caractères',
+            'name.unique' => 'Un département avec ce nom existe déjà dans cette entreprise',
             'active.boolean' => 'Le statut actif doit être vrai ou faux',
             'slug.unique' => 'Ce slug est déjà utilisé dans cette entreprise',
             'slug.max' => 'Le slug ne peut pas dépasser 255 caractères',

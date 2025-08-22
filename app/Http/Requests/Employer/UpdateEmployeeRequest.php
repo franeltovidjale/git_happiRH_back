@@ -58,7 +58,6 @@ class UpdateEmployeeRequest extends FormRequest
                 'unique:members,username,' . $memberId,
             ],
             'role' => 'sometimes|required|string|max:255',
-            'designation' => 'sometimes|nullable|string|max:255',
             'joining_date' => 'sometimes|required|date',
             'location_id' => 'sometimes|nullable|exists:locations,id',
 
@@ -120,7 +119,7 @@ class UpdateEmployeeRequest extends FormRequest
             'username.unique' => 'Ce nom d\'utilisateur est déjà utilisé',
             'role.required' => 'Le rôle est obligatoire',
             'role.max' => 'Le rôle ne peut pas dépasser 255 caractères',
-            'designation.max' => 'La désignation ne peut pas dépasser 255 caractères',
+
             'joining_date.required' => 'La date d\'embauche est obligatoire',
             'joining_date.date' => 'La date d\'embauche doit être une date valide',
             'location_id.exists' => 'L\'emplacement sélectionné n\'existe pas',

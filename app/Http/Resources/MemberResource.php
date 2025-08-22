@@ -21,7 +21,7 @@ class MemberResource extends JsonResource
             'status' => $this->status,
             'username' => $this->username,
             'code' => $this->code,
-            'designation' => $this->designation,
+            'role' => $this->role,
             'joining_date' => $this->joining_date,
             'user' => $this->whenLoaded('user', function () {
                 return [

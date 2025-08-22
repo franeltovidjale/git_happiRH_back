@@ -32,7 +32,7 @@ class StoreEmployeeRequest extends FormRequest
             'birth_date' => [
                 'required',
                 'date',
-                'before_or_equal:'.now()->subYears(18)->format('Y-m-d'),
+                'before_or_equal:' . now()->subYears(18)->format('Y-m-d'),
             ],
             'marital_status' => 'nullable|in:single,married,divorced,widowed',
             'gender' => 'required|in:male,female,other',
@@ -47,7 +47,6 @@ class StoreEmployeeRequest extends FormRequest
             // Professional Information
             'username' => 'nullable|string|unique:employees,username',
             'role' => 'required|string|max:255',
-            'designation' => 'nullable|string|max:255',
             'joining_date' => 'required|date',
             'location_id' => 'nullable|exists:locations,id',
             'department_id' => 'required|exists:departments,id',
@@ -115,7 +114,7 @@ class StoreEmployeeRequest extends FormRequest
             'username.unique' => 'Ce nom d\'utilisateur est déjà utilisé',
             'role.required' => 'Le rôle est obligatoire',
             'role.max' => 'Le rôle ne peut pas dépasser 255 caractères',
-            'designation.max' => 'La désignation ne peut pas dépasser 255 caractères',
+
             'joining_date.required' => 'La date d\'embauche est obligatoire',
             'joining_date.date' => 'La date d\'embauche doit être une date valide',
             'location_id.exists' => 'L\'emplacement sélectionné n\'existe pas',

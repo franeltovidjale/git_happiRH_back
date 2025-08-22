@@ -20,7 +20,7 @@ return new class extends Migration
             $table->boolean('active')->default(true);
             $table->timestamps();
 
-            $table->unique(['member_id', 'weekday']);
+            $table->unique(['member_id', 'weekday', 'start_hour']);
         });
     }
 

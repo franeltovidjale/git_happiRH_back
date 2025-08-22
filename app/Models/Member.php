@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
@@ -26,7 +27,7 @@ use Illuminate\Support\Str;
  * @property \Carbon\Carbon|null $birth_date
  * @property string $marital_status
  * @property string|null $nationality
- * @property string|null $designation
+ * @property string|null $role
  * @property \Carbon\Carbon|null $joining_date
  * @property int|null $location_id
  * @property string|null $status_note
@@ -105,7 +106,7 @@ class Member extends Model
         'birth_date',
         'marital_status',
         'nationality',
-        'designation',
+        'role',
         'joining_date',
         'location_id',
         'status_note',
@@ -130,8 +131,12 @@ class Member extends Model
     {
         parent::boot();
 
-        static::creating(function ($model) {
-            $model->code = strtoupper(Str::random(10));
+        static::creating(function (Member $model) {
+            do {
+                $code = $model->user_id . str_pad(rand(1, 999999), 4, '0', STR_PAD_LEFT);
+            } while (static::where('code', $code)->exists());
+
+            $model->code = $code;
         });
     }
 
@@ -233,5 +238,40 @@ class Member extends Model
     public function contactPerson(): HasOne
     {
         return $this->hasOne(MemberContactPerson::class);
+    }
+
+    /**
+     * Get the working days for the member.
+     *
+     * @return HasMany<WorkingDay>
+     */
+    public function workDays(): HasMany
+    {
+        return $this->hasMany(WorkingDay::class);
+    }
+
+    /**
+     * Scope to search members by name, email, first name, and phone number.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param string $search
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeSearch($query, array  $filters): \Illuminate\Database\Eloquent\Builder
+    {
+
+        $search = $filters['search'] ?? '';
+
+        return $query->when(
+            strlen($search) >= 3,
+            function ($query) use ($search) {
+                $query->whereHas('user', function ($userQuery) use ($search) {
+                    $userQuery->where('email', 'like', "%{$search}%")
+                        ->orWhere('last_name', 'like', "%{$search}%")
+                        ->orWhere('first_name', 'like', "%{$search}%")
+                        ->orWhere('phone', 'like', "%{$search}%");
+                });
+            }
+        );
     }
 }

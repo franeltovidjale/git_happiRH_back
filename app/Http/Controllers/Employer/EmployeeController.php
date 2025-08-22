@@ -18,6 +18,7 @@ use App\Models\MemberSalary;
 use App\Models\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
@@ -29,12 +30,13 @@ class EmployeeController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
         $enterprise = $this->getActiveEnterprise();
         $members = $enterprise->members()
+            ->search($request->all())
             ->where('type', Member::TYPE_EMPLOYEE)
-            ->with(['user', 'address', 'banking', 'salary', 'employment'])
+            ->with(['user', 'address', 'banking', 'salary', 'employment', 'departments'])
             ->get();
 
         return $this->ok('Liste des employés récupérée avec succès', EmployeeResource::collection($members));
@@ -71,7 +73,7 @@ class EmployeeController extends Controller
                 'marital_status' => $request->marital_status,
                 'nationality' => $request->nationality,
                 'username' => $request->username,
-                'designation' => $request->designation,
+                'role' => $request->role,
                 'joining_date' => $request->joining_date,
                 'status_by' => auth()->id(),
                 'status_date' => now(),
@@ -129,6 +131,11 @@ class EmployeeController extends Controller
                 ]);
             }
 
+            // Associate department if provided
+            if ($request->filled('department_id')) {
+                $member->departments()->attach($request->department_id);
+            }
+
             Mail::to($user->email)->send(new EmployeeRegisteredMail(
                 $user->first_name,
                 $user->last_name,
@@ -161,7 +168,17 @@ class EmployeeController extends Controller
         try {
             $enterprise = $this->getActiveEnterprise();
 
-            $member = Member::with(['user', 'enterprise', 'address', 'banking', 'salary', 'employment', 'contactPerson'])
+            $member = Member::with([
+                'user',
+                'enterprise',
+                'address',
+                'banking',
+                'salary',
+                'employment',
+                'contactPerson',
+                'departments',
+                'workDays'
+            ])
                 ->where('enterprise_id', $enterprise->id)
                 ->findOrFail($id);
 
@@ -205,7 +222,7 @@ class EmployeeController extends Controller
                 'marital_status',
                 'nationality',
                 'username',
-                'designation',
+                'role',
                 'joining_date',
                 'location_id',
             ]));
@@ -269,6 +286,11 @@ class EmployeeController extends Controller
                     ['member_id' => $member->id],
                     array_filter($mappedContactData) // Remove null values
                 );
+            }
+
+            // Update department association if provided
+            if ($request->filled('department_id')) {
+                $member->departments()->sync([$request->department_id]);
             }
 
             DB::commit();

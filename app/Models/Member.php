@@ -270,6 +270,11 @@ class Member extends Model
 
         $search = $filters['search'] ?? '';
 
+        // Filter by enterprise if provided
+        if (isset($filters['enterprise_id']) && intval($filters['enterprise_id']) > 0) {
+            $query->where('enterprise_id', $filters['enterprise_id']);
+        }
+
         return $query->when(
             strlen($search) >= 3,
             function ($query) use ($search) {

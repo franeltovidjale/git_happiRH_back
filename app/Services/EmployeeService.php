@@ -16,6 +16,7 @@ class EmployeeService
             ->where('type', Member::TYPE_EMPLOYEE)
             ->search($filters);
         $snippets = ['user', ...$snippets];
+
         return $query->get();
     }
 
@@ -31,7 +32,7 @@ class EmployeeService
 
         $snippets = ['user', ...$snippets];
 
-        if (!empty($snippets)) {
+        if (! empty($snippets)) {
             $query->with($snippets);
         }
 

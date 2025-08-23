@@ -137,6 +137,21 @@ class EmployeeResource extends JsonResource
                     ];
                 });
             }),
+            'experiences' => $this->whenLoaded('experiences', function () {
+                return $this->experiences->map(function ($experience) {
+                    return [
+                        'id' => $experience->id,
+                        'job_title' => $experience->job_title,
+                        'sector' => $experience->sector,
+                        'company_name' => $experience->company_name,
+                        'start_date' => $experience->start_date,
+                        'end_date' => $experience->end_date,
+                        'responsibilities' => $experience->responsibilities,
+                        'created_at' => $experience->created_at,
+                        'updated_at' => $experience->updated_at,
+                    ];
+                });
+            }),
         ];
     }
 }

@@ -49,11 +49,11 @@ class EmployeeController extends Controller
 
             $invalidSnippets = array_diff($snippets, $allowedSnippets);
             if (! empty($invalidSnippets)) {
-                return $this->badRequest('Snippets invalides: ' . implode(', ', $invalidSnippets));
+                return $this->badRequest('Snippets invalides: '.implode(', ', $invalidSnippets));
             }
         }
 
-        logger()->info('Snippets: ' . json_encode($snippets));
+        logger()->info('Snippets: '.json_encode($snippets));
 
         $enterprise = $this->getActiveEnterprise();
 
@@ -173,12 +173,12 @@ class EmployeeController extends Controller
             return $this->created('Employé créé avec succès', new EmployeeResource($member));
         } catch (\Exception $e) {
             DB::rollback();
-            logger()->error('Erreur lors de la création de l\'employé: ' . $e->getMessage(), [
+            logger()->error('Erreur lors de la création de l\'employé: '.$e->getMessage(), [
                 'exception' => $e,
                 'request_data' => $request->validated(),
             ]);
 
-            return $this->serverError('Erreur lors de la création de l\'employé: ' . $e->getMessage());
+            return $this->serverError('Erreur lors de la création de l\'employé: '.$e->getMessage());
         }
     }
 
@@ -200,7 +200,7 @@ class EmployeeController extends Controller
 
                 $invalidSnippets = array_diff($snippets, $allowedSnippets);
                 if (! empty($invalidSnippets)) {
-                    return $this->badRequest('Snippets invalides: ' . implode(', ', $invalidSnippets));
+                    return $this->badRequest('Snippets invalides: '.implode(', ', $invalidSnippets));
                 }
             }
 
@@ -212,7 +212,7 @@ class EmployeeController extends Controller
                 $snippets
             );
 
-            if (!$member) {
+            if (! $member) {
                 return $this->notFound('Employé introuvable');
             }
 
@@ -340,7 +340,7 @@ class EmployeeController extends Controller
             }
             logger()->error($e);
 
-            return $this->serverError('Erreur lors de la mise à jour de l\'employé: ' . $e->getMessage());
+            return $this->serverError('Erreur lors de la mise à jour de l\'employé: '.$e->getMessage());
         }
     }
 
@@ -365,7 +365,7 @@ class EmployeeController extends Controller
             $oldStatus = $member->status;
             $newStatus = $request->status;
             if ($newStatus === $oldStatus) {
-                return $this->ok('Le statut de l\'employé est déjà ' . $newStatus);
+                return $this->ok('Le statut de l\'employé est déjà '.$newStatus);
             }
 
             // Update member status
@@ -409,7 +409,7 @@ class EmployeeController extends Controller
             }
             logger()->error($e);
 
-            return $this->serverError('Erreur lors du changement de statut de l\'employé: ' . $e->getMessage());
+            return $this->serverError('Erreur lors du changement de statut de l\'employé: '.$e->getMessage());
         }
     }
 

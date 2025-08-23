@@ -17,6 +17,7 @@ use App\Models\MemberEmployment;
 use App\Models\MemberSalary;
 use App\Models\User;
 use App\Services\EmployeeService;
+use App\Services\UserService;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -29,7 +30,8 @@ use Illuminate\Validation\ValidationException;
 class EmployeeController extends Controller
 {
     public function __construct(
-        private EmployeeService $employeeService
+        private EmployeeService $employeeService,
+        private UserService $userService
     ) {}
 
     /**
@@ -49,11 +51,10 @@ class EmployeeController extends Controller
 
             $invalidSnippets = array_diff($snippets, $allowedSnippets);
             if (! empty($invalidSnippets)) {
-                return $this->badRequest('Snippets invalides: '.implode(', ', $invalidSnippets));
+                return $this->badRequest('Snippets invalides: ' . implode(', ', $invalidSnippets));
             }
         }
 
-        logger()->info('Snippets: '.json_encode($snippets));
 
         $enterprise = $this->getActiveEnterprise();
 
@@ -173,12 +174,12 @@ class EmployeeController extends Controller
             return $this->created('Employé créé avec succès', new EmployeeResource($member));
         } catch (\Exception $e) {
             DB::rollback();
-            logger()->error('Erreur lors de la création de l\'employé: '.$e->getMessage(), [
+            logger()->error('Erreur lors de la création de l\'employé: ' . $e->getMessage(), [
                 'exception' => $e,
                 'request_data' => $request->validated(),
             ]);
 
-            return $this->serverError('Erreur lors de la création de l\'employé: '.$e->getMessage());
+            return $this->serverError('Erreur lors de la création de l\'employé: ' . $e->getMessage());
         }
     }
 
@@ -200,7 +201,7 @@ class EmployeeController extends Controller
 
                 $invalidSnippets = array_diff($snippets, $allowedSnippets);
                 if (! empty($invalidSnippets)) {
-                    return $this->badRequest('Snippets invalides: '.implode(', ', $invalidSnippets));
+                    return $this->badRequest('Snippets invalides: ' . implode(', ', $invalidSnippets));
                 }
             }
 
@@ -340,7 +341,7 @@ class EmployeeController extends Controller
             }
             logger()->error($e);
 
-            return $this->serverError('Erreur lors de la mise à jour de l\'employé: '.$e->getMessage());
+            return $this->serverError('Erreur lors de la mise à jour de l\'employé: ' . $e->getMessage());
         }
     }
 
@@ -365,7 +366,7 @@ class EmployeeController extends Controller
             $oldStatus = $member->status;
             $newStatus = $request->status;
             if ($newStatus === $oldStatus) {
-                return $this->ok('Le statut de l\'employé est déjà '.$newStatus);
+                return $this->ok('Le statut de l\'employé est déjà ' . $newStatus);
             }
 
             // Update member status
@@ -409,7 +410,7 @@ class EmployeeController extends Controller
             }
             logger()->error($e);
 
-            return $this->serverError('Erreur lors du changement de statut de l\'employé: '.$e->getMessage());
+            return $this->serverError('Erreur lors du changement de statut de l\'employé: ' . $e->getMessage());
         }
     }
 
@@ -442,6 +443,40 @@ class EmployeeController extends Controller
             }
 
             return $this->serverError('Impossible de supprimer l\'employé actuellement');
+        }
+    }
+
+    /**
+     * Update employee profile photo.
+     */
+    public function updateEmployeePhoto(Request $request, string $id): JsonResponse
+    {
+        $request->validate([
+            'photo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        try {
+            $enterprise = $this->getActiveEnterprise();
+
+            $member = Member::where('enterprise_id', $enterprise->id)
+                ->where('id', $id)
+                ->first();
+
+            if (! $member) {
+                return $this->notFound('Employé introuvable');
+            }
+
+            $photo = $request->file('photo');
+
+            $this->userService->updatePhoto($member->user, $photo);
+
+            $updatedUser = User::find($member->user->id);
+
+            return $this->ok('Photo de profil de l\'employé mise à jour avec succès', $updatedUser->only(['photo', 'id']));
+        } catch (\Exception $e) {
+            logger()->error($e);
+
+            return $this->serverError('Erreur lors de la mise à jour de la photo de profil de l\'employé');
         }
     }
 }

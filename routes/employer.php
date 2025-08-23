@@ -9,12 +9,14 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('employer')->group(function () {
     Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('profile', [ProfileController::class, 'show'])->name('profile.show');
+        Route::post('profile/photo', [ProfileController::class, 'updateProfilePhoto']);
         Route::post('set-active-enterprise', [ProfileController::class, 'setActiveEnterprise'])->name('set-active-enterprise');
     });
 
     Route::middleware(['auth:sanctum', 'active.enterprise', 'employer'])->group(function () {
         Route::apiResource('employees', EmployeeController::class);
         Route::put('employees/{employee}/status', [EmployeeController::class, 'changeStatus']);
+        Route::post('employees/{employee}/photo', [EmployeeController::class, 'updateEmployeePhoto']);
         Route::apiResource('departments', DepartmentController::class);
         Route::prefix('members')->group(function () {
             Route::apiResource('experiences', ExperienceController::class)

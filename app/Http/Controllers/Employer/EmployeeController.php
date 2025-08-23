@@ -16,6 +16,7 @@ use App\Models\MemberContactPerson;
 use App\Models\MemberEmployment;
 use App\Models\MemberSalary;
 use App\Models\User;
+use App\Services\EmployeeService;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -27,17 +28,38 @@ use Illuminate\Validation\ValidationException;
 
 class EmployeeController extends Controller
 {
+    public function __construct(
+        private EmployeeService $employeeService
+    ) {}
+
     /**
      * Display a listing of the resource.
      */
     public function index(Request $request): JsonResponse
     {
+        $allowedSnippets = ['address', 'banking', 'salary', 'employment', 'departments', 'experiences'];
+
+        $snippets = [];
+
+        if ($request->has('snippets')) {
+            $snippets = array_map(
+                'trim',
+                explode(',', $request->input('snippets'))
+            );
+
+            $invalidSnippets = array_diff($snippets, $allowedSnippets);
+            if (! empty($invalidSnippets)) {
+                return $this->badRequest('Snippets invalides: ' . implode(', ', $invalidSnippets));
+            }
+        }
+
+        logger()->info('Snippets: ' . json_encode($snippets));
+
         $enterprise = $this->getActiveEnterprise();
-        $members = $enterprise->members()
-            ->search($request->all())
-            ->where('type', Member::TYPE_EMPLOYEE)
-            ->with(['user', 'address', 'banking', 'salary', 'employment', 'departments'])
-            ->get();
+
+        $request->merge(['enterprise_id' => $enterprise->id]);
+
+        $members = $this->employeeService->fetchList($request->all(), $snippets);
 
         return $this->ok('Liste des employés récupérée avec succès', EmployeeResource::collection($members));
     }
@@ -163,30 +185,42 @@ class EmployeeController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id): JsonResponse
+    public function show(Request $request, string $id): JsonResponse
     {
         try {
+            $allowedSnippets = ['address', 'banking', 'salary', 'employment', 'contactPerson', 'departments', 'workDays', 'experiences'];
+
+            $snippets = [];
+
+            if ($request->has('snippets')) {
+                $snippets = array_map(
+                    'trim',
+                    explode(',', $request->input('snippets'))
+                );
+
+                $invalidSnippets = array_diff($snippets, $allowedSnippets);
+                if (! empty($invalidSnippets)) {
+                    return $this->badRequest('Snippets invalides: ' . implode(', ', $invalidSnippets));
+                }
+            }
+
             $enterprise = $this->getActiveEnterprise();
 
-            $member = Member::with([
-                'user',
-                'enterprise',
-                'address',
-                'banking',
-                'salary',
-                'employment',
-                'contactPerson',
-                'departments',
-                'workDays'
-            ])
-                ->where('enterprise_id', $enterprise->id)
-                ->findOrFail($id);
+            $member = $this->employeeService->fetchOne(
+                (int) $id,
+                ['enterprise_id' => $enterprise->id],
+                $snippets
+            );
+
+            if (!$member) {
+                return $this->notFound('Employé introuvable');
+            }
 
             return $this->ok('Employé récupéré avec succès', new EmployeeResource($member));
         } catch (\Exception $e) {
             logger()->error($e);
 
-            return $this->notFound('Employé introuvable');
+            return $this->serverError('Erreur lors de la récupération de l\'employé');
         }
     }
 

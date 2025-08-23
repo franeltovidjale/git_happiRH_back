@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Employer\DepartmentController;
 use App\Http\Controllers\Employer\EmployeeController;
+use App\Http\Controllers\Employer\ExperienceController;
 use App\Http\Controllers\Employer\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -15,5 +16,9 @@ Route::prefix('employer')->group(function () {
         Route::apiResource('employees', EmployeeController::class);
         Route::put('employees/{employee}/status', [EmployeeController::class, 'changeStatus']);
         Route::apiResource('departments', DepartmentController::class);
+        Route::prefix('members')->group(function () {
+            Route::apiResource('experiences', ExperienceController::class)
+                ->only(['store', 'update', 'destroy']);
+        });
     });
 });

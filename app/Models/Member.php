@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Str;
 
 /**
  * Member Model
@@ -133,7 +132,7 @@ class Member extends Model
 
         static::creating(function (Member $model) {
             do {
-                $code = $model->user_id . str_pad(rand(1, 999999), 4, '0', STR_PAD_LEFT);
+                $code = $model->user_id.str_pad(rand(1, 999999), 4, '0', STR_PAD_LEFT);
             } while (static::where('code', $code)->exists());
 
             $model->code = $code;
@@ -251,13 +250,22 @@ class Member extends Model
     }
 
     /**
+     * Get the experiences for the member.
+     *
+     * @return HasMany<Experience>
+     */
+    public function experiences(): HasMany
+    {
+        return $this->hasMany(Experience::class);
+    }
+
+    /**
      * Scope to search members by name, email, first name, and phone number.
      *
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     * @param string $search
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param  string  $search
      */
-    public function scopeSearch($query, array  $filters): \Illuminate\Database\Eloquent\Builder
+    public function scopeSearch($query, array $filters): \Illuminate\Database\Eloquent\Builder
     {
 
         $search = $filters['search'] ?? '';

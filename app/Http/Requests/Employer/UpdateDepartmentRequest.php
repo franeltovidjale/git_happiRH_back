@@ -29,7 +29,7 @@ class UpdateDepartmentRequest extends FormRequest
 
         return [
             'name' => [
-                'required',
+                'nullable',
                 'string',
                 'max:255',
                 function ($attribute, $value, $fail) use ($enterpriseId, $departmentId) {
@@ -46,16 +46,9 @@ class UpdateDepartmentRequest extends FormRequest
                 },
             ],
             'active' => 'boolean',
-            'slug' => [
-                'nullable',
-                'string',
-                'max:255',
-                Rule::unique('departments')->where(function ($query) use ($enterpriseId) {
-                    return $query->where('enterprise_id', $enterpriseId);
-                })->ignore($departmentId),
-            ],
+
             'late_penalty' => 'boolean',
-            'work_model' => 'required|in:' . implode(',', Department::WORK_MODEL_OPTIONS),
+            'work_model' => 'nullable|in:' . implode(',', Department::WORK_MODEL_OPTIONS),
             'meeting_participation_score' => 'boolean',
             'attendance_score' => 'boolean',
             'overtime_recording_score' => 'nullable|string|max:255',
@@ -72,13 +65,11 @@ class UpdateDepartmentRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'name.required' => 'Le nom du département est obligatoire',
             'name.max' => 'Le nom du département ne peut pas dépasser 255 caractères',
             'active.boolean' => 'Le statut actif doit être vrai ou faux',
             'slug.unique' => 'Ce slug est déjà utilisé dans cette entreprise',
             'slug.max' => 'Le slug ne peut pas dépasser 255 caractères',
             'late_penalty.boolean' => 'La pénalité de retard doit être vrai ou faux',
-            'work_model.required' => 'Le modèle de travail est obligatoire',
             'work_model.in' => 'Le modèle de travail doit être remote, hybrid ou in-office',
             'meeting_participation_score.boolean' => 'Le score de participation aux réunions doit être vrai ou faux',
             'attendance_score.boolean' => 'Le score de présence doit être vrai ou faux',

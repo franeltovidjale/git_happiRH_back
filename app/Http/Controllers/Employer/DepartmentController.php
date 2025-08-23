@@ -7,6 +7,7 @@ use App\Http\Requests\Employer\StoreDepartmentRequest;
 use App\Http\Requests\Employer\UpdateDepartmentRequest;
 use App\Http\Resources\DepartmentResource;
 use App\Models\Department;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -73,47 +74,48 @@ class DepartmentController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $slug): JsonResponse
+    public function show(int $id): JsonResponse
     {
         try {
             $enterprise = $this->getActiveEnterprise();
 
             $department = Department::with(['enterprise', 'members.user', 'supervisor.user'])
                 ->where('enterprise_id', $enterprise->id)
-                ->where('slug', $slug)
+                ->where('id', $id)
                 ->firstOrFail();
             return $this->ok('Département récupéré avec succès', new DepartmentResource($department));
         } catch (\Exception $e) {
             Log::error($e);
-            return $this->notFound('Département introuvable');
+            if ($e instanceof ModelNotFoundException) {
+                return $this->notFound('Département introuvable');
+            }
+            return $this->serverError('Erreur lors de la récupération du département');
         }
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateDepartmentRequest $request, string $slug): JsonResponse
+    public function update(UpdateDepartmentRequest $request, int $id): JsonResponse
     {
+        DB::beginTransaction();
         try {
             $enterprise = $this->getActiveEnterprise();
 
             $department = Department::where('enterprise_id', $enterprise->id)
-                ->where('slug', $slug)
+                ->where('id', $id)
                 ->firstOrFail();
 
-            DB::beginTransaction();
-
             $department->update([
-                'name' => $request->name,
+                'name' => $request->name ?? $department->name,
                 'active' => $request->boolean('active', $department->active),
-                'slug' => $request->slug,
                 'late_penalty' => $request->boolean('late_penalty', $department->late_penalty),
-                'work_model' => $request->work_model,
+                'work_model' => $request->work_model ?? $department->work_model,
                 'meeting_participation_score' => $request->boolean('meeting_participation_score', $department->meeting_participation_score),
                 'attendance_score' => $request->boolean('attendance_score', $department->attendance_score),
-                'overtime_recording_score' => $request->overtime_recording_score,
-                'overtime_clocking_score' => $request->overtime_clocking_score,
-                'supervisor_id' => $request->supervisor_id,
+                'overtime_recording_score' => $request->overtime_recording_score ?? $department->overtime_recording_score,
+                'overtime_clocking_score' => $request->overtime_clocking_score ?? $department->overtime_clocking_score,
+                'supervisor_id' => $request->supervisor_id ?? $department->supervisor_id,
             ]);
 
             DB::commit();
@@ -129,15 +131,15 @@ class DepartmentController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $slug): JsonResponse
+    public function destroy(int $id): JsonResponse
     {
+        DB::beginTransaction();
         try {
-            DB::beginTransaction();
 
             $enterprise = $this->getActiveEnterprise();
 
             $department = Department::where('enterprise_id', $enterprise->id)
-                ->where('slug', $slug)
+                ->where('id', $id)
                 ->firstOrFail();
 
             // Check if department has members
@@ -153,6 +155,9 @@ class DepartmentController extends Controller
             return $this->ok('Département supprimé avec succès');
         } catch (\Exception $e) {
             DB::rollback();
+            if ($e instanceof ModelNotFoundException) {
+                return $this->notFound('Département introuvable');
+            }
             logger()->error($e);
             return $this->serverError('Erreur lors de la suppression du département');
         }

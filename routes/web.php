@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\Admin\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\Admin\NewPasswordController;
 use App\Http\Controllers\Auth\Admin\PasswordResetLinkController;
 use App\Http\Controllers\Auth\Admin\RegisteredUserController;
+use App\Http\Controllers\Admin\EnterpriseController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -62,4 +63,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+
+    Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
+        ->name('logout');
+
+    Route::prefix('enterprises')->group(function () {
+        Route::get('/', [EnterpriseController::class, 'index'])->name('enterprises.index');
+    });
 });

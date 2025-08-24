@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->morphs('documentable');
             $table->string('key');
+            $table->string('name');
             $table->string('path')->nullable();
             $table->boolean('active')->default(true);
             $table->enum('scope', ['private', 'public']);

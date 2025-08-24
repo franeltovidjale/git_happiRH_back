@@ -16,8 +16,8 @@ class SettingSeeder extends Seeder
         $settings = [
             [
                 'key' => 'logoPath',
-                'value' => '/images/logo.png',
-                'type' => 'input',
+                'value' => '/logo.svg',
+                'type' => 'public-file',
                 'label' => 'Logo Path',
                 'description' => 'Path to the application logo',
                 'editable' => true,

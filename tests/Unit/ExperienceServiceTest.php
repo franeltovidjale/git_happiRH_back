@@ -14,32 +14,7 @@ beforeEach(function () {
     $this->service = new ExperienceService;
 });
 
-// Helper function to create unique slugs
-function createUniqueSector($name = 'Technology')
-{
-    static $counter = 0;
-    $counter++;
 
-    return \App\Models\Sector::create([
-        'name' => $name,
-        'slug' => strtolower($name) . '-' . $counter,
-    ]);
-}
-
-// Helper function to create unique countries
-function createUniqueCountry($name = 'United States', $code = 'US')
-{
-    static $counter = 0;
-    $counter++;
-
-    return \App\Models\Country::create([
-        'name' => $name . ' ' . $counter,
-        'flag' => '🇺🇸',
-        'code' => $code . $counter,
-        'lang' => 'en',
-        'active' => true,
-    ]);
-}
 
 describe('ExperienceService', function () {
     describe('create', function () {

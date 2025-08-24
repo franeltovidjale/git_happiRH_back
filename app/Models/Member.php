@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use App\Contracts\Documentable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
@@ -44,7 +46,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property-read MemberSalary|null $salary
  * @property-read MemberEmployment|null $employment
  */
-class Member extends Model
+class Member extends Model implements Documentable
 {
     use HasFactory, SoftDeletes;
 
@@ -132,7 +134,7 @@ class Member extends Model
 
         static::creating(function (Member $model) {
             do {
-                $code = $model->user_id.str_pad(rand(1, 999999), 4, '0', STR_PAD_LEFT);
+                $code = $model->user_id . str_pad(rand(1, 999999), 4, '0', STR_PAD_LEFT);
             } while (static::where('code', $code)->exists());
 
             $model->code = $code;
@@ -257,6 +259,32 @@ class Member extends Model
     public function experiences(): HasMany
     {
         return $this->hasMany(Experience::class);
+    }
+
+    /**
+     * Get the documents for this member.
+     *
+     * @return MorphMany<Document>
+     */
+    public function documents(): MorphMany
+    {
+        return $this->morphMany(Document::class, 'documentable');
+    }
+
+    /**
+     * Get the enterprise ID for this documentable model.
+     */
+    public function getEnterpriseId(): int
+    {
+        return $this->enterprise_id;
+    }
+
+    /**
+     * Get the model's ID.
+     */
+    public function getId(): int
+    {
+        return $this->id;
     }
 
     /**

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Employer\DepartmentController;
+use App\Http\Controllers\Employer\DocumentController;
 use App\Http\Controllers\Employer\EmployeeController;
 use App\Http\Controllers\Employer\ExperienceController;
 use App\Http\Controllers\Employer\ProfileController;
@@ -18,6 +19,11 @@ Route::prefix('employer')->group(function () {
         Route::put('employees/{employee}/status', [EmployeeController::class, 'changeStatus']);
         Route::post('employees/{employee}/photo', [EmployeeController::class, 'updateEmployeePhoto']);
         Route::apiResource('departments', DepartmentController::class);
+
+        // Document routes
+        Route::post('documents/{document}', [DocumentController::class, 'update']);
+        Route::apiResource('documents', DocumentController::class)->only(['index', 'store', 'destroy']);
+
         Route::prefix('members')->group(function () {
             Route::apiResource('experiences', ExperienceController::class)
                 ->only(['store', 'update', 'destroy']);

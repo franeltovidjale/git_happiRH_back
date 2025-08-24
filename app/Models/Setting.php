@@ -23,6 +23,7 @@ class Setting extends Model
 {
     use HasFactory;
 
+    private static $object = [];
     /**
      * Allowed setting keys
      *
@@ -192,11 +193,13 @@ class Setting extends Model
 
         switch ($type) {
             case 'boolean':
-                return filter_var($value, FILTER_VALIDATE_BOOLEAN);
+                return filter_var($value, filter: FILTER_VALIDATE_BOOLEAN);
             case 'number':
                 return is_numeric($value) ? (strpos($value, '.') !== false ? (float) $value : (int) $value) : $value;
             case 'array':
                 return json_decode($value, true) ?? [];
+            case 'public-file':
+                return asset($value);
             case 'input':
             case 'textarea':
             case 'string':
@@ -221,11 +224,26 @@ class Setting extends Model
                 return (string) $value;
             case 'array':
                 return json_encode($value);
+            case 'public-file':
+                return asset($value);
             case 'input':
             case 'textarea':
             case 'string':
             default:
                 return (string) $value;
         }
+    }
+
+    public static function toObject(): array
+    {
+        if (!empty(static::$object)) {
+            return static::$object;
+        }
+
+        $settings = static::all();
+        foreach ($settings as $setting) {
+            static::$object[$setting->key] = static::parseValue($setting->value, $setting->type);
+        }
+        return static::$object;
     }
 }

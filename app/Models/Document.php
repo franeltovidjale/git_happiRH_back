@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 /**
  * @property int $id
@@ -25,6 +26,7 @@ class Document extends Model
         'documentable_id',
         'documentable_type',
         'key',
+        'name',
         'path',
         'active',
         'scope',
@@ -40,5 +42,12 @@ class Document extends Model
     public function documentable()
     {
         return $this->morphTo();
+    }
+
+    protected function path(): Attribute
+    {
+        return Attribute::make(
+            get: fn($value) => asset("storage/{$value}"),
+        );
     }
 }

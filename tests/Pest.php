@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Country;
+use App\Models\Sector;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -42,7 +44,31 @@ expect()->extend('toBeOne', function () {
 |
 */
 
-function something()
-{
-    // ..
+if (! function_exists('createUniqueSector')) {
+    function createUniqueSector($name = 'Technology')
+    {
+        static $counter = 0;
+        $counter++;
+
+        return Sector::create([
+            'name' => $name,
+            'slug' => strtolower($name) . '-' . $counter,
+        ]);
+    }
+}
+
+if (! function_exists('createUniqueCountry')) {
+    function createUniqueCountry($name = 'United States', $code = 'US')
+    {
+        static $counter = 0;
+        $counter++;
+
+        return Country::create([
+            'name' => $name . ' ' . $counter,
+            'flag' => '🇺🇸',
+            'code' => $code . $counter,
+            'lang' => 'en',
+            'active' => true,
+        ]);
+    }
 }

@@ -26,11 +26,11 @@ return new class extends Migration
             $table->json('status_stories')->nullable();
 
             $table->string('address')->nullable();
-            $table->text('logo')->nullable();
             $table->string('zip_code')->nullable();
             $table->string('email')->nullable();
             $table->string('phone')->nullable();
             $table->string('website')->nullable();
+            $table->string('logo')->nullable();
 
             $table->string('country_code');
             $table->foreign('country_code')->references('code')->on('countries')->cascadeOnDelete();

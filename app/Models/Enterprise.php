@@ -48,6 +48,8 @@ class Enterprise extends Model
 
     public const STATUS_INACTIVE = 'inactive';
 
+    public const STATUS_SUSPENDED = 'suspended';
+
     public const STATUS_STORIES = [
         self::STATUS_PENDING => self::STATUS_PENDING,
         self::STATUS_ACTIVE => self::STATUS_ACTIVE,
@@ -128,7 +130,6 @@ class Enterprise extends Model
         return $this->belongsTo(User::class, 'owner_id');
     }
 
-
     /**
      * Get the departments of the enterprise.
      */
@@ -151,6 +152,14 @@ class Enterprise extends Model
     public function sector(): BelongsTo
     {
         return $this->belongsTo(Sector::class, 'sector_id');
+    }
+
+    /**
+     * Get the country of the enterprise.
+     */
+    public function country(): BelongsTo
+    {
+        return $this->belongsTo(Country::class, 'country_code', 'code');
     }
 
     /**

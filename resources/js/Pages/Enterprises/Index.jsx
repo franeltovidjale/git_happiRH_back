@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Head } from "@inertiajs/react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import {
@@ -12,141 +11,7 @@ import {
     ChevronRight,
 } from "lucide-react";
 
-// Dummy data for the enterprise table
-const enterprises = [
-    {
-        id: 1,
-        photo: "https://placehold.co/40x40/f43f5e/fff?text=T",
-        name: "TechCorp Solutions",
-        enterpriseId: "ENT001",
-        sector: "Technology",
-        location: "Paris",
-        type: "SAS",
-        status: "Active",
-    },
-    {
-        id: 2,
-        photo: "https://placehold.co/40x40/3b82f6/fff?text=F",
-        name: "FinancePlus Group",
-        enterpriseId: "ENT002",
-        sector: "Finance",
-        location: "Lyon",
-        type: "SARL",
-        status: "Active",
-    },
-    {
-        id: 3,
-        photo: "https://placehold.co/40x40/16a34a/fff?text=C",
-        name: "Consulting Experts",
-        enterpriseId: "ENT003",
-        sector: "Consulting",
-        location: "Marseille",
-        type: "SAS",
-        status: "Active",
-    },
-    {
-        id: 4,
-        photo: "https://placehold.co/40x40/6366f1/fff?text=D",
-        name: "Digital Innovations",
-        enterpriseId: "ENT004",
-        sector: "Technology",
-        location: "Toulouse",
-        type: "SAS",
-        status: "Active",
-    },
-    {
-        id: 5,
-        photo: "https://placehold.co/40x40/f97316/fff?text=S",
-        name: "ServiceMaster Pro",
-        enterpriseId: "ENT005",
-        sector: "Services",
-        location: "Nantes",
-        type: "SARL",
-        status: "Active",
-    },
-    {
-        id: 6,
-        photo: "https://placehold.co/40x40/ef4444/fff?text=J",
-        name: "Jewelry & Co",
-        enterpriseId: "ENT006",
-        sector: "Retail",
-        location: "Bordeaux",
-        type: "SAS",
-        status: "Active",
-    },
-    {
-        id: 7,
-        photo: "https://placehold.co/40x40/22c55e/fff?text=M",
-        name: "Manufacturing Plus",
-        enterpriseId: "ENT007",
-        sector: "Manufacturing",
-        location: "Strasbourg",
-        type: "SAS",
-        status: "Active",
-    },
-    {
-        id: 8,
-        photo: "https://placehold.co/40x40/8b5cf6/fff?text=B",
-        name: "BuildTech Solutions",
-        enterpriseId: "ENT008",
-        sector: "Construction",
-        location: "Nice",
-        type: "SARL",
-        status: "Active",
-    },
-    {
-        id: 9,
-        photo: "https://placehold.co/40x40/f43f5e/fff?text=K",
-        name: "Kitchen & Dining",
-        enterpriseId: "ENT009",
-        sector: "Restaurant",
-        location: "Montpellier",
-        type: "SAS",
-        status: "Active",
-    },
-    {
-        id: 10,
-        photo: "https://placehold.co/40x40/3b82f6/fff?text=K",
-        name: "Knowledge Hub",
-        enterpriseId: "ENT010",
-        sector: "Education",
-        location: "Rennes",
-        type: "SAS",
-        status: "Active",
-    },
-    {
-        id: 11,
-        photo: "https://placehold.co/40x40/16a34a/fff?text=A",
-        name: "AutoMotive Pro",
-        enterpriseId: "ENT011",
-        sector: "Automotive",
-        location: "Lille",
-        type: "SARL",
-        status: "Active",
-    },
-    {
-        id: 12,
-        photo: "https://placehold.co/40x40/6366f1/fff?text=D",
-        name: "Design Studio",
-        enterpriseId: "ENT012",
-        sector: "Design",
-        location: "Grenoble",
-        type: "SAS",
-        status: "Active",
-    },
-];
-
-export default function EnterprisesIndex({ auth }) {
-    const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 10;
-    const totalPages = Math.ceil(enterprises.length / itemsPerPage);
-
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    const currentEnterprises = enterprises.slice(
-        startIndex,
-        startIndex + itemsPerPage
-    );
-
+export default function EnterprisesIndex({ auth, enterprises }) {
     return (
         <AuthenticatedLayout user={auth.user}>
             <Head title="Entreprises" />
@@ -177,150 +42,169 @@ export default function EnterprisesIndex({ auth }) {
 
                 {/* Table */}
                 <div className="overflow-hidden">
-                    <table className="w-full text-sm text-left text-gray-500">
-                        <thead className="text-xs text-gray-700 uppercase bg-gray-50">
-                            <tr>
-                                <th scope="col" className="px-6 py-3">
-                                    Nom entreprise
-                                </th>
-                                <th scope="col" className="px-6 py-3">
-                                    ID entreprise
-                                </th>
-                                <th scope="col" className="px-6 py-3">
-                                    Secteur
-                                </th>
-                                <th scope="col" className="px-6 py-3">
-                                    Localisation
-                                </th>
-                                <th scope="col" className="px-6 py-3">
-                                    Type
-                                </th>
-                                <th scope="col" className="px-6 py-3">
-                                    Status
-                                </th>
-                                <th scope="col" className="px-6 py-3">
-                                    Action
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {currentEnterprises.map((enterprise, index) => (
-                                <tr
-                                    key={enterprise.id}
-                                    className={`${
-                                        index % 2 === 0
-                                            ? "bg-white"
-                                            : "bg-gray-50"
-                                    } hover:bg-gray-100 transition-colors duration-200`}
-                                >
-                                    <td className="flex items-center px-6 py-4 space-x-3">
-                                        <img
-                                            src={enterprise.photo}
-                                            alt={enterprise.name}
-                                            className="w-8 h-8 rounded-full"
-                                        />
-                                        <span className="font-medium text-gray-800">
-                                            {enterprise.name}
-                                        </span>
-                                    </td>
-                                    <td className="px-6 py-4 text-gray-500">
-                                        {enterprise.enterpriseId}
-                                    </td>
-                                    <td className="px-6 py-4 text-gray-500">
-                                        {enterprise.sector}
-                                    </td>
-                                    <td className="px-6 py-4 text-gray-500">
-                                        {enterprise.location}
-                                    </td>
-                                    <td className="px-6 py-4 text-gray-500">
-                                        {enterprise.type}
-                                    </td>
-                                    <td className="px-6 py-4">
-                                        <span className="bg-blue-100 text-blue-600 text-xs font-medium px-2.5 py-0.5 rounded-full">
-                                            {enterprise.status}
-                                        </span>
-                                    </td>
-                                    <td className="px-6 py-4 space-x-2">
-                                        <button className="text-gray-400 transition-colors hover:text-gray-700">
-                                            <Eye className="w-5 h-5" />
-                                        </button>
-                                        <button className="text-gray-400 transition-colors hover:text-gray-700">
-                                            <Pencil className="w-5 h-5" />
-                                        </button>
-                                        <button className="text-gray-400 transition-colors hover:text-gray-700">
-                                            <Trash2 className="w-5 h-5" />
-                                        </button>
-                                    </td>
+                    {enterprises.data.length > 0 ? (
+                        <table className="w-full text-sm text-left text-gray-500">
+                            <thead className="text-xs text-gray-700 uppercase bg-gray-50">
+                                <tr>
+                                    <th scope="col" className="px-6 py-3">
+                                        Nom entreprise
+                                    </th>
+                                    <th scope="col" className="px-6 py-3">
+                                        ID entreprise
+                                    </th>
+                                    <th scope="col" className="px-6 py-3">
+                                        Secteur
+                                    </th>
+                                    <th scope="col" className="px-6 py-3">
+                                        Pays
+                                    </th>
+                                    <th scope="col" className="px-6 py-3">
+                                        Status
+                                    </th>
+                                    <th scope="col" className="px-6 py-3">
+                                        Action
+                                    </th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                {enterprises.data.map((enterprise, index) => (
+                                    <tr
+                                        key={enterprise.id}
+                                        className={`${
+                                            index % 2 === 0
+                                                ? "bg-white"
+                                                : "bg-gray-50"
+                                        } hover:bg-gray-100 transition-colors duration-200`}
+                                    >
+                                        <td className="flex items-center px-6 py-4 space-x-3">
+                                            {enterprise.logo ? (
+                                                <img
+                                                    src={enterprise.logo}
+                                                    alt={enterprise.name}
+                                                    className="object-cover w-8 h-8 rounded-full"
+                                                />
+                                            ) : (
+                                                <div className="flex justify-center items-center w-8 h-8 text-xs font-medium text-white bg-blue-500 rounded-full">
+                                                    {enterprise.name
+                                                        .charAt(0)
+                                                        .toUpperCase()}
+                                                </div>
+                                            )}
+                                            <span className="font-medium text-gray-800">
+                                                {enterprise.name}
+                                            </span>
+                                        </td>
+                                        <td className="px-6 py-4 text-gray-500">
+                                            {enterprise.code}
+                                        </td>
+                                        <td className="px-6 py-4 text-gray-500">
+                                            {enterprise.sector?.name || "-"}
+                                        </td>
+                                        <td className="px-6 py-4 text-gray-500">
+                                            {enterprise.country?.name ||
+                                                enterprise.country_code}
+                                        </td>
+                                        <td className="px-6 py-4">
+                                            <span
+                                                className={`text-xs font-medium px-2.5 py-0.5 rounded-full ${
+                                                    enterprise.status ===
+                                                    "active"
+                                                        ? "bg-green-100 text-green-600"
+                                                        : enterprise.status ===
+                                                          "pending"
+                                                        ? "bg-yellow-100 text-yellow-600"
+                                                        : enterprise.status ===
+                                                          "inactive"
+                                                        ? "bg-red-100 text-red-600"
+                                                        : "bg-gray-100 text-gray-600"
+                                                }`}
+                                            >
+                                                {enterprise.status}
+                                            </span>
+                                        </td>
+                                        <td className="px-6 py-4 space-x-2">
+                                            <button className="text-gray-400 transition-colors hover:text-gray-700">
+                                                <Eye className="w-5 h-5" />
+                                            </button>
+                                            <button className="text-gray-400 transition-colors hover:text-gray-700">
+                                                <Pencil className="w-5 h-5" />
+                                            </button>
+                                            <button className="text-gray-400 transition-colors hover:text-gray-700">
+                                                <Trash2 className="w-5 h-5" />
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    ) : (
+                        <div className="py-12 text-center">
+                            <div className="flex justify-center items-center mx-auto mb-4 w-24 h-24 bg-gray-100 rounded-full">
+                                <svg
+                                    className="w-12 h-12 text-gray-400"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                                    />
+                                </svg>
+                            </div>
+                            <h3 className="mb-2 text-lg font-medium text-gray-900">
+                                Aucune entreprise trouvée
+                            </h3>
+                            <p className="mb-6 text-gray-500">
+                                Il n'y a actuellement aucune entreprise
+                                enregistrée dans le système.
+                            </p>
+                            <button className="inline-flex items-center px-4 py-2 text-white bg-blue-600 rounded-lg transition-colors hover:bg-blue-700">
+                                <Plus className="mr-2 w-5 h-5" />
+                                Ajouter une entreprise
+                            </button>
+                        </div>
+                    )}
                 </div>
 
                 {/* Pagination */}
-                <div className="flex justify-between items-center mt-6 text-sm text-gray-500">
-                    <div className="flex items-center space-x-2">
-                        <span className="text-gray-500">Présentation</span>
-                        <select className="p-1 text-gray-500 rounded-lg border border-gray-300">
-                            <option>10</option>
-                        </select>
-                    </div>
-                    <div className="flex items-center space-x-4">
-                        <span className="text-gray-500">
-                            Affichage de {startIndex + 1} à{" "}
-                            {Math.min(
-                                startIndex + itemsPerPage,
-                                enterprises.length
-                            )}{" "}
-                            sur {enterprises.length} enregistrements
-                        </span>
-                        <div className="flex items-center space-x-1">
-                            <button
-                                onClick={() =>
-                                    setCurrentPage((prev) =>
-                                        Math.max(prev - 1, 1)
-                                    )
-                                }
-                                disabled={currentPage === 1}
-                                className={`p-2 rounded-lg border border-gray-300 ${
-                                    currentPage === 1
-                                        ? "text-gray-300"
-                                        : "text-gray-500 hover:text-gray-700 hover:bg-gray-100"
-                                }`}
-                            >
-                                <ChevronLeft className="w-4 h-4" />
-                            </button>
-                            {Array.from({ length: totalPages }, (_, i) => (
-                                <button
-                                    key={i + 1}
-                                    onClick={() => setCurrentPage(i + 1)}
-                                    className={`px-3 py-1 rounded-lg border border-gray-300 ${
-                                        currentPage === i + 1
-                                            ? "bg-blue-600 text-white"
-                                            : "bg-white text-gray-500 hover:text-gray-700 hover:bg-gray-100"
-                                    }`}
-                                >
-                                    {i + 1}
-                                </button>
-                            ))}
-                            <button
-                                onClick={() =>
-                                    setCurrentPage((prev) =>
-                                        Math.min(prev + 1, totalPages)
-                                    )
-                                }
-                                disabled={currentPage === totalPages}
-                                className={`p-2 rounded-lg border border-gray-300 ${
-                                    currentPage === totalPages
-                                        ? "text-gray-300"
-                                        : "text-gray-500 hover:text-gray-700 hover:bg-gray-100"
-                                }`}
-                            >
-                                <ChevronRight className="w-4 h-4" />
-                            </button>
+                {enterprises.links && enterprises.links.length > 3 && (
+                    <div className="flex justify-between items-center mt-6 text-sm text-gray-500">
+                        <div className="flex items-center space-x-2">
+                            <span className="text-gray-500">Présentation</span>
+                            <select className="p-1 text-gray-500 rounded-lg border border-gray-300">
+                                <option>10</option>
+                            </select>
+                        </div>
+                        <div className="flex items-center space-x-4">
+                            <span className="text-gray-500">
+                                Affichage de {enterprises.from} à{" "}
+                                {enterprises.to} sur {enterprises.total}{" "}
+                                enregistrements
+                            </span>
+                            <div className="flex items-center space-x-1">
+                                {enterprises.links.map((link, index) => (
+                                    <a
+                                        key={index}
+                                        href={link.url}
+                                        className={`px-3 py-1 rounded-lg border border-gray-300 ${
+                                            link.active
+                                                ? "bg-blue-600 text-white"
+                                                : link.url
+                                                ? "bg-white text-gray-500 hover:text-gray-700 hover:bg-gray-100"
+                                                : "bg-gray-100 text-gray-300 cursor-not-allowed"
+                                        }`}
+                                        dangerouslySetInnerHTML={{
+                                            __html: link.label,
+                                        }}
+                                    />
+                                ))}
+                            </div>
                         </div>
                     </div>
-                </div>
+                )}
             </div>
         </AuthenticatedLayout>
     );

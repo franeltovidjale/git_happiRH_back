@@ -1,15 +1,7 @@
 import { Head } from "@inertiajs/react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import {
-    Search,
-    Plus,
-    Filter,
-    Eye,
-    Pencil,
-    Trash2,
-    ChevronLeft,
-    ChevronRight,
-} from "lucide-react";
+import { Search, Plus, Filter, Eye, Pencil, Trash2 } from "lucide-react";
+import { Link } from "@inertiajs/react";
 
 export default function EnterprisesIndex({ auth, enterprises }) {
     return (
@@ -123,9 +115,15 @@ export default function EnterprisesIndex({ auth, enterprises }) {
                                             </span>
                                         </td>
                                         <td className="px-6 py-4 space-x-2">
-                                            <button className="text-gray-400 transition-colors hover:text-gray-700">
+                                            <Link
+                                                href={route(
+                                                    "enterprises.show",
+                                                    enterprise.id
+                                                )}
+                                                className="text-gray-400 transition-colors hover:text-gray-700"
+                                            >
                                                 <Eye className="w-5 h-5" />
-                                            </button>
+                                            </Link>
                                             <button className="text-gray-400 transition-colors hover:text-gray-700">
                                                 <Pencil className="w-5 h-5" />
                                             </button>

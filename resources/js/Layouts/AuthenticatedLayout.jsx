@@ -60,9 +60,9 @@ const SidebarSectionTitle = ({ title }) => {
 
 export default function Authenticated({ user, children }) {
     return (
-        <div className="flex min-h-screen font-sans bg-gray-100">
-            {/* Sidebar */}
-            <div className="flex-shrink-0 p-4 m-4 w-48 bg-white rounded-3xl shadow-lg">
+        <div className="flex min-h-screen font-sans bg-gray-50">
+            {/* Fixed Sidebar */}
+            <div className="fixed left-4 top-4 bottom-4 flex-shrink-0 p-4 w-48 bg-white rounded-3xl shadow-lg z-50">
                 {/* Logo */}
                 <ApplicationLogo className="w-10 h-10" />
 
@@ -168,10 +168,10 @@ export default function Authenticated({ user, children }) {
                 </div>
             </div>
 
-            {/* Main content area */}
-            <div className="flex flex-col flex-1 m-4">
+            {/* Main content area with left margin to accommodate fixed sidebar */}
+            <div className="flex flex-col flex-1 ml-56 mr-4">
                 {/* Dashboard Header */}
-                <header className="bg-white rounded-3xl border-b border-gray-100 shadow-sm">
+                <header className="bg-white border-b border-gray-300 shadow-sm">
                     <div className="px-6 py-4">
                         <div className="flex justify-between items-center">
                             {/* Breadcrumb */}

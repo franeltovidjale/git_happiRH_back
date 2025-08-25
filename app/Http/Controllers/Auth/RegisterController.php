@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\RegisterRequest;
-use App\Models\Member;
 use App\Models\Enterprise;
+use App\Models\Member;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\JsonResponse;
@@ -62,7 +62,6 @@ class RegisterController extends Controller
 
         $enterprise ??= $this->createEnterprise($user, $userData);
 
-
         Member::create([
             'user_id' => $user->id,
             'enterprise_id' => $enterprise->id,
@@ -70,14 +69,13 @@ class RegisterController extends Controller
             'status' => Member::STATUS_REQUESTED,
             'status_by' => $user->id,
             'status_date' => now(),
-            'status_stories' =>   encodeModelStatusStory(
+            'status_stories' => encodeModelStatusStory(
                 Member::STATUS_REQUESTED,
                 'Membre créé et en attente de validation',
                 $user->id
             ),
         ]);
     }
-
 
     /**
      * Create an enterprise
@@ -93,6 +91,7 @@ class RegisterController extends Controller
         return Enterprise::create([
             'name' => $userData['enterprise_name'],
             'sector_id' => $userData['sector_id'],
+            'plan_id' => $userData['plan_id'],
             'owner_id' => $user->id,
             'country_code' => $userData['country_code'],
             'status' => Enterprise::STATUS_PENDING,

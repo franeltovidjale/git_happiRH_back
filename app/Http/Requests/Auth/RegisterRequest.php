@@ -13,8 +13,6 @@ class RegisterRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
-     *
-     * @return bool
      */
     public function authorize(): bool
     {
@@ -38,6 +36,7 @@ class RegisterRequest extends FormRequest
             'enterprise_code' => 'required_if:type,employee|string|exists:enterprises,code',
             'enterprise_name' => 'required_if:type,employer|string|max:100',
             'sector_id' => 'required_if:type,employer|exists:sectors,id',
+            'plan_id' => 'required_if:type,employer|exists:plans,id',
             'country_code' => 'required_if:type,employer|string|exists:countries,code',
         ];
     }
@@ -63,6 +62,8 @@ class RegisterRequest extends FormRequest
             'enterprise_name.required_if' => 'Le nom de l\'entreprise est obligatoire pour un employeur',
             'sector_id.required_if' => 'Le secteur d\'activité est obligatoire pour un employeur',
             'sector_id.exists' => 'Le secteur sélectionné n\'existe pas',
+            'plan_id.required_if' => 'Le plan est obligatoire pour un employeur',
+            'plan_id.exists' => 'Le plan sélectionné n\'existe pas',
             'country_code.required_if' => 'Le pays est obligatoire pour un employeur',
             'country_code.exists' => 'Le pays sélectionné n\'existe pas',
         ];

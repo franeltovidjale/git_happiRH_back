@@ -68,6 +68,7 @@ class Enterprise extends Model
         'code',
         'owner_id',
         'sector_id',
+        'plan_id',
         'country_code',
         'address',
         'logo',
@@ -155,6 +156,14 @@ class Enterprise extends Model
     }
 
     /**
+     * Get the plan of the enterprise.
+     */
+    public function plan(): BelongsTo
+    {
+        return $this->belongsTo(Plan::class, 'plan_id');
+    }
+
+    /**
      * Get the country of the enterprise.
      */
     public function country(): BelongsTo
@@ -168,7 +177,7 @@ class Enterprise extends Model
     public function getLogoAttribute($value): string
     {
         if (! empty($value)) {
-            return asset('storage/' . $value);
+            return asset('storage/'.$value);
         }
 
         return asset('empty-image.png');

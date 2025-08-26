@@ -18,6 +18,8 @@ import {
     X,
     BanIcon,
     HomeIcon,
+    Ban,
+    StopCircle,
 } from "lucide-react";
 import EnterpriseDetails from "./Partials/EnterpriseDetails";
 import EmployeeList from "./Partials/EmployeeList";
@@ -39,38 +41,8 @@ export default function EnterpriseShow({
     enterprise,
     tabs,
     currentTab,
-    employees,
+    members,
 }) {
-    const getStatusColor = (status) => {
-        switch (status) {
-            case "active":
-                return "bg-emerald-500";
-            case "pending":
-                return "bg-amber-500";
-            case "inactive":
-                return "bg-gray-500";
-            case "suspended":
-                return "bg-red-500";
-            default:
-                return "bg-gray-500";
-        }
-    };
-
-    const getStatusIcon = (status) => {
-        switch (status) {
-            case "active":
-                return <CheckCircle className="h-4 w-4" />;
-            case "pending":
-                return <AlertCircle className="h-4 w-4" />;
-            case "inactive":
-                return <X className="h-4 w-4" />;
-            case "suspended":
-                return <BanIcon className="h-4 w-4" />;
-            default:
-                return <AlertCircle className="h-4 w-4" />;
-        }
-    };
-
     const handleTabChange = (value) => {
         router.visit(route("enterprises.show", enterprise.id), {
             data: { tab: value },
@@ -83,8 +55,8 @@ export default function EnterpriseShow({
         switch (tabKey) {
             case "dashboard":
                 return <EnterpriseDetails enterprise={enterprise} />;
-            case "employees":
-                return <EmployeeList employees={employees} />;
+            case "members":
+                return <EmployeeList employees={members} />;
             case "documents":
                 return <DocumentList documents={enterprise.documents} />;
             case "analytics":
@@ -139,10 +111,14 @@ export default function EnterpriseShow({
                             </h1>
                             <div className="flex items-center gap-4 text-gray-600 mb-3">
                                 <span className="text-sm">
-                                    {enterprise.members?.length || 0} employés •{" "}
-                                    {enterprise.departments?.length || 0}{" "}
-                                    départements
+                                    {enterprise.members_count || 0} membres
                                 </span>
+                                {enterprise.plan && (
+                                    <div className="inline-flex items-center px-3 py-1 text-xs font-medium bg-teal-50 text-teal-700 rounded-full border border-teal-200">
+                                        <span className="w-2 h-2 bg-teal-400 rounded-full mr-2"></span>
+                                        {enterprise.plan.name || "Free"}
+                                    </div>
+                                )}
                             </div>
                             {/* Follower avatars placeholder */}
                             <div className="flex -space-x-2">
@@ -157,25 +133,22 @@ export default function EnterpriseShow({
 
                         {/* Action Buttons */}
                         <div className="flex gap-3">
-                            <Link
-                                href={route("dashboard")}
-                                className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-all duration-300 shadow-md"
-                            >
+                            <button className="flex items-center gap-2 px-4 py-2 bg-teal-500 text-white rounded-lg hover:bg-teal-500/90 transition-all duration-300 shadow-md">
                                 <HomeIcon className="h-4 w-4" />
                                 <span className="text-sm font-medium">
-                                    Tableau de bord
-                                </span>
-                            </Link>
-                            <button className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-all duration-300">
-                                <Edit className="h-4 w-4" />
-                                <span className="text-sm font-medium">
-                                    Modifier
+                                    Activer
                                 </span>
                             </button>
-                            <button className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-all duration-300">
-                                <Megaphone className="h-4 w-4" />
+                            <button className="flex items-center gap-2 px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-500/90 transition-all duration-300 shadow-md">
+                                <StopCircle className="h-4 w-4" />
                                 <span className="text-sm font-medium">
-                                    Promouvoir
+                                    Rejecter
+                                </span>
+                            </button>
+                            <button className="flex items-center gap-2 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-500/90 transition-all duration-300 shadow-md">
+                                <Ban className="h-4 w-4" />
+                                <span className="text-sm font-medium">
+                                    Suspendre
                                 </span>
                             </button>
                         </div>

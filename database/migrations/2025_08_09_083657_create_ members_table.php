@@ -19,6 +19,7 @@ return new class extends Migration
             $table->foreignId('enterprise_id')->constrained('enterprises');
             $table->foreignId('user_id')->constrained('users');
             $table->foreignId('location_id')->nullable()->constrained('locations')->cascadeOnDelete();
+            $table->foreignId('department_id')->nullable()->constrained('departments')->cascadeOnDelete();
             $table->foreignId('status_by')->constrained('users')->cascadeOnDelete();
 
             // Core member information

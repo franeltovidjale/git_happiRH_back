@@ -10,7 +10,7 @@ export default function EmployeeList({ employees }) {
                         <Search className="absolute left-3 top-1/2 w-4 h-4 text-gray-400 -translate-y-1/2" />
                         <input
                             type="text"
-                            placeholder="Rechercher un employé"
+                            placeholder="Rechercher un membre"
                             className="py-2 pr-4 pl-9 rounded-lg border border-gray-300 focus:outline-none focus:ring-1 focus:ring-blue-500"
                         />
                     </div>
@@ -30,17 +30,15 @@ export default function EmployeeList({ employees }) {
                         <thead className="text-xs text-gray-700 uppercase bg-gray-50">
                             <tr>
                                 <th scope="col" className="px-6 py-3">
-                                    Employé
+                                    Membre
                                 </th>
                                 <th scope="col" className="px-6 py-3">
                                     Matricule
                                 </th>
                                 <th scope="col" className="px-6 py-3">
-                                    Département
+                                    Type
                                 </th>
-                                <th scope="col" className="px-6 py-3">
-                                    Poste
-                                </th>
+
                                 <th scope="col" className="px-6 py-3">
                                     Statut
                                 </th>
@@ -86,11 +84,27 @@ export default function EmployeeList({ employees }) {
                                         {employee.code || "-"}
                                     </td>
                                     <td className="px-6 py-4 text-gray-500">
-                                        {employee.department?.name || "-"}
+                                        <span
+                                            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                                                employee.type === "owner"
+                                                    ? "bg-purple-100 text-purple-800"
+                                                    : employee.type ===
+                                                      "human-resource"
+                                                    ? "bg-blue-100 text-blue-800"
+                                                    : "bg-green-100 text-green-800"
+                                            }`}
+                                        >
+                                            {employee.type === "owner"
+                                                ? "Propriétaire"
+                                                : employee.type ===
+                                                  "human-resource"
+                                                ? "RH"
+                                                : employee.type === "employee"
+                                                ? "Employé"
+                                                : employee.type}
+                                        </span>
                                     </td>
-                                    <td className="px-6 py-4 text-gray-500">
-                                        {employee.role || "-"}
-                                    </td>
+
                                     <td className="px-6 py-4">
                                         <StatusBadge
                                             status={
@@ -121,10 +135,10 @@ export default function EmployeeList({ employees }) {
                             </svg>
                         </div>
                         <h3 className="mb-2 text-lg font-medium text-gray-900">
-                            Aucun employé trouvé
+                            Aucun membre trouvé
                         </h3>
                         <p className="mb-6 text-gray-500">
-                            Il n'y a actuellement aucun employé enregistré dans
+                            Il n'y a actuellement aucun membre enregistré dans
                             cette entreprise.
                         </p>
                     </div>

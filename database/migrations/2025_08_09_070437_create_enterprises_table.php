@@ -26,8 +26,6 @@ return new class extends Migration
             $table->foreignId('status_by')->constrained('users')->cascadeOnDelete();
             $table->json('status_stories')->nullable();
 
-            $table->decimal('latitude', 10, 8)->nullable();
-            $table->decimal('longitude', 11, 8)->nullable();
 
             $table->string('address')->nullable();
             $table->string('zip_code')->nullable();

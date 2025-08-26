@@ -44,6 +44,12 @@ class Enterprise extends Model
 
     public const STATUS_PENDING = 'pending';
 
+    public const STATUS_REQUESTED = 'requested';
+
+    public const STATUS_REJECTED = 'rejected';
+
+    public const STATUS_VERIFIED = 'verified';
+
     public const STATUS_ACTIVE = 'active';
 
     public const STATUS_INACTIVE = 'inactive';
@@ -117,7 +123,15 @@ class Enterprise extends Model
     protected static function generateUniqueCode(): string
     {
         do {
-            $code = strtoupper(Str::random(8));
+            // Seed random number to avoid collisions
+            $rand = str_pad(rand(1, Enterprise::max('id') + 1), 3, '0', STR_PAD_LEFT);
+
+            // Generate seed random code
+            $code = strtoupper(Str::random(3));
+            $code .= "-{$rand}-";
+
+            // Generate random code
+            $code .= strtoupper(Str::random(3));
         } while (static::where('code', $code)->exists());
 
         return $code;
@@ -177,7 +191,7 @@ class Enterprise extends Model
     public function getLogoAttribute($value): string
     {
         if (! empty($value)) {
-            return asset('storage/'.$value);
+            return asset('storage/' . $value);
         }
 
         return asset('empty-image.png');

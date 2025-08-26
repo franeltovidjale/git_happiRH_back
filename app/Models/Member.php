@@ -110,6 +110,7 @@ class Member extends Model implements Documentable
         'role',
         'joining_date',
         'location_id',
+        'department_id',
         'status_note',
         'status_date',
         'status_by',
@@ -184,11 +185,11 @@ class Member extends Model implements Documentable
     /**
      * Get the departments that the member belongs to.
      *
-     * @return BelongsToMany<Department, Member>
+     * @return BelongsTo<Department, Member>
      */
-    public function departments(): BelongsToMany
+    public function department(): BelongsTo
     {
-        return $this->belongsToMany(Department::class, 'department_member');
+        return $this->belongsTo(Department::class);
     }
 
     /**

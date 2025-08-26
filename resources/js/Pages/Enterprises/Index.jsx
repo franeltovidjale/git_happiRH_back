@@ -2,6 +2,7 @@ import { Head } from "@inertiajs/react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Search, Plus, Filter, Eye, Pencil, Trash2 } from "lucide-react";
 import { Link } from "@inertiajs/react";
+import StatusBadge from "@/Components/StatusBadge";
 
 export default function EnterprisesIndex({ auth, enterprises }) {
     return (
@@ -84,6 +85,19 @@ export default function EnterprisesIndex({ auth, enterprises }) {
                                             )}
                                             <span className="font-medium text-gray-800">
                                                 {enterprise.name}
+                                                {enterprise.plan && (
+                                                    <>
+                                                        {" "}
+                                                        <br />{" "}
+                                                        <span className="text-xs text-gray-400">
+                                                            Plan: ({" "}
+                                                            <span className="text-teal-500">
+                                                                Free
+                                                            </span>
+                                                            )
+                                                        </span>{" "}
+                                                    </>
+                                                )}
                                             </span>
                                         </td>
                                         <td className="px-6 py-4 text-gray-500">
@@ -97,22 +111,9 @@ export default function EnterprisesIndex({ auth, enterprises }) {
                                                 enterprise.country_code}
                                         </td>
                                         <td className="px-6 py-4">
-                                            <span
-                                                className={`text-xs font-medium px-2.5 py-0.5 rounded-full ${
-                                                    enterprise.status ===
-                                                    "active"
-                                                        ? "bg-green-100 text-green-600"
-                                                        : enterprise.status ===
-                                                          "pending"
-                                                        ? "bg-yellow-100 text-yellow-600"
-                                                        : enterprise.status ===
-                                                          "inactive"
-                                                        ? "bg-red-100 text-red-600"
-                                                        : "bg-gray-100 text-gray-600"
-                                                }`}
-                                            >
-                                                {enterprise.status}
-                                            </span>
+                                            <StatusBadge
+                                                status={enterprise.status}
+                                            />
                                         </td>
                                         <td className="px-6 py-4 space-x-2">
                                             <Link
@@ -124,12 +125,6 @@ export default function EnterprisesIndex({ auth, enterprises }) {
                                             >
                                                 <Eye className="w-5 h-5" />
                                             </Link>
-                                            <button className="text-gray-400 transition-colors hover:text-gray-700">
-                                                <Pencil className="w-5 h-5" />
-                                            </button>
-                                            <button className="text-gray-400 transition-colors hover:text-gray-700">
-                                                <Trash2 className="w-5 h-5" />
-                                            </button>
                                         </td>
                                     </tr>
                                 ))}

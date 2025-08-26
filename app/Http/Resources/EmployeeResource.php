@@ -39,13 +39,8 @@ class EmployeeResource extends JsonResource
                 'joining_date' => $this->joining_date,
                 'email' => $this->user->email,
             ],
-            'departments' => $this->whenLoaded('departments', function () {
-                return $this->departments->map(function ($department) {
-                    return [
-                        'id' => $department->id,
-                        'name' => $department->name,
-                    ];
-                });
+            'department' => $this->whenLoaded('department', function () {
+                return new DepartmentResource($this->department);
             }),
             // Address information
             'address' => $this->whenLoaded('address', function () {

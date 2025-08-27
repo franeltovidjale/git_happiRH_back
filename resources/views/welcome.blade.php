@@ -214,7 +214,8 @@
             </div>
 
             <x-ui.button variant="{{ $plan->is_recommended ? 'secondary' : 'outline' }}" size="lg"
-                class="w-full {{ $plan->is_recommended ? 'relative z-10' : '' }}">
+                class="w-full {{ $plan->is_recommended ? 'relative z-10' : '' }}"
+                :href="route('public.register',['plan' => $plan->slug])">
                 {{ $plan->name === 'Enterprise' ? 'Contacter' : 'Commencer' }}
             </x-ui.button>
 

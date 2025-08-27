@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Requests\Employer;
+namespace App\Http\Requests\Api\Employer;
 
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
- * Store Location Request
+ * Update Enterprise Request
  */
-class StoreLocationRequest extends FormRequest
+class UpdateEnterpriseRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -27,25 +27,23 @@ class StoreLocationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'enterprise_id' => 'required|exists:enterprises,id',
-            'name' => 'required|string|max:255',
+            'ifu' => 'nullable|string|max:16',
+            'name' => 'required|string|max:100',
             'active' => 'boolean',
         ];
     }
 
     /**
-     * Get custom error messages for validation rules.
+     * Get custom messages for validator errors.
      *
      * @return array<string, string>
      */
     public function messages(): array
     {
         return [
-            'enterprise_id.required' => 'Enterprise is required',
-            'enterprise_id.exists' => 'Selected enterprise does not exist',
-            'name.required' => 'Location name is required',
-            'name.max' => 'Location name cannot exceed 255 characters',
-            'active.boolean' => 'Active status must be true or false',
+            'name.required' => 'Enterprise name is required.',
+            'name.max' => 'Enterprise name cannot exceed 100 characters.',
+            'ifu.max' => 'IFU cannot exceed 16 characters.',
         ];
     }
 }

@@ -1,13 +1,11 @@
 <?php
 
-namespace App\Http\Requests\Employer;
+namespace App\Http\Requests\Api\Employer;
 
-use App\Models\Department;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 
-class UpdateDepartmentRequest extends FormRequest
+class StoreDepartmentRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,18 +23,16 @@ class UpdateDepartmentRequest extends FormRequest
     public function rules(): array
     {
         $enterpriseId = auth()->user()->active_enterprise_id;
-        $departmentId = $this->route('department');
 
         return [
             'name' => [
-                'nullable',
+                'required',
                 'string',
                 'max:255',
-                function ($attribute, $value, $fail) use ($enterpriseId, $departmentId) {
-                    $slug = Str::slug($value);
+                function ($attribute, $value, $fail) use ($enterpriseId) {
+                    $slug = \Illuminate\Support\Str::slug($value);
 
-                    $exists = Department::where('enterprise_id', $enterpriseId)
-                        ->where('id', '!=', $departmentId)
+                    $exists = \App\Models\Department::where('enterprise_id', $enterpriseId)
                         ->where('slug', $slug)
                         ->exists();
 
@@ -46,9 +42,8 @@ class UpdateDepartmentRequest extends FormRequest
                 },
             ],
             'active' => 'boolean',
-
             'late_penalty' => 'boolean',
-            'work_model' => 'nullable|in:' . implode(',', Department::WORK_MODEL_OPTIONS),
+            'work_model' => 'required|string|max:255',
             'meeting_participation_score' => 'boolean',
             'attendance_score' => 'boolean',
             'overtime_recording_score' => 'nullable|string|max:255',
@@ -65,12 +60,15 @@ class UpdateDepartmentRequest extends FormRequest
     public function messages(): array
     {
         return [
+            'name.required' => 'Le nom du département est obligatoire',
             'name.max' => 'Le nom du département ne peut pas dépasser 255 caractères',
+            'name.unique' => 'Un département avec ce nom existe déjà dans cette entreprise',
             'active.boolean' => 'Le statut actif doit être vrai ou faux',
             'slug.unique' => 'Ce slug est déjà utilisé dans cette entreprise',
             'slug.max' => 'Le slug ne peut pas dépasser 255 caractères',
             'late_penalty.boolean' => 'La pénalité de retard doit être vrai ou faux',
-            'work_model.in' => 'Le modèle de travail doit être remote, hybrid ou in-office',
+            'work_model.required' => 'Le modèle de travail est obligatoire',
+            'work_model.max' => 'Le modèle de travail ne peut pas dépasser 255 caractères',
             'meeting_participation_score.boolean' => 'Le score de participation aux réunions doit être vrai ou faux',
             'attendance_score.boolean' => 'Le score de présence doit être vrai ou faux',
             'overtime_recording_score.max' => 'Le score d\'enregistrement des heures supplémentaires ne peut pas dépasser 255 caractères',

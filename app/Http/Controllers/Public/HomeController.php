@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Public;
 
 use App\Http\Controllers\Controller;
 use App\Models\Plan;
+use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
@@ -41,8 +42,19 @@ class HomeController extends Controller
         return view('public.company');
     }
 
-    public function getStarted()
+    public function getStarted(Request $request)
     {
+        $plan = null;
+        if ($request->has('plan')) {
+            $plan = Plan::active()->where('slug', $request->get('plan'))->first();
+        }
+
+        if ($plan) {
+            return view('get-started', [
+                'plan' => $plan,
+            ]);
+        }
+
         return view('auth.register');
     }
 }

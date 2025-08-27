@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Employer;
+namespace App\Http\Requests\Api\Employer;
 
 use App\Models\Member;
 use Illuminate\Foundation\Http\FormRequest;
@@ -26,7 +26,7 @@ class ChangeEmployeeStatusRequest extends FormRequest
             'status' => [
                 'required',
                 'string',
-                'in:'.implode(',', [
+                'in:' . implode(',', [
                     Member::STATUS_REQUESTED,
                     Member::STATUS_REJECTED,
                     Member::STATUS_ACTIVE,

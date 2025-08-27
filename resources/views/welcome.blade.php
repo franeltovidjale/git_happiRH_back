@@ -194,15 +194,22 @@
 
             <div class="space-y-4 mb-8 text-left w-full {{ $plan->is_recommended ? 'relative z-10' : '' }}">
                 @foreach($plan->features as $feature)
-                @if($feature->pivot->is_enabled)
-                <div class="flex items-center space-x-2 text-gray-600">
+                <div
+                    class="flex items-center space-x-2 {{ $feature->pivot->is_enabled ? 'text-gray-600' : 'text-gray-400' }}">
+                    @if($feature->pivot->is_enabled)
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-teal-500" viewBox="0 0 24 24"
                         fill="currentColor">
                         <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z" />
                     </svg>
+                    @else
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-500" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                    @endif
                     <span>{{ $feature->name }}</span>
                 </div>
-                @endif
                 @endforeach
             </div>
 

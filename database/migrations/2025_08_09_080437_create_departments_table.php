@@ -23,7 +23,7 @@ return new class extends Migration
             $table->boolean('attendance_score')->default(false);
             $table->string('overtime_recording_score')->nullable();
             $table->string('overtime_clocking_score')->nullable();
-            $table->foreignId('supervisor_id')->nullable()->constrained('members')->nullOnDelete();
+            $table->foreignId('supervisor_id')->nullable()->nullOnDelete();
             $table->softDeletes();
             $table->timestamps();
 

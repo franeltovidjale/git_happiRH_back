@@ -169,172 +169,55 @@
 
     <!-- Pricing cards container -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8 w-full mx-auto">
-        <!-- Base Card -->
+        @foreach($plans as $plan)
         <div
-            class="bg-white rounded-[32px] p-8 soft-shadow-white flex flex-col items-center text-center transition-all duration-500 ease-out hover:scale-105 hover:shadow-xl hover:-translate-y-2 group">
-            <div class="mb-8">
-                <span class="text-3xl sm:text-4xl font-extrabold text-orange-400">52 500 XOF</span>
-                <span class="text-lg text-gray-500">/mois</span>
-            </div>
-            <h3 class="text-2xl font-bold text-primary-700 mb-4">Starter</h3>
-            <p class="text-gray-500 text-sm mb-8 max-w-[200px]">Parfait pour les petites entreprises qui débutent</p>
-            <div class="space-y-4 mb-8 text-left w-full">
-                <div class="flex items-center space-x-2 text-gray-600">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-teal-500" viewBox="0 0 24 24"
-                        fill="currentColor">
-                        <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z" />
-                    </svg>
-                    <span>Jusqu'à 10 employés</span>
-                </div>
-                <div class="flex items-center space-x-2 text-gray-600">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-teal-500" viewBox="0 0 24 24"
-                        fill="currentColor">
-                        <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z" />
-                    </svg>
-                    <span>Gestion des présences</span>
-                </div>
-                <div class="flex items-center space-x-2 text-gray-600">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-teal-500" viewBox="0 0 24 24"
-                        fill="currentColor">
-                        <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z" />
-                    </svg>
-                    <span>Support par email</span>
-                </div>
-                <div class="flex items-center space-x-2 text-gray-600">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-teal-500" viewBox="0 0 24 24"
-                        fill="currentColor">
-                        <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z" />
-                    </svg>
-                    <span>Rapports de base</span>
-                </div>
-            </div>
-            <x-ui.button variant="outline" size="lg" class="w-full">
-                Commencer
-            </x-ui.button>
-            <div class="mt-4 text-center">
-                <a href="#" class="text-sm text-secondary-500 hover:text-secondary-600 transition-colors duration-200">
-                    Cela ne vous convient pas ? <span class="font-medium text-orange-500">Personnaliser</span>
-                </a>
-            </div>
-        </div>
-
-        <!-- Pro Card (Highlighted) -->
-        <div class="bg-white rounded-[32px] p-8 soft-shadow-blue flex flex-col items-center text-center relative">
+            class="bg-white rounded-[32px] p-8 {{ $plan->is_recommended ? 'soft-shadow-blue' : 'soft-shadow-white' }} flex flex-col items-center text-center transition-all duration-500 ease-out hover:scale-105 hover:shadow-xl hover:-translate-y-2 group relative">
+            @if($plan->is_recommended)
             <div class="absolute -top-4 -right-4 w-24 h-24 bg-primary/10 rounded-full"></div>
             <div class="absolute -bottom-6 -left-6 w-20 h-20 bg-secondary/10 rounded-full"></div>
             <div class="absolute top-8 -right-2 w-12 h-12 bg-primary/5 rounded-full"></div>
             <span
                 class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-primary text-white text-xs font-semibold py-1 px-4 rounded-full z-20">LE
-                PLUS
-                POPULAIRE</span>
-            <div class="mb-8 relative z-10">
-                <span class="text-3xl sm:text-4xl font-extrabold text-orange-400">78 750 XOF</span>
-                <span class="text-lg text-gray-500">/mois</span>
-            </div>
-            <h3 class="text-2xl font-bold text-primary-700 mb-4 relative z-10">Pro</h3>
-            <p class="text-gray-500 text-sm mb-8 max-w-[200px] relative z-10">Idéal pour les entreprises en croissance
-            </p>
-            <div class="space-y-4 mb-8 text-left w-full relative z-10">
-                <div class="flex items-center space-x-2 text-gray-600">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-teal-500" viewBox="0 0 24 24"
-                        fill="currentColor">
-                        <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z" />
-                    </svg>
-                    <span>Jusqu'à 50 employés</span>
-                </div>
-                <div class="flex items-center space-x-2 text-gray-600">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-teal-500" viewBox="0 0 24 24"
-                        fill="currentColor">
-                        <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z" />
-                    </svg>
-                    <span>Toutes les fonctionnalités</span>
-                </div>
-                <div class="flex items-center space-x-2 text-gray-600">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-teal-500" viewBox="0 0 24 24"
-                        fill="currentColor">
-                        <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z" />
-                    </svg>
-                    <span>Support prioritaire</span>
-                </div>
-                <div class="flex items-center space-x-2 text-gray-600">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-teal-500" viewBox="0 0 24 24"
-                        fill="currentColor">
-                        <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z" />
-                    </svg>
-                    <span>Analytics avancés</span>
-                </div>
-                <div class="flex items-center space-x-2 text-gray-600">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-teal-500" viewBox="0 0 24 24"
-                        fill="currentColor">
-                        <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z" />
-                    </svg>
-                    <span>Intégrations API</span>
-                </div>
-            </div>
-            <x-ui.button variant="secondary" size="lg" class="w-full relative z-10">
-                Commencer
-            </x-ui.button>
-            <div class="mt-4 text-center relative z-10">
-                <a href="#" class="text-sm text-secondary-500 hover:text-secondary-600 transition-colors duration-200">
-                    Cela ne vous convient pas ? <span class="font-medium text-orange-500">Personnaliser</span>
-                </a>
-            </div>
-        </div>
+                PLUS POPULAIRE</span>
+            @endif
 
-        <!-- Enterprise Card -->
-        <div class="bg-white rounded-[32px] p-8 soft-shadow-white flex flex-col items-center text-center">
-            <div class="mb-8">
-                <span class="text-3xl sm:text-4xl font-extrabold text-orange-400">170 625 XOF</span>
+            <div class="mb-8 {{ $plan->is_recommended ? 'relative z-10' : '' }}">
+                <span class="text-3xl sm:text-4xl font-extrabold text-orange-400">{{ number_format($plan->price, 0, ',',
+                    ' ') }} {{ $plan->currency }}</span>
                 <span class="text-lg text-gray-500">/mois</span>
             </div>
-            <h3 class="text-2xl font-bold text-primary-700 mb-4">Enterprise</h3>
-            <p class="text-gray-500 text-sm mb-8 max-w-[200px]">Pour les grandes entreprises</p>
-            <div class="space-y-4 mb-8 text-left w-full">
+
+            <h3 class="text-2xl font-bold text-primary-700 mb-4 {{ $plan->is_recommended ? 'relative z-10' : '' }}">{{
+                $plan->name }}</h3>
+            <p class="text-gray-500 text-sm mb-8 max-w-[200px] {{ $plan->is_recommended ? 'relative z-10' : '' }}">{{
+                $plan->description }}</p>
+
+            <div class="space-y-4 mb-8 text-left w-full {{ $plan->is_recommended ? 'relative z-10' : '' }}">
+                @foreach($plan->features as $feature)
+                @if($feature->pivot->is_enabled)
                 <div class="flex items-center space-x-2 text-gray-600">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-teal-500" viewBox="0 0 24 24"
                         fill="currentColor">
                         <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z" />
                     </svg>
-                    <span>Employés illimités</span>
+                    <span>{{ $feature->name }}</span>
                 </div>
-                <div class="flex items-center space-x-2 text-gray-600">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-teal-500" viewBox="0 0 24 24"
-                        fill="currentColor">
-                        <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z" />
-                    </svg>
-                    <span>Support dédié 24/7</span>
-                </div>
-                <div class="flex items-center space-x-2 text-gray-600">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-teal-500" viewBox="0 0 24 24"
-                        fill="currentColor">
-                        <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z" />
-                    </svg>
-                    <span>Personnalisation complète</span>
-                </div>
-                <div class="flex items-center space-x-2 text-gray-600">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-teal-500" viewBox="0 0 24 24"
-                        fill="currentColor">
-                        <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z" />
-                    </svg>
-                    <span>Formation sur site</span>
-                </div>
-                <div class="flex items-center space-x-2 text-gray-600">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-teal-500" viewBox="0 0 24 24"
-                        fill="currentColor">
-                        <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z" />
-                    </svg>
-                    <span>SLA garanti</span>
-                </div>
+                @endif
+                @endforeach
             </div>
-            <x-ui.button variant="outline" size="lg" class="w-full">
-                Contacter
+
+            <x-ui.button variant="{{ $plan->is_recommended ? 'secondary' : 'outline' }}" size="lg"
+                class="w-full {{ $plan->is_recommended ? 'relative z-10' : '' }}">
+                {{ $plan->name === 'Enterprise' ? 'Contacter' : 'Commencer' }}
             </x-ui.button>
-            <div class="mt-4 text-center">
+
+            <div class="mt-4 text-center {{ $plan->is_recommended ? 'relative z-10' : '' }}">
                 <a href="#" class="text-sm text-secondary-500 hover:text-secondary-600 transition-colors duration-200">
                     Cela ne vous convient pas ? <span class="font-medium text-orange-500">Personnaliser</span>
                 </a>
             </div>
         </div>
+        @endforeach
     </div>
 </section>
 

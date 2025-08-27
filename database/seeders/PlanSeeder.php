@@ -98,6 +98,7 @@ class PlanSeeder extends Seeder
                 'currency' => 'XOF',
                 'billing_cycle' => Plan::BILLING_CYCLE_MONTHLY,
                 'is_active' => true,
+                'is_recommended' => true,
             ],
             [
                 'name' => 'Business',

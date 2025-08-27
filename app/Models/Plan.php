@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string $currency
  * @property string $billing_cycle
  * @property bool $is_active
+ * @property bool $is_recommended
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|Feature[] $features
@@ -30,6 +31,7 @@ class Plan extends Model
     public const BILLING_CYCLE_MONTHLY = 'monthly';
 
     public const BILLING_CYCLE_YEARLY = 'yearly';
+
 
     public const BILLING_CYCLES = [
         self::BILLING_CYCLE_MONTHLY => self::BILLING_CYCLE_MONTHLY,
@@ -49,6 +51,7 @@ class Plan extends Model
         'currency',
         'billing_cycle',
         'is_active',
+        'is_recommended',
     ];
 
     /**
@@ -61,6 +64,7 @@ class Plan extends Model
         'currency' => 'string',
         'billing_cycle' => 'string',
         'is_active' => 'boolean',
+        'is_recommended' => 'boolean',
     ];
 
     /**
@@ -81,16 +85,6 @@ class Plan extends Model
         return $this->hasMany(Enterprise::class);
     }
 
-    /**
-     * Check if the plan has a specific feature enabled.
-     */
-    public function hasFeature(string $criteria): bool
-    {
-        return $this->features()
-            ->where('criteria', $criteria)
-            ->wherePivot('is_enabled', true)
-            ->exists();
-    }
 
     /**
      * Scope to get only active plans.

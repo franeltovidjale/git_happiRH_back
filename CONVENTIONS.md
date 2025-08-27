@@ -2,12 +2,14 @@
 Always follow SOLID principe
 Always follow DRY principe
 Always follow laravel convention by default
-Always use base controller method for sending api response
+Always use base controller method for sending api response in api context
+
 ## Controller Creation
 Place controllers in the appropriate directory based on the functionality:
 - **Admin** → `app/Http/Controllers/Admin/`
-- **Employer** → `app/Http/Controllers/Employer/`
-- **Employee** → `app/Http/Controllers/Employee/`
+- **Employer** → `app/Http/Controllers/Api/Employer/`
+- **Employee** → `app/Http/Controllers/Api/Employee/`
+- **Public**: → `app/Http/Controllers/Public/`
 Never put validation in controller, always use Request Class validation
 - Add controller to the corresponding route file
 - General controllers can be placed in the main controllers directory.

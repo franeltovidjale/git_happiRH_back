@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Employer;
+namespace App\Http\Controllers\Api\Employer;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Employer\StoreDepartmentRequest;

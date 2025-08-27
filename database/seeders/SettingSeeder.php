@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\Setting;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class SettingSeeder extends Seeder
@@ -187,6 +186,15 @@ class SettingSeeder extends Seeder
                     'endTime' => 'End Time (HH:MM)',
                 ],
             ],
+            [
+                'key' => 'yearlyPlanRate',
+                'value' => '0.05',
+                'type' => 'number',
+                'label' => 'Yearly Plan Discount Rate',
+                'description' => 'Discount rate for yearly plans (0.05 = 5% discount)',
+                'editable' => true,
+            ],
+
         ];
 
         foreach ($settings as $settingData) {

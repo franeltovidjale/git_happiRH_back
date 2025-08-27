@@ -1,10 +1,12 @@
 <?php
 
-use App\Http\Controllers\Employer\DepartmentController;
-use App\Http\Controllers\Employer\DocumentController;
-use App\Http\Controllers\Employer\EmployeeController;
-use App\Http\Controllers\Employer\ExperienceController;
-use App\Http\Controllers\Employer\ProfileController;
+use App\Http\Controllers\Api\Employer\{
+    DepartmentController,
+    DocumentController,
+    EmployeeController,
+    ExperienceController,
+    ProfileController
+};
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('employer')->group(function () {

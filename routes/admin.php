@@ -1,12 +1,15 @@
 <?php
 
-use App\Http\Controllers\Auth\Admin\AuthenticatedSessionController;
-use App\Http\Controllers\Auth\Admin\NewPasswordController;
-use App\Http\Controllers\Auth\Admin\PasswordResetLinkController;
-use App\Http\Controllers\Auth\Admin\RegisteredUserController;
-use App\Http\Controllers\Admin\EnterpriseController;
-use App\Http\Controllers\ProfileController;
-use Illuminate\Foundation\Application;
+use App\Http\Controllers\Admin\Auth\{
+    AuthenticatedSessionController,
+    NewPasswordController,
+    PasswordResetLinkController,
+    RegisteredUserController
+};
+use App\Http\Controllers\Admin\{
+    EnterpriseController,
+    ProfileController
+};
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 

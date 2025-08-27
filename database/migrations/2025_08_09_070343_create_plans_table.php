@@ -20,6 +20,8 @@ return new class extends Migration
             $table->string('currency', 32)->default('XOF');
             $table->string('billing_cycle')->default('monthly'); // monthly, yearly
             $table->boolean('is_active')->default(true);
+            $table->boolean('is_recommended')->default(false);
+
             $table->timestamps();
         });
     }

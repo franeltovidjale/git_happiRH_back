@@ -39,45 +39,58 @@
     @stack('styles')
 </head>
 
-<body class="bg-background text-foreground"></body>
+<body class="bg-gray-100/80 text-foreground">
 
-<!-- Main Container -->
-<div class="max-w-7xl mx-auto p-4">
+    <!-- Main Container -->
+    <div class="max-w-7xl mx-auto p-4">
 
-    <!-- Navigation Bar -->
-    <header
-        class="sticky top-0 z-50 bg-white/95 backdrop-blur-sm  border-b border-gray-200 flex justify-between items-center py-5">
-        <div class="flex items-center space-x-2">
-            <img src="{{ asset('logo.svg') }}" alt="{{ config('app.name') }}" class="w-10 h-10">
-            <span class="font-bold text-2xl text-primary-700">{{ config('app.name') }}</span>
-        </div>
-        <nav class="hidden md:flex space-x-6 lg:space-x-12 text-gray-600 font-medium">
-            <a href="{{ route('features') }}" class="hover:text-primary-600">Features</a>
-            <a href="{{ route('tarifs') }}" class="hover:text-primary-600">Tarifs</a>
-            <a href="{{ route('demo') }}" class="hover:text-primary-600">Vidéos de démo</a>
-            <a href="{{ route('resources') }}" class="hover:text-primary-600">Resources</a>
-            <a href="{{ route('company') }}" class="hover:text-primary-600">Company</a>
-        </nav>
-        <div class="flex items-center space-x-4">
-            <x-button variant="ghost" size="md">Login</x-button>
-            <x-button variant="primary" size="md" href="{{ route('public.register') }}">
-                <span>Sign Up</span>
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-2" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd"
-                        d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
-                        clip-rule="evenodd" />
-                </svg>
-            </x-button>
-        </div>
-    </header>
+        <!-- Navigation Bar -->
+        <header
+            class="sticky top-0 z-50 bg-white backdrop-blur-sm flex justify-between items-center p-5 rounded-3xl mb-4 transition-all duration-300">
+            <a href="/" class="flex items-center space-x-2">
+                <img src="{{ asset('logo.svg') }}" alt="{{ config('app.name') }}" class="w-10 h-10">
+                <span class="font-bold text-2xl text-primary-700">{{ config('app.name') }}</span>
+            </a>
+            <nav class="hidden md:flex space-x-6 lg:space-x-12 text-gray-600 font-medium">
+                <a href="{{ route('features') }}" class="hover:text-primary-600">Features</a>
+                <a href="{{ route('tarifs') }}" class="hover:text-primary-600">Tarifs</a>
+                <a href="{{ route('demo') }}" class="hover:text-primary-600">Vidéos de démo</a>
+                <a href="{{ route('resources') }}" class="hover:text-primary-600">Resources</a>
+                <a href="{{ route('company') }}" class="hover:text-primary-600">Company</a>
+            </nav>
+            <div class="flex items-center space-x-4">
+                <x-ui.button variant="ghost" size="md">Login</x-ui.button>
+                <x-ui.button variant="primary" size="md" href="{{ route('public.register') }}">
+                    <span>Sign Up</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-2" viewBox="0 0 20 20"
+                        fill="currentColor">
+                        <path fill-rule="evenodd"
+                            d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
+                            clip-rule="evenodd" />
+                    </svg>
+                </x-ui.button>
+            </div>
+        </header>
 
-    <!-- Main Content -->
-    <main>
-        @yield('content')
-    </main>
-</div>
+        <!-- Main Content -->
+        <main>
+            @yield('content')
+        </main>
+    </div>
 
-@stack('scripts')
+    @stack('scripts')
+
+    <script>
+        // Détecter le scroll pour ajouter shadow à la navbar sticky
+    window.addEventListener('scroll', function() {
+        const header = document.querySelector('header');
+        if (window.scrollY > 0) {
+            header.classList.add('shadow');
+        } else {
+            header.classList.remove('shadow');
+        }
+    });
+    </script>
 </body>
 
 </html>

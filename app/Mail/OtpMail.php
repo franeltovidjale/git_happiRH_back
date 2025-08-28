@@ -12,7 +12,7 @@ use Illuminate\Queue\SerializesModels;
 /**
  * OtpMail
  *
- * Sends OTP code to user's email for password reset
+ * Generic OTP email for various purposes (password reset, login verification, etc.)
  */
 class OtpMail extends Mailable
 {
@@ -23,10 +23,14 @@ class OtpMail extends Mailable
      *
      * @param string $otpCode
      * @param string|null $firstName
+     * @param string $emailSubject
+     * @param string $purpose
      */
     public function __construct(
         public string $otpCode,
-        public ?string $firstName = null
+        public ?string $firstName = null,
+        public string $emailSubject = 'Code de vérification',
+        public string $purpose = 'vérification'
     ) {
         //
     }
@@ -37,7 +41,7 @@ class OtpMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Code de vérification - ' . config('app.name'),
+            subject: $this->emailSubject . ' - ' . config('app.name'),
         );
     }
 
@@ -51,6 +55,7 @@ class OtpMail extends Mailable
             with: [
                 'otpCode' => $this->otpCode,
                 'firstName' => $this->firstName,
+                'purpose' => $this->purpose,
             ]
         );
     }

@@ -2,6 +2,8 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Enterprise;
+use App\Models\User;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,7 +17,23 @@ class EmployerMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (!auth()->check() || auth()->user()->type !== 'employer') {
+        if (! auth()->check()) {
+            return response()->json(['message' => 'Unauthorized. Employer access required.'], 403);
+        }
+        /**
+         * @var User
+         */
+        $user = auth()->user();
+        /**
+         * @var Enterprise|null
+         */
+        $activeEnterprise = $user->activeEnterprise;
+
+        if (! $activeEnterprise) {
+            return response()->json(['message' => 'Unauthorized. Employer access required.'], 403);
+        }
+
+        if ($activeEnterprise->owner_id !== $user->id) {
             return response()->json(['message' => 'Unauthorized. Employer access required.'], 403);
         }
 

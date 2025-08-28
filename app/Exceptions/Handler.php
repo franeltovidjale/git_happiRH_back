@@ -69,6 +69,24 @@ class Handler extends ExceptionHandler
             return $this->invalidJson($request, $e);
         }
 
+        if ($request->is('api/*')) {
+            if ($e instanceof \Illuminate\Auth\AuthenticationException) {
+                return response()->json([
+                    'message' => "Votre session a expiré, veuillez vous reconnecter",
+                    'success' => false,
+                ], 401);
+            }
+
+            if ($e instanceof \Illuminate\Auth\Access\AuthorizationException) {
+                return response()->json([
+                    'message' => "Vous n'avez pas les permissions pour accéder à cette ressource",
+                    'success' => false,
+                ], 403);
+            }
+        }
+
+
+
         return parent::render($request, $e);
     }
 

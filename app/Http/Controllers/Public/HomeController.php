@@ -49,12 +49,8 @@ class HomeController extends Controller
             $plan = Plan::active()->where('slug', $request->get('plan'))->first();
         }
 
-        if ($plan) {
-            return view('get-started', [
-                'plan' => $plan,
-            ]);
-        }
-
-        return view('auth.register');
+        return view('auth.register', [
+            'plan' => $plan,
+        ]);
     }
 }

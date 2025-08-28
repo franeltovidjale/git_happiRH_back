@@ -37,6 +37,10 @@
         }
     </style>
     @stack('styles')
+
+    @yield('links')
+
+    @livewireStyles
 </head>
 
 <body class="bg-gray-100/80 text-foreground">
@@ -78,6 +82,7 @@
         </main>
     </div>
 
+    @livewireScripts()
     @stack('scripts')
 
     <script>

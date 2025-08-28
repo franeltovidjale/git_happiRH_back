@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('email', 255)->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->enum('type', ['admin', 'user'])->default('user');
+            $table->string('type', 100)->default('user');
             $table->boolean('is_deletable')->default(true);
             $table->enum('gender', ['male', 'female', 'other'])->nullable();
             $table->foreignId('active_enterprise_id')->nullable();

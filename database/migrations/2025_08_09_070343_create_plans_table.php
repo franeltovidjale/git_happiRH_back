@@ -22,6 +22,11 @@ return new class extends Migration
             $table->boolean('is_active')->default(true);
             $table->boolean('is_recommended')->default(false);
 
+            $table->string('target_audience')->nullable();
+            $table->decimal('price_per_employee', 10, 2)->default(0);
+            $table->integer('trial_period_months')->default(0);
+            $table->boolean('is_custom_quote')->default(false);
+
             $table->timestamps();
         });
     }

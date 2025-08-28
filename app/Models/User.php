@@ -47,6 +47,8 @@ class User extends Authenticatable
 
     public const TYPE_ADMIN = 'admin';
 
+    public const TYPE_GERANT = 'gerant';
+
     /**
      * The attributes that are mass assignable.
      *
@@ -99,7 +101,7 @@ class User extends Authenticatable
     protected function photo(): Attribute
     {
         return Attribute::make(
-            get: fn($value) => $value ? asset("storage/{$value}") : null,
+            get: fn ($value) => $value ? asset("storage/{$value}") : null,
         );
     }
 

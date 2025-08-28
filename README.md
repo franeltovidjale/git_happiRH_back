@@ -10,3 +10,8 @@ L'employé et l'employeur utilisent des applications mobiles
 ## Public
 
 L'espace public est géré dans laravel view classique
+
+
+## Librairies & packages
+- Laravel Inertia pour le backoffice (admin)
+- Laravel livewire pour le frontend (pour SEO, et le coté dynamique)

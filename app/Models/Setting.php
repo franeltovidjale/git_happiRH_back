@@ -24,6 +24,7 @@ class Setting extends Model
     use HasFactory;
 
     private static $object = [];
+
     /**
      * Allowed setting keys
      *
@@ -50,6 +51,7 @@ class Setting extends Model
         'appSlogan',
         'workDays',
         'standardWorkingHours',
+        'yearlyPlanRate',
     ];
 
     /**
@@ -80,19 +82,18 @@ class Setting extends Model
     /**
      * Retrieve a setting value by key
      *
-     * @param string $key
-     * @param mixed $default
+     * @param  mixed  $default
      * @return mixed
      */
     public static function getSetting(string $key, $default = null)
     {
-        if (!static::isValidKey($key)) {
+        if (! static::isValidKey($key)) {
             return $default;
         }
 
         $setting = static::where('key', $key)->first();
 
-        if (!$setting) {
+        if (! $setting) {
             return $default;
         }
 
@@ -102,36 +103,29 @@ class Setting extends Model
     /**
      * Save or update a setting by key
      *
-     * @param string $key
-     * @param mixed $value
-     * @return bool
+     * @param  mixed  $value
      */
     public static function setSetting(string $key, $value): bool
     {
-        if (!static::isValidKey($key)) {
+        if (! static::isValidKey($key)) {
             return false;
         }
 
         $setting = static::where('key', $key)->first();
 
-        if (!$setting) {
+        if (! $setting) {
             return false;
         }
 
         $setting->value = static::formatValue($value, $setting->type);
+
         return $setting->save();
     }
 
     /**
      * Create or update a setting by key
      *
-     * @param string $key
-     * @param mixed $value
-     * @param string $type
-     * @param string|null $label
-     * @param string|null $description
-     * @param bool $editable
-     * @return bool
+     * @param  mixed  $value
      */
     public static function createOrUpdateSetting(
         string $key,
@@ -141,7 +135,7 @@ class Setting extends Model
         ?string $description = null,
         bool $editable = true
     ): bool {
-        if (!static::isValidKey($key)) {
+        if (! static::isValidKey($key)) {
             return false;
         }
 
@@ -159,9 +153,6 @@ class Setting extends Model
 
     /**
      * Check if a key is valid
-     *
-     * @param string $key
-     * @return bool
      */
     public static function isValidKey(string $key): bool
     {
@@ -181,8 +172,7 @@ class Setting extends Model
     /**
      * Parse value based on setting type
      *
-     * @param string|null $value
-     * @param string $type
+     * @param  string|null  $value
      * @return mixed
      */
     private static function parseValue($value, string $type)
@@ -211,9 +201,7 @@ class Setting extends Model
     /**
      * Format value for storage based on setting type
      *
-     * @param mixed $value
-     * @param string $type
-     * @return string
+     * @param  mixed  $value
      */
     private static function formatValue($value, string $type): string
     {
@@ -236,7 +224,7 @@ class Setting extends Model
 
     public static function toObject(): array
     {
-        if (!empty(static::$object)) {
+        if (! empty(static::$object)) {
             return static::$object;
         }
 
@@ -244,6 +232,7 @@ class Setting extends Model
         foreach ($settings as $setting) {
             static::$object[$setting->key] = static::parseValue($setting->value, $setting->type);
         }
+
         return static::$object;
     }
 }

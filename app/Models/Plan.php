@@ -47,7 +47,11 @@ class Plan extends Model
         'name',
         'slug',
         'description',
+        'target_audience',
         'price',
+        'price_per_employee',
+        'trial_period_months',
+        'is_custom_quote',
         'currency',
         'billing_cycle',
         'is_active',
@@ -61,6 +65,9 @@ class Plan extends Model
      */
     protected $casts = [
         'price' => 'decimal:2',
+        'price_per_employee' => 'decimal:2',
+        'trial_period_months' => 'integer',
+        'is_custom_quote' => 'boolean',
         'currency' => 'string',
         'billing_cycle' => 'string',
         'is_active' => 'boolean',

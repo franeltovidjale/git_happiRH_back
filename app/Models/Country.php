@@ -19,7 +19,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string $lang Default language for the country
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- *
  * @property-read \Illuminate\Database\Eloquent\Collection|Langue[] $languages
  */
 class Country extends Model
@@ -50,11 +49,14 @@ class Country extends Model
 
     /**
      * Get the languages associated with this country.
-     *
-     * @return HasMany
      */
     public function languages(): HasMany
     {
         return $this->hasMany(Langue::class, 'country_code', 'code');
+    }
+
+    public function scopeActive($query)
+    {
+        return $query->where('active', true);
     }
 }

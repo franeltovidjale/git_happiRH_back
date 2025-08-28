@@ -16,7 +16,7 @@ use Illuminate\Support\Str;
  * @property string $name
  * @property bool $active
  * @property string $code
- * @property int $owner_id
+ * @property int|null $owner_id
  * @property int|null $sector_id
  * @property string $country_code
  * @property string|null $address
@@ -32,7 +32,7 @@ use Illuminate\Support\Str;
  * @property array|null $status_stories
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
- * @property-read User $owner
+ * @property-read User|null $owner
  * @property-read Sector|null $sector
  * @property-read \Illuminate\Database\Eloquent\Collection|Member[] $members
  * @property-read \Illuminate\Database\Eloquent\Collection|Department[] $departments
@@ -191,7 +191,7 @@ class Enterprise extends Model
     public function getLogoAttribute($value): string
     {
         if (! empty($value)) {
-            return asset('storage/' . $value);
+            return asset('storage/'.$value);
         }
 
         return asset('empty-image.png');

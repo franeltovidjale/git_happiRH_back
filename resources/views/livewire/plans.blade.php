@@ -184,7 +184,7 @@
 
                 <!-- Right side - Features -->
                 <div class="flex flex-col items-center lg:items-start">
-                    <h4 class="mb-4 text-xl font-semibold text-blue-400">Premier salaire à verser?</h4>
+
                     <p class="mb-6 text-sm text-gray-600">Démarrez du bon pied... et à prix doux !</p>
 
                     <div class="space-y-3 text-left">
@@ -296,7 +296,7 @@
                 @endforeach
             </div>
 
-            <a href="{{ route('public.register', ['plan' => $plan->slug]) }}"
+            <a href="{{ route('public.register', ['plan' => $plan->slug, 'employeesCount' => $employeeCount, 'billingCycle' => $billingCycle]) }}"
                 class="w-full {{ $plan->is_recommended ? 'bg-secondary-600 hover:bg-secondary-700 text-white' : 'bg-white hover:bg-gray-50 text-primary-600 border-2 border-primary-600' }} py-3 px-6 rounded-lg font-medium transition-colors {{ $plan->is_recommended ? 'relative z-10' : '' }} inline-block text-center">
                 Commencer
             </a>

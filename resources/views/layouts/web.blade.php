@@ -63,9 +63,9 @@
                 <a href="{{ route('company') }}" class="hover:text-primary-600">Company</a>
             </nav>
             <div class="flex items-center space-x-4">
-                <x-ui.button variant="ghost" size="md">Login</x-ui.button>
+                <x-ui.button variant="secondary" size="md">Login</x-ui.button>
                 <x-ui.button variant="primary" size="md" href="{{ route('public.register') }}">
-                    <span>Sign Up</span>
+                    <span>Démarrer gratuitement</span>
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-2" viewBox="0 0 20 20"
                         fill="currentColor">
                         <path fill-rule="evenodd"

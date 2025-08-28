@@ -49,6 +49,10 @@ class HomeController extends Controller
             $plan = Plan::active()->where('slug', $request->get('plan'))->first();
         }
 
+        if (!$plan) {
+            return redirect()->route('tarifs');
+        }
+
         return view('auth.register', [
             'plan' => $plan,
         ]);

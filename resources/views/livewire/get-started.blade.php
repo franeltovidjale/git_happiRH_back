@@ -33,43 +33,41 @@
             <!-- Step 1: Plan Selection -->
             @if($currentStep === 1)
             <div class="w-full max-w-md space-y-6">
-                <h2 class="text-2xl font-bold text-center">Choisissez votre plan</h2>
+                <h2 class="text-2xl font-bold text-center">Votre plan sélectionné</h2>
 
-                <div class="space-y-4">
-                    @foreach($availablePlans as $plan)
-                    <div class="border-2 rounded-lg p-4 cursor-pointer transition-all {{ $selectedPlanId == $plan->id ? 'border-primary bg-primary-50' : 'border-gray-200 hover:border-gray-300' }}"
-                        wire:click="selectPlan({{ $plan->id }})">
-                        <div class="flex justify-between items-start">
-                            <div>
-                                <h3 class="font-semibold text-lg">{{ $plan->name }}</h3>
-                                <p class="text-gray-600 text-sm">{{ $plan->description }}</p>
-                            </div>
-                            <div class="text-right">
-                                <div class="text-2xl font-bold text-primary">{{ number_format($plan->price) }} {{
-                                    $plan->currency }}</div>
-                                <div class="text-sm text-gray-500">/mois</div>
+                <div class="border-2 border-primary bg-primary-50 rounded-lg p-6">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h3 class="font-semibold text-lg">{{ $selectedPlan->name }}</h3>
+                            <p class="text-gray-600 text-sm">{{ $selectedPlan->description }}</p>
+                            <div class="mt-2">
+                                <span
+                                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $billingCycle === 'yearly' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800' }}">
+                                    {{ $billingCycle === 'yearly' ? 'Facturation annuelle' : 'Facturation mensuelle' }}
+                                </span>
                             </div>
                         </div>
-
-                        @if($selectedPlanId == $plan->id)
-                        <div class="mt-4 pt-4 border-t border-gray-200">
-                            <h4 class="font-medium mb-2">Fonctionnalités incluses:</h4>
-                            <ul class="space-y-1 text-sm">
-                                @foreach($plan->features->where('pivot.is_enabled', true)->take(5) as $feature)
-                                <li class="flex items-center">
-                                    <svg class="w-4 h-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                                        <path fill-rule="evenodd"
-                                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                                            clip-rule="evenodd"></path>
-                                    </svg>
-                                    {{ $feature->name }}
-                                </li>
-                                @endforeach
-                            </ul>
+                        <div class="text-right">
+                            <div class="text-2xl font-bold text-primary">{{ $this->formatTotalPrice() }}</div>
+                            @if($billingCycle === 'yearly' && $this->getMonthlyPriceFromYearly())
+                            <div class="text-sm text-gray-500">{{ $this->getMonthlyPriceFromYearly() }}</div>
+                            @endif
                         </div>
-                        @endif
                     </div>
-                    @endforeach
+
+                    @if($employeesCount > 0 && $selectedPlan->price_per_employee > 0)
+                    <div class="mt-4 pt-4 border-t border-gray-200">
+                        <div class="flex justify-between items-center text-sm">
+                            <span class="text-gray-600">Prix de base:</span>
+                            <span class="font-medium">{{ $this->formatBasePrice() }}</span>
+                        </div>
+                        <div class="flex justify-between items-center text-sm">
+                            <span class="text-gray-600">{{ $employeesCount }} employé{{ $employeesCount > 1 ? 's' : ''
+                                }} × {{ $this->formatPricePerEmployee() }}:</span>
+                            <span class="font-medium">{{ $this->formatTotalPrice() }}</span>
+                        </div>
+                    </div>
+                    @endif
                 </div>
 
                 <button wire:click="nextStep"
@@ -84,13 +82,56 @@
             <div class="w-full max-w-md space-y-6">
                 <h2 class="text-2xl font-bold text-center">Créer votre compte</h2>
 
-                <form wire:submit.prevent="register" class="space-y-4">
+                @if(session()->has('error'))
+                <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm text-red-800">{{ session('error') }}</p>
+                        </div>
+                    </div>
+                </div>
+                @endif
+
+                @if(session()->has('success'))
+                <div class="bg-green-50 border border-green-200 rounded-lg p-4">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <svg class="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm text-green-800">{{ session('success') }}</p>
+                        </div>
+                    </div>
+                </div>
+                @endif
+
+                <form wire:submit.prevent="register" class="space-y-4 {{ $isProcessing ? 'cursor-wait' : '' }}">
+                    <div>
+                        <label for="enterpriseName" class="block text-sm font-medium text-gray-700 mb-1">Nom de
+                            l'entreprise</label>
+                        <input type="text" id="enterpriseName" wire:model="enterpriseName"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent {{ $isProcessing ? 'cursor-wait' : '' }}"
+                            placeholder="Nom de votre entreprise" {{ $isProcessing ? 'disabled' : '' }}>
+                        @error('enterpriseName') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+                    </div>
+
                     <div>
                         <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email
                             professionnel</label>
                         <input type="email" id="email" wire:model="email"
-                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-                            placeholder="contact@votreentreprise.com">
+                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent {{ $isProcessing ? 'cursor-wait' : '' }}"
+                            placeholder="contact@votreentreprise.com" {{ $isProcessing ? 'disabled' : '' }}>
                         @error('email') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                     </div>
 
@@ -98,15 +139,16 @@
                         <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">Numéro de
                             téléphone</label>
                         <input type="tel" id="phone" wire:model="phone"
-                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-                            placeholder="+33 1 23 45 67 89">
+                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent {{ $isProcessing ? 'cursor-wait' : '' }}"
+                            placeholder="+33 1 23 45 67 89" {{ $isProcessing ? 'disabled' : '' }}>
                         @error('phone') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                     </div>
 
                     <div>
                         <label for="countryCode" class="block text-sm font-medium text-gray-700 mb-1">Pays</label>
                         <select id="countryCode" wire:model="countryCode"
-                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
+                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent {{ $isProcessing ? 'cursor-wait' : '' }}"
+                            {{ $isProcessing ? 'disabled' : '' }}>
                             <option value="">Sélectionnez un pays</option>
                             @foreach($this->countries as $country)
                             <option value="{{ $country->code }}">{{ $country->name }}</option>
@@ -115,53 +157,32 @@
                         @error('countryCode') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                     </div>
 
-                    <div>
-                        <label for="employeeCount" class="block text-sm font-medium text-gray-700 mb-1">Nombre
-                            d'employés</label>
-                        <input type="number" id="employeeCount" wire:model="employeeCount" min="1" max="1000"
-                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-                            placeholder="10">
-                        @error('employeeCount') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
-                    </div>
 
-                    <div>
-                        <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Mot de passe</label>
-                        <div class="relative">
-                            <input type="{{ $showPassword ? 'text' : 'password' }}" id="password" wire:model="password"
-                                class="w-full px-3 py-2 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-                                placeholder="••••••••">
-                            <button type="button" wire:click="togglePassword"
-                                class="absolute inset-y-0 right-0 pr-3 flex items-center">
-                                @if($showPassword)
-                                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21">
-                                    </path>
-                                </svg>
-                                @else
-                                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
-                                    </path>
-                                </svg>
-                                @endif
-                            </button>
-                        </div>
-                        @error('password') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
-                    </div>
+
+
 
                     <div class="flex space-x-4">
                         <button type="button" wire:click="previousStep"
-                            class="flex-1 bg-gray-200 text-gray-700 py-3 px-6 rounded-lg font-medium hover:bg-gray-300 transition-colors">
+                            class="flex-1 bg-gray-200 text-gray-700 py-3 px-6 rounded-lg font-medium hover:bg-gray-300 transition-colors {{ $isProcessing ? 'cursor-wait' : '' }}"
+                            {{ $isProcessing ? 'disabled' : '' }}>
                             Retour
                         </button>
                         <button type="submit"
-                            class="flex-1 bg-primary text-white py-3 px-6 rounded-lg font-medium hover:bg-primary-700 transition-colors">
+                            class="flex-1 bg-primary text-white py-3 px-6 rounded-lg font-medium hover:bg-primary-700 transition-colors flex items-center justify-center {{ $isProcessing ? 'cursor-wait' : '' }}"
+                            {{ $isProcessing ? 'disabled' : '' }}>
+                            @if($isProcessing)
+                            <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg"
+                                fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                    stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor"
+                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                </path>
+                            </svg>
+                            Création en cours...
+                            @else
                             Créer mon compte
+                            @endif
                         </button>
                     </div>
                 </form>

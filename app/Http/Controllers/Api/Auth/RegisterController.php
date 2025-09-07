@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Auth\RegisterRequest;
+use App\Http\Requests\Api\RegisterRequest;
 use App\Models\Enterprise;
 use App\Models\Member;
 use App\Models\User;
@@ -92,7 +92,6 @@ class RegisterController extends Controller
             'name' => $userData['enterprise_name'],
             'sector_id' => $userData['sector_id'],
             'plan_id' => $userData['plan_id'],
-            'owner_id' => $user->id,
             'country_code' => $userData['country_code'],
             'status' => Enterprise::STATUS_PENDING,
             'status_by' => $user->id,

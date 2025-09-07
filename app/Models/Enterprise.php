@@ -17,6 +17,7 @@ use Illuminate\Support\Str;
  * @property bool $active
  * @property string $code
  * @property int|null $owner_id
+ * @property int|null $gerant_id
  * @property int|null $sector_id
  * @property string $country_code
  * @property string|null $address
@@ -33,6 +34,7 @@ use Illuminate\Support\Str;
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
  * @property-read User|null $owner
+ * @property-read User|null $gerant
  * @property-read Sector|null $sector
  * @property-read \Illuminate\Database\Eloquent\Collection|Member[] $members
  * @property-read \Illuminate\Database\Eloquent\Collection|Department[] $departments
@@ -73,6 +75,7 @@ class Enterprise extends Model
         'active',
         'code',
         'owner_id',
+        'gerant_id',
         'sector_id',
         'plan_id',
         'country_code',
@@ -143,6 +146,14 @@ class Enterprise extends Model
     public function owner(): BelongsTo
     {
         return $this->belongsTo(User::class, 'owner_id');
+    }
+
+    /**
+     * Get the gerant of the enterprise.
+     */
+    public function gerant(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'gerant_id');
     }
 
     /**

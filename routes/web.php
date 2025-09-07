@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Public\DownloadController;
 use App\Http\Controllers\Public\HomeController;
 use App\Http\Controllers\Public\LoginController;
 use App\Http\Controllers\Public\RegistrationController;
@@ -17,6 +18,7 @@ Route::get('/company', [HomeController::class, 'company'])->name('company');
 Route::get('/register-success', [RegistrationController::class, 'registerSuccess'])->name('public.register-success');
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('public.login');
 
+Route::get('/download-payslip', [DownloadController::class, 'download'])->name('download-payslip');
 
 Route::get(
     '/get-started',

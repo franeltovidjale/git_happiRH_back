@@ -17,3 +17,5 @@ yarn-error.log
 /.idea
 /.vscode
 /.cursor
+/CLAUDE.md
+/issues-template

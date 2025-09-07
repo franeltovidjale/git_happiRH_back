@@ -15,7 +15,6 @@ use App\Http\Controllers\Api\{Auth, Employer, Employee};
 |
 */
 
-Route::post('/register', [Auth\RegisterController::class, 'register']);
 Route::post('/login', [Auth\LoginController::class, 'login']);
 Route::post('/login/verify-otp', [Auth\LoginController::class, 'verifyByOtp']);
 Route::post('/login/resend-otp', [Auth\LoginController::class, 'resendLoginOtp']);

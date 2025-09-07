@@ -46,16 +46,16 @@
 <body class="bg-gray-100/80 text-foreground">
 
     <!-- Main Container -->
-    <div class="max-w-7xl mx-auto p-4">
+    <div class="p-4 mx-auto max-w-7xl">
 
         <!-- Navigation Bar -->
         <header
-            class="sticky top-0 z-50 bg-white backdrop-blur-sm flex justify-between items-center p-5 rounded-3xl mb-4 transition-all duration-300">
+            class="flex sticky top-0 z-50 justify-between items-center p-5 mb-4 bg-white rounded-3xl backdrop-blur-sm transition-all duration-300">
             <a href="/" class="flex items-center space-x-2">
                 <img src="{{ asset('logo.svg') }}" alt="{{ config('app.name') }}" class="w-10 h-10">
-                <span class="font-bold text-2xl text-primary-700">{{ config('app.name') }}</span>
+                <span class="text-2xl font-bold text-primary-700">{{ config('app.name') }}</span>
             </a>
-            <nav class="hidden md:flex space-x-6 lg:space-x-12 text-gray-600 font-medium">
+            <nav class="hidden space-x-6 font-medium text-gray-600 md:flex lg:space-x-12">
                 <a href="{{ route('features') }}" class="hover:text-primary-600">Features</a>
                 <a href="{{ route('tarifs') }}" class="hover:text-primary-600">Tarifs</a>
                 <a href="{{ route('demo') }}" class="hover:text-primary-600">Vidéos de démo</a>
@@ -63,10 +63,10 @@
                 <a href="{{ route('company') }}" class="hover:text-primary-600">Company</a>
             </nav>
             <div class="flex items-center space-x-4">
-                <x-ui.button variant="secondary" size="md">Login</x-ui.button>
+                <x-ui.button variant="secondary" size="md" href="{{ route('public.login') }}">Login</x-ui.button>
                 <x-ui.button variant="primary" size="md" href="{{ route('public.register') }}">
                     <span>Démarrer gratuitement</span>
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-2" viewBox="0 0 20 20"
+                    <svg xmlns="http://www.w3.org/2000/svg" class="ml-2 w-4 h-4" viewBox="0 0 20 20"
                         fill="currentColor">
                         <path fill-rule="evenodd"
                             d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"

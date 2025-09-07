@@ -201,4 +201,14 @@ class Enterprise extends Model
     {
         return $this->hasMany(Member::class);
     }
+
+    public function paymentReminders(): HasMany
+    {
+        return $this->hasMany(PaymentReminder::class);
+    }
+
+    public function payments(): HasMany
+    {
+        return $this->hasMany(EnterprisePayment::class);
+    }
 }

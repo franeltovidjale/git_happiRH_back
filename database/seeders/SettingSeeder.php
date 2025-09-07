@@ -188,7 +188,7 @@ class SettingSeeder extends Seeder
             ],
             [
                 'key' => 'yearlyPlanRate',
-                'value' => '0.05',
+                'value' => '0.1',
                 'type' => 'number',
                 'label' => 'Yearly Plan Discount Rate',
                 'description' => 'Discount rate for yearly plans (0.05 = 5% discount)',

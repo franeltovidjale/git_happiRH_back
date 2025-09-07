@@ -99,6 +99,7 @@ class GetStarted extends Component
                 'status' => Enterprise::STATUS_REQUESTED,
                 'status_by' => $user->id,
                 'status_date' => now(),
+                'gerant_id' => $user->id,
             ]);
 
             // Set user's active enterprise

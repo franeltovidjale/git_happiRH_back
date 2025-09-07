@@ -1,12 +1,19 @@
 <?php
 
 use App\Http\Controllers\Api\Employer\{
+    AbsenceController,
     DepartmentController,
     DocumentController,
     EmployeeController,
     ExperienceController,
-    ProfileController
+    PlanningController,
+    PresenceController,
+    ProfileController,
+    ProjectController,
+    TaskController,
+    TransactionController
 };
+
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('employer')->group(function () {
@@ -30,5 +37,25 @@ Route::prefix('employer')->group(function () {
             Route::apiResource('experiences', ExperienceController::class)
                 ->only(['store', 'update', 'destroy']);
         });
+
+        // Project routes
+        Route::post('projects', [ProjectController::class, 'store']);
+        Route::put('projects/{id}', [ProjectController::class, 'update']);
+
+        // Task routes
+        Route::post('tasks', [TaskController::class, 'store']);
+        Route::put('tasks/{id}', [TaskController::class, 'update']);
+
+        // Absence routes
+        Route::post('absences', [AbsenceController::class, 'store']);
+
+        // Planning routes
+        Route::post('plannings', [PlanningController::class, 'store']);
+
+        // Presence routes
+        Route::post('presences', [PresenceController::class, 'store']);
+
+        // Transaction routes
+        Route::get('transactions', [TransactionController::class, 'index']);
     });
 });

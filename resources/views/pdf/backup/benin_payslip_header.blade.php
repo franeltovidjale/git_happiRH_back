@@ -44,6 +44,10 @@
             padding: 0;
         }
 
+        .table-spacing {
+            margin-bottom: 15px;
+        }
+
         .sub-table {
             width: 100%;
             border-collapse: collapse;
@@ -271,7 +275,7 @@
         <table class="main-table">
             <!-- Tableau 1: SOGEA SATOM, LIEU DE PAIEMENT, PERIODE -->
             <tr>
-                <td>
+                <td class="table-spacing">
                     <table class="sub-table">
                         <tr>
                             <td class="three-col">
@@ -327,7 +331,7 @@
 
             <!-- Tableau 2: ETABLISSEMENT, CONVENTION COLLECTIVE, APPOINTEMENTS -->
             <tr>
-                <td>
+                <td class="table-spacing">
                     <table class="sub-table">
                         <tr>
                             <td class="three-col">
@@ -373,7 +377,7 @@
 
             <!-- Tableau 3: QUALIFICATION et DETAILS EMPLOYE -->
             <tr>
-                <td>
+                <td class="table-spacing">
                     <table class="sub-table">
                         <tr>
                             <td class="two-col">
@@ -410,8 +414,8 @@
 
             <!-- Tableau 4: DÉTAILS DE LA PAIE -->
             <tr>
-                <td>
-                    <div style="margin-top: 10px;">
+                <td class="table-spacing">
+                    <div>
                         <div style="background: #4169E1; color: white; text-align: center; font-size: 14px; font-weight: bold; padding: 8px; margin-bottom: 5px;">
                             DÉTAILS DE LA PAIE
                         </div>

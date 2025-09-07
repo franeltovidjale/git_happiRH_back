@@ -28,12 +28,15 @@ class LoginController extends Controller
     /**
      * Handle user login
      */
-    public function login(LoginRequest $request): JsonResponse
+    public function login(Request $request): JsonResponse
     {
+        DB::beginTransaction();
         try {
-            DB::beginTransaction();
 
-            $credentials = $request->validated();
+            $credentials = $request->validate([
+                'email' => ['required', 'email'],
+                'password' => ['required', 'string'],
+            ]);
 
             if (! Auth::attempt($credentials)) {
                 DB::rollback();

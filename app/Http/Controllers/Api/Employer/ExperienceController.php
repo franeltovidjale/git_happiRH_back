@@ -7,8 +7,8 @@ use App\Services\ExperienceService;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ExperienceResource;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use App\Http\Requests\Api\Employer\StoreExperienceRequest;
-use App\Http\Requests\Api\Employer\UpdateExperienceRequest;
+use App\Http\Requests\Api\Employer\Members\StoreExperienceRequest;
+use App\Http\Requests\Api\Employer\Members\UpdateExperienceRequest;
 
 class ExperienceController extends Controller
 {

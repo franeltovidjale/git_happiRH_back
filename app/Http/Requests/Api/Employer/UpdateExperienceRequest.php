@@ -22,7 +22,6 @@ class UpdateExperienceRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'member_id' => 'required|integer|exists:members,id',
             'job_title' => 'nullable|string|max:255',
             'sector' => 'nullable|string|max:255',
             'company_name' => 'nullable|string|max:255',

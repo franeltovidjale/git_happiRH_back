@@ -16,7 +16,7 @@ class ExperienceService
      * @throws ModelNotFoundException
      * @throws \Exception
      */
-    public function create(array $data, Enterprise $enterprise): Experience
+    public function store(array $data, Enterprise $enterprise): Experience
     {
         DB::beginTransaction();
 
@@ -66,12 +66,6 @@ class ExperienceService
                 ->where('id', $experienceId)
                 ->firstOrFail();
 
-            // If member_id is being updated, verify it belongs to the enterprise
-            if (isset($data['member_id']) && $data['member_id'] !== $experience->member_id) {
-                $member = Member::where('enterprise_id', $enterprise->id)
-                    ->where('id', $data['member_id'])
-                    ->firstOrFail();
-            }
 
             $experience->update([
                 'member_id' => $data['member_id'] ?? $experience->member_id,

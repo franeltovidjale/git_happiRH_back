@@ -46,6 +46,7 @@ Route::prefix('employer')->group(function () {
         // Task routes
         Route::post('tasks', [TaskController::class, 'store']);
         Route::put('tasks/{id}', [TaskController::class, 'update']);
+        Route::delete('tasks/{id}', [TaskController::class, 'destroy']);
 
         // Absence routes
         Route::post('absences', [AbsenceController::class, 'store']);

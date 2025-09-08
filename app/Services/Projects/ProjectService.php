@@ -24,11 +24,12 @@ class ProjectService
                 'status' => $status,
                 'project_lead_id' => $data['project_lead_id'] ?? null,
                 'creator_id' => auth()->id(),
+                'enterprise_id' => auth()->user()->activeEnterprise->id,
             ]);
 
             DB::commit();
 
-            return $project->load(['creator', 'projectLead']);
+            return $project->load(['creator', 'projectLead', 'enterprise']);
         } catch (\Exception $e) {
             DB::rollback();
             throw $e;
@@ -56,7 +57,7 @@ class ProjectService
 
             DB::commit();
 
-            return $project->load(['creator', 'projectLead']);
+            return $project->load(['creator', 'projectLead', 'enterprise']);
         } catch (\Exception $e) {
             DB::rollback();
             throw $e;

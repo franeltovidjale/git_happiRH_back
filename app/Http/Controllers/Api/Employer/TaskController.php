@@ -49,4 +49,20 @@ class TaskController extends Controller
             return $this->serverError('Erreur lors de la mise à jour de la tâche', null, $e->getMessage());
         }
     }
+
+    /**
+     * Remove the specified task
+     */
+    public function destroy(int $id): JsonResponse
+    {
+        try {
+            $this->taskService->destroy($id);
+
+            return $this->ok('Tâche supprimée avec succès');
+        } catch (\Exception $e) {
+            logger()->error($e);
+
+            return $this->serverError('Erreur lors de la suppression de la tâche', null, $e->getMessage());
+        }
+    }
 }

@@ -31,12 +31,12 @@ class StoreTaskRequest extends FormRequest
                 Rule::unique('tasks', 'name')->where('project_id', $this->input('project_id'))
             ],
             'project_id' => ['required', 'exists:projects,id'],
-            'project_lead_id' => ['nullable', 'exists:users,id'],
+            'project_lead_id' => ['nullable', 'exists:members,id'],
             'due_date' => ['nullable', 'date', 'after_or_equal:today'],
             'start_time' => ['nullable', 'date_format:H:i'],
             'end_time' => ['nullable', 'date_format:H:i', 'after:start_time'],
             'priority' => ['nullable', Rule::in(TaskPriority::values())],
-            'assigned_to' => ['nullable', 'exists:users,id'],
+            'assigned_to' => ['nullable', 'exists:members,id'],
             'notifications' => ['boolean'],
         ];
     }

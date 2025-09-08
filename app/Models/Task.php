@@ -14,22 +14,22 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $id
  * @property string $name
  * @property int $project_id
- * @property int|null $project_lead_id
  * @property \Carbon\Carbon|null $due_date
  * @property \Carbon\Carbon|null $start_time
  * @property \Carbon\Carbon|null $end_time
  * @property string $priority
  * @property int|null $assigned_to
- * @property int $created_by
+ * @property int $creator_id
+ * @property int $enterprise_id
  * @property array|null $attachments
  * @property bool $notifications
  * @property string $status
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
  * @property-read Project $project
- * @property-read User|null $projectLead
  * @property-read User|null $assignedUser
  * @property-read User $creator
+ * @property-read Enterprise $enterprise
  */
 class Task extends Model
 {
@@ -43,13 +43,13 @@ class Task extends Model
     protected $fillable = [
         'name',
         'project_id',
-        'project_lead_id',
         'due_date',
         'start_time',
         'end_time',
         'priority',
         'assigned_to',
-        'created_by',
+        'creator_id',
+        'enterprise_id',
         'attachments',
         'notifications',
         'status',
@@ -79,14 +79,6 @@ class Task extends Model
     }
 
     /**
-     * Get the project lead.
-     */
-    public function projectLead(): BelongsTo
-    {
-        return $this->belongsTo(User::class, 'project_lead_id');
-    }
-
-    /**
      * Get the assigned user.
      */
     public function assignedUser(): BelongsTo
@@ -99,6 +91,14 @@ class Task extends Model
      */
     public function creator(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'created_by');
+        return $this->belongsTo(User::class, 'creator_id');
+    }
+
+    /**
+     * Get the enterprise that owns the task.
+     */
+    public function enterprise(): BelongsTo
+    {
+        return $this->belongsTo(Enterprise::class);
     }
 }

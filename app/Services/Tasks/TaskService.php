@@ -21,13 +21,13 @@ class TaskService
             $task = Task::create([
                 'name' => $data['name'],
                 'project_id' => $data['project_id'],
-                'project_lead_id' => $data['project_lead_id'] ?? null,
                 'due_date' => $data['due_date'] ?? null,
                 'start_time' => $data['start_time'] ?? null,
                 'end_time' => $data['end_time'] ?? null,
                 'priority' => $priority,
                 'assigned_to' => $data['assigned_to'] ?? null,
-                'created_by' => auth()->id(),
+                'creator_id' => auth()->id(),
+                'enterprise_id' => auth()->user()->activeEnterprise->id,
                 'attachments' => $data['attachments'] ?? null,
                 'notifications' => $data['notifications'] ?? false,
                 'status' => 'todo',
@@ -35,7 +35,7 @@ class TaskService
 
             DB::commit();
 
-            return $task->load(['project', 'creator', 'projectLead', 'assignedUser']);
+            return $task->load(['project', 'creator', 'assignedUser', 'enterprise']);
         } catch (\Exception $e) {
             DB::rollback();
             throw $e;
@@ -63,7 +63,27 @@ class TaskService
 
             DB::commit();
 
-            return $task->load(['project', 'creator', 'projectLead', 'assignedUser']);
+            return $task->load(['project', 'creator', 'assignedUser', 'enterprise']);
+        } catch (\Exception $e) {
+            DB::rollback();
+            throw $e;
+        }
+    }
+
+    /**
+     * Delete a task
+     */
+    public function destroy(int $taskId): bool
+    {
+        try {
+            DB::beginTransaction();
+
+            $task = Task::findOrFail($taskId);
+            $deleted = $task->delete();
+
+            DB::commit();
+
+            return $deleted;
         } catch (\Exception $e) {
             DB::rollback();
             throw $e;

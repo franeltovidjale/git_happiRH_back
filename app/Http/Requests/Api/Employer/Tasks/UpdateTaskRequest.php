@@ -41,7 +41,6 @@ class UpdateTaskRequest extends FormRequest
                 $projectId ? Rule::unique('tasks', 'name')->where('project_id', $projectId)->ignore($taskId) : 'string'
             ],
             'project_id' => ['sometimes', 'exists:projects,id'],
-            'project_lead_id' => ['nullable', 'exists:users,id'],
             'due_date' => ['nullable', 'date', 'after_or_equal:today'],
             'start_time' => ['nullable', 'date_format:H:i'],
             'end_time' => ['nullable', 'date_format:H:i', 'after:start_time'],
@@ -62,7 +61,6 @@ class UpdateTaskRequest extends FormRequest
             'name.max' => 'Le nom de la tâche ne doit pas dépasser 255 caractères.',
             'name.unique' => 'Une tâche avec ce nom existe déjà dans ce projet.',
             'project_id.exists' => 'Le projet sélectionné n\'existe pas.',
-            'project_lead_id.exists' => 'Le chef de projet sélectionné n\'existe pas.',
             'due_date.date' => 'La date d\'échéance doit être une date valide.',
             'due_date.after_or_equal' => 'La date d\'échéance ne peut pas être antérieure à aujourd\'hui.',
             'start_time.date_format' => 'L\'heure de début doit être au format HH:MM.',

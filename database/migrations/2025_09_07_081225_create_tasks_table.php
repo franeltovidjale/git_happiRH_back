@@ -15,13 +15,13 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->foreignId('project_id')->constrained('projects')->cascadeOnDelete();
-            $table->foreignId('project_lead_id')->nullable()->constrained('users')->cascadeOnDelete();
             $table->date('due_date')->nullable();
             $table->time('start_time')->nullable();
             $table->time('end_time')->nullable();
             $table->string('priority')->default('medium');
             $table->foreignId('assigned_to')->nullable()->constrained('members')->cascadeOnDelete();
             $table->foreignId('creator_id')->constrained('members')->cascadeOnDelete();
+            $table->foreignId('enterprise_id')->constrained('enterprises')->cascadeOnDelete();
             $table->json('attachments')->nullable();
             $table->boolean('notifications')->default(false);
             $table->string('status')->default('todo');

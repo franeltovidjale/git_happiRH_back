@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('status')->default('draft');
             $table->foreignId('project_lead_id')->nullable()->constrained('members')->cascadeOnDelete();
             $table->foreignId('creator_id')->constrained('members')->cascadeOnDelete();
+            $table->foreignId('enterprise_id')->constrained('enterprises')->cascadeOnDelete();
             $table->timestamps();
         });
     }

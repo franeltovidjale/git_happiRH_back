@@ -17,10 +17,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string $status
  * @property int|null $project_lead_id
  * @property int $creator_id
+ * @property int $enterprise_id
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
  * @property-read User|null $projectLead
  * @property-read User $creator
+ * @property-read Enterprise $enterprise
  * @property-read \Illuminate\Database\Eloquent\Collection|Task[] $tasks
  */
 class Project extends Model
@@ -38,6 +40,7 @@ class Project extends Model
         'status',
         'project_lead_id',
         'creator_id',
+        'enterprise_id',
     ];
 
     /**
@@ -63,6 +66,14 @@ class Project extends Model
     public function projectLead(): BelongsTo
     {
         return $this->belongsTo(User::class, 'project_lead_id');
+    }
+
+    /**
+     * Get the enterprise that owns the project.
+     */
+    public function enterprise(): BelongsTo
+    {
+        return $this->belongsTo(Enterprise::class);
     }
 
     /**

@@ -101,6 +101,7 @@ class EmployeeController extends Controller
                 'joining_date' => $request->joining_date,
                 'status_by' => auth()->id(),
                 'status_date' => now(),
+                'department_id' => $request->department_id,
             ]);
 
             // Create address information
@@ -153,11 +154,6 @@ class EmployeeController extends Controller
                     'full_name' => $request->contact_person_full_name,
                     'phone' => $request->contact_person_phone,
                 ]);
-            }
-
-            // Associate department if provided
-            if ($request->filled('department_id')) {
-                $member->departments()->attach($request->department_id);
             }
 
             Mail::to($user->email)->send(new EmployeeRegisteredMail(
@@ -261,6 +257,7 @@ class EmployeeController extends Controller
                 'role',
                 'joining_date',
                 'location_id',
+                'department_id',
             ]));
             if (! empty($memberData)) {
                 $member->update($memberData);
@@ -322,11 +319,6 @@ class EmployeeController extends Controller
                     ['member_id' => $member->id],
                     array_filter($mappedContactData) // Remove null values
                 );
-            }
-
-            // Update department association if provided
-            if ($request->filled('department_id')) {
-                $member->departments()->sync([$request->department_id]);
             }
 
             DB::commit();

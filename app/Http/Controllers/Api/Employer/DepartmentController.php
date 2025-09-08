@@ -3,7 +3,8 @@
 namespace App\Http\Controllers\Api\Employer;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Employer\StoreDepartmentRequest;
+use App\Http\Requests\Api\Employer\StoreDepartmentRequest;
+use App\Http\Requests\Api\Employer\UpdateDepartmentRequest as EmployerUpdateDepartmentRequest;
 use App\Http\Requests\Employer\UpdateDepartmentRequest;
 use App\Http\Resources\DepartmentResource;
 use App\Models\Department;
@@ -96,7 +97,7 @@ class DepartmentController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateDepartmentRequest $request, int $id): JsonResponse
+    public function update(EmployerUpdateDepartmentRequest $request, int $id): JsonResponse
     {
         DB::beginTransaction();
         try {

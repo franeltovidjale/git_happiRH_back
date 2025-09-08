@@ -84,6 +84,7 @@ class UpdateEmployeeRequest extends FormRequest
 
             // Status - only validate if provided
             'active' => 'sometimes|boolean',
+            'department_id' => 'sometimes|required|exists:departments,id',
         ];
     }
 

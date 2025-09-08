@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Api\Employer;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Employer\Tasks\StoreTaskRequest;
-use App\Http\Requests\Employer\Tasks\UpdateTaskRequest;
+use App\Http\Requests\Api\Employer\Tasks\StoreTaskRequest;
+use App\Http\Requests\Api\Employer\Tasks\UpdateTaskRequest;
 use App\Services\Tasks\TaskService;
 use Illuminate\Http\JsonResponse;
 

@@ -82,7 +82,7 @@ class DocumentController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request, Document $document): JsonResponse
+    public function destroy(Document $document): JsonResponse
     {
         try {
             $enterprise = $this->getActiveEnterprise();

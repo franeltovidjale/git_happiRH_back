@@ -23,7 +23,7 @@ class ProjectService
                 'description' => $data['description'] ?? null,
                 'status' => $status,
                 'project_lead_id' => $data['project_lead_id'] ?? null,
-                'created_by' => auth()->id(),
+                'creator_id' => auth()->id(),
             ]);
 
             DB::commit();
@@ -46,7 +46,7 @@ class ProjectService
             $project = Project::findOrFail($projectId);
 
             // If status is not provided, determine from date (or keep current status)
-            if (!isset($data['status'])) {
+            if (! isset($data['status'])) {
                 $data['status'] = $this->determineStatusFromDate();
             }
 

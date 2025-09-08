@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Api\Employer;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Employer\Projects\StoreProjectRequest;
-use App\Http\Requests\Employer\Projects\UpdateProjectRequest;
+use App\Http\Requests\Api\Employer\Projects\StoreProjectRequest;
+use App\Http\Requests\Api\Employer\Projects\UpdateProjectRequest;
 use App\Services\Projects\ProjectService;
 use Illuminate\Http\JsonResponse;
 

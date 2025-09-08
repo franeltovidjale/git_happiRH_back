@@ -16,7 +16,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string|null $description
  * @property string $status
  * @property int|null $project_lead_id
- * @property int $created_by
+ * @property int $creator_id
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
  * @property-read User|null $projectLead
@@ -37,7 +37,7 @@ class Project extends Model
         'description',
         'status',
         'project_lead_id',
-        'created_by',
+        'creator_id',
     ];
 
     /**
@@ -54,7 +54,7 @@ class Project extends Model
      */
     public function creator(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'created_by');
+        return $this->belongsTo(User::class, 'creator_id');
     }
 
     /**

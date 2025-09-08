@@ -64,6 +64,26 @@ class ProjectService
     }
 
     /**
+     * Delete an existing project
+     */
+    public function delete(int $projectId): bool
+    {
+        try {
+            DB::beginTransaction();
+
+            $project = Project::findOrFail($projectId);
+            $deleted = $project->delete();
+
+            DB::commit();
+
+            return $deleted;
+        } catch (\Exception $e) {
+            DB::rollback();
+            throw $e;
+        }
+    }
+
+    /**
      * Determine project status based on current date
      */
     private function determineStatusFromDate(): string

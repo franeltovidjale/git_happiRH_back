@@ -27,7 +27,7 @@ class UpdateProjectRequest extends FormRequest
             'name' => ['sometimes', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'status' => ['nullable', Rule::in(ProjectStatus::values())],
-            'project_lead_id' => ['nullable', 'exists:users,id'],
+            'project_lead_id' => ['nullable', 'exists:members,id'],
         ];
     }
 

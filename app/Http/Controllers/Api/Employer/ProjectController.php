@@ -35,7 +35,7 @@ class ProjectController extends Controller
     /**
      * Update the specified project
      */
-    public function update(UpdateProjectRequest $request, int $id): JsonResponse
+    public function update(UpdateProjectRequest $request, int $id)
     {
         try {
             $project = $this->projectService->update($id, $request->validated());
@@ -47,6 +47,22 @@ class ProjectController extends Controller
             logger()->error($e);
 
             return $this->serverError('Erreur lors de la mise à jour du projet', null, $e->getMessage());
+        }
+    }
+
+    /**
+     * Remove the specified project
+     */
+    public function destroy(int $id): JsonResponse
+    {
+        try {
+            $this->projectService->delete($id);
+
+            return $this->ok('Projet supprimé avec succès');
+        } catch (\Exception $e) {
+            logger()->error($e);
+
+            return $this->serverError('Erreur lors de la suppression du projet', null, $e->getMessage());
         }
     }
 }

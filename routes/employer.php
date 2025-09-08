@@ -41,6 +41,7 @@ Route::prefix('employer')->group(function () {
         // Project routes
         Route::post('projects', [ProjectController::class, 'store']);
         Route::put('projects/{id}', [ProjectController::class, 'update']);
+        Route::delete('projects/{id}', [ProjectController::class, 'destroy']);
 
         // Task routes
         Route::post('tasks', [TaskController::class, 'store']);

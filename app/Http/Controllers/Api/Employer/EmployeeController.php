@@ -420,6 +420,10 @@ class EmployeeController extends Controller
             $member = Member::where('enterprise_id', $enterprise->id)
                 ->findOrFail($id);
 
+            if ($member->type === User::TYPE_GERANT) {
+                return $this->badRequest('Impossible de supprimer le gérant de l\'entreprise');
+            }
+
             $user = $member->user;
             $member->delete();
             $user->delete();

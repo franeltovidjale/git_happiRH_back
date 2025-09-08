@@ -83,6 +83,12 @@ class Handler extends ExceptionHandler
                     'success' => false,
                 ], 403);
             }
+            if ($e instanceof \Illuminate\Database\Eloquent\ModelNotFoundException) {
+                return response()->json([
+                    'message' => "Ressource non trouvée ou non disponible",
+                    'success' => false,
+                ], 404);
+            }
         }
 
 

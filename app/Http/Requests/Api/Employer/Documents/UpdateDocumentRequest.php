@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Api\Employer;
+namespace App\Http\Requests\Api\Employer\Documents;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -51,7 +51,7 @@ class UpdateDocumentRequest extends FormRequest
     protected function prepareForValidation(): void
     {
         // Generate key from name if not provided and name is being updated
-        if (!$this->has('key') && $this->has('name')) {
+        if (! $this->has('key') && $this->has('name')) {
             $this->merge([
                 'key' => \Illuminate\Support\Str::slug($this->name),
             ]);

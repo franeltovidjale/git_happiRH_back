@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Api\Employer;
+namespace App\Http\Requests\Api\Employer\Documents;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Str;
@@ -56,7 +56,7 @@ class StoreDocumentRequest extends FormRequest
     protected function prepareForValidation(): void
     {
         // Generate key from name if not provided
-        if (!$this->has('key') && $this->has('name')) {
+        if (! $this->has('key') && $this->has('name')) {
             $this->merge([
                 'key' => Str::slug($this->name),
             ]);

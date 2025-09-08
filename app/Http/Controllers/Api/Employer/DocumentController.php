@@ -3,8 +3,9 @@
 namespace App\Http\Controllers\Api\Employer;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Employer\StoreDocumentRequest;
-use App\Http\Requests\Employer\UpdateDocumentRequest;
+use App\Http\Requests\Api\Employer\Documents\StoreDocumentRequest;
+use App\Http\Requests\Api\Employer\Documents\UpdateDocumentRequest;
+use App\Http\Resources\DocumentResource;
 use App\Models\Document;
 use App\Models\Member;
 use App\Services\DocumentService;
@@ -27,7 +28,7 @@ class DocumentController extends Controller
         $filters = $request->only(['search', 'member_id', 'scope', 'active', 'per_page']);
         $documents = $this->documentService->getDocumentsForEnterprise($enterprise, $filters);
 
-        return $this->ok('Documents récupérés avec succès', $documents);
+        return $this->ok('Documents récupérés avec succès', DocumentResource::collection($documents));
     }
 
     /**
@@ -35,34 +36,47 @@ class DocumentController extends Controller
      */
     public function store(StoreDocumentRequest $request): JsonResponse
     {
-        $enterprise = $this->getActiveEnterprise();
+        try {
+            $enterprise = $this->getActiveEnterprise();
 
-        $member = Member::where('enterprise_id', $enterprise->id)
-            ->findOrFail($request->member_id);
+            $member = Member::where('enterprise_id', $enterprise->id)
+                ->findOrFail($request->member_id);
 
-        $data = $request->validated();
-        $file = $request->file('file');
+            $data = $request->validated();
+            $file = $request->file('file');
 
-        $document = $this->documentService->save($data, $member, $enterprise, $file);
+            $document = $this->documentService->save($data, $member, $enterprise, $file);
 
-        return $this->created('Document créé avec succès', $document->load('documentable.user'));
+            return $this->created('Document créé avec succès', $document->load('documentable.user'));
+        } catch (\Throwable $e) {
+            logger()->error('Erreur lors de la création du document: ' . $e->getMessage(), [
+                'exception' => $e,
+                'request_data' => $request->except(['file']),
+            ]);
+
+            return $this->error('Erreur lors de la création du document', 500);
+        }
     }
-
-
 
     /**
      * Update the specified resource in storage.
      */
     public function update(UpdateDocumentRequest $request, Document $document): JsonResponse
     {
-        $enterprise = $this->getActiveEnterprise();
+        try {
+            $enterprise = $this->getActiveEnterprise();
 
-        $data = $request->validated();
-        $file = $request->file('file');
+            $data = $request->validated();
+            $file = $request->file('file');
 
-        $updatedDocument = $this->documentService->update($data, $document->id, $enterprise, $file);
+            $updatedDocument = $this->documentService->update($data, $document->id, $enterprise, $file);
 
-        return $this->ok('Document mis à jour avec succès', $updatedDocument->load('documentable.user'));
+            return $this->ok('Document mis à jour avec succès', DocumentResource::make($updatedDocument));
+        } catch (\Throwable $e) {
+            logger()->error($e);
+
+            return $this->error('Erreur lors de la mise à jour du document', 500);
+        }
     }
 
     /**
@@ -70,10 +84,19 @@ class DocumentController extends Controller
      */
     public function destroy(Request $request, Document $document): JsonResponse
     {
-        $enterprise = $this->getActiveEnterprise();
+        try {
+            $enterprise = $this->getActiveEnterprise();
 
-        $this->documentService->delete($document->id, $enterprise);
+            $this->documentService->delete($document->id, $enterprise);
 
-        return $this->ok('Document supprimé avec succès');
+            return $this->ok('Document supprimé avec succès');
+        } catch (\Throwable $e) {
+            logger()->error('Erreur lors de la suppression du document: ' . $e->getMessage(), [
+                'exception' => $e,
+                'document_id' => $document->id,
+            ]);
+
+            return $this->error('Erreur lors de la suppression du document', 500);
+        }
     }
 }

@@ -1,14 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Api\Employer;
+namespace App\Http\Requests\Api\Employer\Members;
 
-use App\Models\Member;
 use Illuminate\Foundation\Http\FormRequest;
 
-/**
- * Update Employee Request
- */
-class UpdateEmployeeRequest extends FormRequest
+class StoreEmployeeRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,66 +21,59 @@ class UpdateEmployeeRequest extends FormRequest
      */
     public function rules(): array
     {
-        $memberId = $this->route('employee');
-
         return [
-            // User-related fields - only validate if provided
-            'first_name' => 'sometimes|required|string|max:100',
-            'last_name' => 'sometimes|required|string|max:100',
-            'phone' => 'sometimes|required|string|max:20',
+            // User-related fields
+            'first_name' => 'required|string|max:100',
+            'last_name' => 'required|string|max:100',
+            'email' => 'required|email|unique:users,email',
+            'phone' => 'required|string|max:20',
 
-            // Personal Information - only validate if provided
+            // Personal Information
             'birth_date' => [
-                'sometimes',
                 'required',
                 'date',
                 'before_or_equal:' . now()->subYears(18)->format('Y-m-d'),
             ],
-            'marital_status' => 'sometimes|nullable|in:single,married,divorced,widowed',
-            'gender' => 'sometimes|nullable|in:male,female,other',
-            'nationality' => 'sometimes|nullable|string|max:255',
+            'marital_status' => 'nullable|in:single,married,divorced,widowed',
+            'gender' => 'required|in:male,female,other',
+            'nationality' => 'nullable|string|max:255',
 
-            // Address Information - only validate if provided
-            'address' => 'sometimes|nullable|string',
-            'city' => 'sometimes|nullable|string|max:255',
-            'state' => 'sometimes|nullable|string|max:255',
-            'zip_code' => 'sometimes|nullable|string|max:20',
+            // Address Information
+            'address' => 'nullable|string',
+            'city' => 'nullable|string|max:255',
+            'state' => 'nullable|string|max:255',
+            'zip_code' => 'nullable|string|max:20',
 
-            // Professional Information - only validate if provided
-            'username' => [
-                'sometimes',
-                'nullable',
-                'string',
-                'unique:members,username,' . $memberId,
-            ],
-            'role' => 'sometimes|required|string|max:255',
-            'joining_date' => 'sometimes|required|date',
-            'location_id' => 'sometimes|nullable|exists:locations,id',
+            // Professional Information
+            'username' => 'nullable|string|unique:employees,username',
+            'role' => 'required|string|max:255',
+            'joining_date' => 'required|date',
+            'location_id' => 'nullable|exists:locations,id',
+            'department_id' => 'required|exists:departments,id',
 
-            // Employment Information - only validate if provided
-            'contract_type' => 'sometimes|nullable|in:cdi,cdd,permanent',
-            'job_type' => 'sometimes|nullable|in:remote,hybrid,in-office',
+            // Employment Information
+            'contract_type' => 'required|in:cdi,cdd,permanent',
+            'job_type' => 'nullable|in:remote,hybrid,in-office',
 
-            // Banking Information - only validate if provided
-            'bank_account_number' => 'sometimes|required|string|max:50',
-            'bank_name' => 'sometimes|required|string|max:255',
-            'pan_number' => 'sometimes|required|string|max:20',
-            'ifsc_code' => 'sometimes|required|string|max:20',
+            // Banking Information
+            'bank_account_number' => 'nullable|string|max:50',
+            'bank_name' => 'nullable|string|max:255',
+            'pan_number' => 'nullable|string|max:20',
+            'ifsc_code' => 'nullable|string|max:20',
 
-            // Salary and Payment Information - only validate if provided
-            'salary_basis' => 'sometimes|nullable|string|max:100',
-            'effective_date' => 'sometimes|nullable|date',
-            'monthly_salary_amount' => 'sometimes|nullable|numeric|min:0|max:99999999.99',
-            'type_of_payment' => 'sometimes|nullable|string|max:100',
-            'billing_rate' => 'sometimes|nullable|numeric|min:0|max:99999999.99',
+            // Salary and Payment Information
+            'salary_basis' => 'nullable|string|max:100',
+            'effective_date' => 'nullable|date',
+            'monthly_salary_amount' => 'nullable|numeric|min:0|max:99999999.99',
+            'type_of_payment' => 'nullable|string|max:100',
+            'billing_rate' => 'nullable|numeric|min:0|max:99999999.99',
 
-            // Contact Information - only validate if provided
-            'contact_person_full_name' => 'sometimes|required|string|max:255',
-            'contact_person_phone' => 'sometimes|required|string|max:20',
+            // Contact Information
+            'contact_person_full_name' => 'nullable|string|max:255',
+            'contact_person_phone' => 'nullable|string|max:20',
 
-            // Status - only validate if provided
-            'active' => 'sometimes|boolean',
-            'department_id' => 'sometimes|required|exists:departments,id',
+            // Status
+            'active' => 'boolean',
         ];
     }
 
@@ -101,13 +90,18 @@ class UpdateEmployeeRequest extends FormRequest
             'first_name.max' => 'Le prénom ne peut pas dépasser 100 caractères',
             'last_name.required' => 'Le nom est obligatoire',
             'last_name.max' => 'Le nom ne peut pas dépasser 100 caractères',
+            'email.required' => 'L\'adresse email est obligatoire',
+            'email.email' => 'L\'adresse email doit être valide',
+            'email.unique' => 'Cette adresse email est déjà utilisée',
             'phone.required' => 'Le téléphone est obligatoire',
             'phone.max' => 'Le téléphone ne peut pas dépasser 20 caractères',
 
             // Personal Information messages
+            'birth_date.required' => 'La date de naissance est obligatoire',
             'birth_date.date' => 'La date de naissance doit être une date valide',
             'birth_date.before_or_equal' => 'L\'employé doit avoir au moins 18 ans',
             'marital_status.in' => 'Le statut marital doit être single, married, divorced ou widowed',
+            'gender.required' => 'Le genre est obligatoire',
             'gender.in' => 'Le genre doit être male, female ou other',
             'nationality.max' => 'La nationalité ne peut pas dépasser 255 caractères',
 
@@ -124,8 +118,11 @@ class UpdateEmployeeRequest extends FormRequest
             'joining_date.required' => 'La date d\'embauche est obligatoire',
             'joining_date.date' => 'La date d\'embauche doit être une date valide',
             'location_id.exists' => 'L\'emplacement sélectionné n\'existe pas',
+            'department_id.required' => 'Le département est obligatoire',
+            'department_id.exists' => 'Le département sélectionné n\'existe pas',
 
             // Employment Information messages
+            'contract_type.required' => 'Le type de contrat est obligatoire',
             'contract_type.in' => 'Le type de contrat doit être cdi, cdd ou permanent',
             'job_type.in' => 'Le type de travail doit être remote, hybrid ou in-office',
 
@@ -147,21 +144,11 @@ class UpdateEmployeeRequest extends FormRequest
             'billing_rate.max' => 'Le taux de facturation ne peut pas dépasser 99,999,999.99',
 
             // Contact Information messages
-            'contact_person_full_name.max' => 'Le nom complet du contact ne peut pas dépasser 255 caractères',
-            'contact_person_phone.max' => 'Le téléphone du contact ne peut pas dépasser 20 caractères',
+            'contact_person_full_name.max' => 'Le nom complet de la personne de contact ne peut pas dépasser 255 caractères',
+            'contact_person_phone.max' => 'Le téléphone de la personne de contact ne peut pas dépasser 20 caractères',
 
             // Status messages
             'active.boolean' => 'Le statut actif doit être vrai ou faux',
         ];
-    }
-
-    /**
-     * Get only the validated data that was actually provided in the request.
-     *
-     * @return array<string, mixed>
-     */
-    public function validatedData(): array
-    {
-        return $this->only(array_keys($this->rules()));
     }
 }

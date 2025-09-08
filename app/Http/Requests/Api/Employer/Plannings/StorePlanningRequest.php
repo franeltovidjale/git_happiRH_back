@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Employer\Plannings;
+namespace App\Http\Requests\Api\Employer\Plannings;
 
 use App\Enums\PlanningStatus;
 use Illuminate\Foundation\Http\FormRequest;

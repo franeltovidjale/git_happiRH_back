@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Employer\Presences;
+namespace App\Http\Requests\Api\Employer\Presences;
 
 use App\Enums\PresenceStatus;
 use Illuminate\Foundation\Http\FormRequest;

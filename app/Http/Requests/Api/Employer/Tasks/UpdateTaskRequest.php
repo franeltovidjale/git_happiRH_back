@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Employer\Tasks;
+namespace App\Http\Requests\Api\Employer\Tasks;
 
 use App\Enums\TaskPriority;
 use App\Enums\TaskStatus;
@@ -26,17 +26,17 @@ class UpdateTaskRequest extends FormRequest
     {
         $taskId = $this->route('id') ?? $this->route('task');
         $projectId = $this->input('project_id');
-        
+
         // Si project_id n'est pas fourni, récupère celui de la tâche existante
         if (!$projectId && $taskId) {
             $existingTask = \App\Models\Task::find($taskId);
             $projectId = $existingTask ? $existingTask->project_id : null;
         }
-        
+
         return [
             'name' => [
-                'sometimes', 
-                'string', 
+                'sometimes',
+                'string',
                 'max:255',
                 $projectId ? Rule::unique('tasks', 'name')->where('project_id', $projectId)->ignore($taskId) : 'string'
             ],

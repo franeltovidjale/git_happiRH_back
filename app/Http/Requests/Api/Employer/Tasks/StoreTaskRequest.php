@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Employer\Tasks;
+namespace App\Http\Requests\Api\Employer\Tasks;
 
 use App\Enums\TaskPriority;
 use Illuminate\Foundation\Http\FormRequest;
@@ -25,8 +25,8 @@ class StoreTaskRequest extends FormRequest
     {
         return [
             'name' => [
-                'required', 
-                'string', 
+                'required',
+                'string',
                 'max:255',
                 Rule::unique('tasks', 'name')->where('project_id', $this->input('project_id'))
             ],

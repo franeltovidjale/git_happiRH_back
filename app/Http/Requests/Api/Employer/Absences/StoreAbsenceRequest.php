@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Employer\Absences;
+namespace App\Http\Requests\Api\Employer\Absences;
 
 use App\Enums\AbsenceStatus;
 use Illuminate\Foundation\Http\FormRequest;

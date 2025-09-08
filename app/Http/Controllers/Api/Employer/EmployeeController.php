@@ -22,10 +22,10 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\EmployeeStatusChangedMail;
 use App\Http\Resources\EmployeeResource;
 use Illuminate\Validation\ValidationException;
-use App\Http\Requests\Api\Employer\StoreEmployeeRequest;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use App\Http\Requests\Api\Employer\UpdateEmployeeRequest;
-use App\Http\Requests\Api\Employer\ChangeEmployeeStatusRequest;
+use App\Http\Requests\Api\Employer\Members\StoreEmployeeRequest;
+use App\Http\Requests\Api\Employer\Members\UpdateEmployeeRequest;
+use App\Http\Requests\Api\Employer\Members\ChangeEmployeeStatusRequest;
 use Illuminate\Http\Request;
 
 class EmployeeController extends Controller

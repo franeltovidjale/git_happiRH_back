@@ -2,30 +2,31 @@
 
 namespace App\Http\Controllers\Api\Employer;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\Employer\ChangeEmployeeStatusRequest;
-use App\Http\Requests\Employer\StoreEmployeeRequest;
-use App\Http\Requests\Employer\UpdateEmployeeRequest;
-use App\Http\Resources\EmployeeResource;
-use App\Mail\EmployeeRegisteredMail;
-use App\Mail\EmployeeStatusChangedMail;
+use App\Models\User;
 use App\Models\Member;
+use Illuminate\Support\Str;
+
+use App\Models\MemberSalary;
 use App\Models\MemberAddress;
 use App\Models\MemberBanking;
-use App\Models\MemberContactPerson;
-use App\Models\MemberEmployment;
-use App\Models\MemberSalary;
-use App\Models\User;
-use App\Services\EmployeeService;
 use App\Services\UserService;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+use App\Models\MemberEmployment;
+use App\Services\EmployeeService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Models\MemberContactPerson;
+use App\Http\Controllers\Controller;
+use App\Mail\EmployeeRegisteredMail;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Str;
+use App\Mail\EmployeeStatusChangedMail;
+use App\Http\Resources\EmployeeResource;
 use Illuminate\Validation\ValidationException;
+use App\Http\Requests\Api\Employer\StoreEmployeeRequest;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use App\Http\Requests\Api\Employer\UpdateEmployeeRequest;
+use App\Http\Requests\Api\Employer\ChangeEmployeeStatusRequest;
+use Illuminate\Http\Request;
 
 class EmployeeController extends Controller
 {

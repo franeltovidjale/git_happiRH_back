@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 
@@ -107,7 +108,7 @@ class Department extends Model
         $counter = 1;
 
         while (static::where('enterprise_id', $enterpriseId)->where('slug', $slug)->exists()) {
-            $slug = $baseSlug.'-'.$counter;
+            $slug = $baseSlug . '-' . $counter;
             $counter++;
         }
 
@@ -125,9 +126,9 @@ class Department extends Model
     /**
      * Get the members that belong to the department.
      */
-    public function members(): BelongsToMany
+    public function members(): HasMany
     {
-        return $this->belongsToMany(Member::class, 'department_member');
+        return $this->hasMany(Member::class);
     }
 
     /**

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Api\Employer;
+namespace App\Http\Requests\Api\Employer\Departements;
 
 use App\Models\Department;
 use Illuminate\Foundation\Http\FormRequest;

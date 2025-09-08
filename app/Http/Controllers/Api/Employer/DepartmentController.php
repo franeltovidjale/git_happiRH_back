@@ -2,17 +2,16 @@
 
 namespace App\Http\Controllers\Api\Employer;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\Api\Employer\StoreDepartmentRequest;
-use App\Http\Requests\Api\Employer\UpdateDepartmentRequest as EmployerUpdateDepartmentRequest;
-use App\Http\Requests\Employer\UpdateDepartmentRequest;
-use App\Http\Resources\DepartmentResource;
 use App\Models\Department;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Str;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
+use App\Http\Controllers\Controller;
+use App\Http\Resources\DepartmentResource;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use App\Http\Requests\Api\Employer\Departements\StoreDepartmentRequest;
+use App\Http\Requests\Api\Employer\Departements\UpdateDepartmentRequest;
 
 class DepartmentController extends Controller
 {
@@ -97,7 +96,7 @@ class DepartmentController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(EmployerUpdateDepartmentRequest $request, int $id): JsonResponse
+    public function update(UpdateDepartmentRequest $request, int $id): JsonResponse
     {
         DB::beginTransaction();
         try {

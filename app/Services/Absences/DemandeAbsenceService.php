@@ -3,15 +3,15 @@
 namespace App\Services\Absences;
 
 use App\Enums\AbsenceStatus;
-use App\Models\Absence;
+use App\Models\DemandeAbsence;
 use Illuminate\Support\Facades\DB;
 
-class AbsenceService
+class DemandeAbsenceService
 {
     /**
-     * Store a new absence
+     * Store a new demande absence
      */
-    public function store(array $data): Absence
+    public function store(array $data): DemandeAbsence
     {
         DB::beginTransaction();
         try {
@@ -19,7 +19,7 @@ class AbsenceService
             // Use provided status or default to 'pending'
             $status = $data['status'] ?? AbsenceStatus::APPROVED;
 
-            $absence = Absence::create([
+            $demandeAbsence = DemandeAbsence::create([
                 'absence_date' => $data['absence_date'],
                 'member_id' => $data['member_id'],
                 'enterprise_id' => activeEnterprise()->id,
@@ -30,7 +30,7 @@ class AbsenceService
 
             DB::commit();
 
-            return $absence->load(['member', 'enterprise', 'creator']);
+            return $demandeAbsence->load(['member', 'enterprise', 'creator']);
         } catch (\Exception $e) {
             DB::rollback();
             throw $e;

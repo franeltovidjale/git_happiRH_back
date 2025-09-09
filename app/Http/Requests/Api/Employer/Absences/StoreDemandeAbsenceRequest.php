@@ -6,7 +6,7 @@ use App\Enums\AbsenceStatus;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class StoreAbsenceRequest extends FormRequest
+class StoreDemandeAbsenceRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,7 +25,15 @@ class StoreAbsenceRequest extends FormRequest
     {
         return [
             'absence_date' => ['required', 'date'],
-            'member_id' => ['required', 'exists:members,id'],
+            'member_id' => [
+                'required', 
+                'exists:members,id',
+                function ($attribute, $value, $fail) {
+                    if ($value && !isMemberPartOfEnterprise($value)) {
+                        $fail('Le membre sélectionné ne fait pas partie de votre entreprise.');
+                    }
+                }
+            ],
             'status' => ['nullable', Rule::in(AbsenceStatus::values())],
             'reason' => ['nullable', 'string', 'max:1000'],
         ];
@@ -37,8 +45,8 @@ class StoreAbsenceRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'absence_date.required' => 'La date d\'absence est obligatoire.',
-            'absence_date.date' => 'La date d\'absence doit être une date valide.',
+            'absence_date.required' => 'La date de la demande d\'absence est obligatoire.',
+            'absence_date.date' => 'La date de la demande d\'absence doit être une date valide.',
             'member_id.required' => 'Le membre est obligatoire.',
             'member_id.exists' => 'Le membre sélectionné n\'existe pas.',
             'enterprise_id.required' => 'L\'entreprise est obligatoire.',

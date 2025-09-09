@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('absences', function (Blueprint $table) {
+        Schema::create('demande_absences', function (Blueprint $table) {
             $table->id();
             $table->dateTime('absence_date');
             $table->string('status')->default('pending');
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('absences');
+        Schema::dropIfExists('demande_absences');
     }
 };

@@ -8,22 +8,22 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * Absence Model
+ * DemandeAbsence Model
  *
  * @property int $id
  * @property \Carbon\Carbon $absence_date
  * @property string $status
  * @property int $member_id
  * @property int $enterprise_id
- * @property int $created_by
+ * @property int $creator_member_id
  * @property string|null $reason
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
- * @property-read User $member
+ * @property-read Member $member
  * @property-read Enterprise $enterprise
- * @property-read User $creator
+ * @property-read Member $creator
  */
-class Absence extends Model
+class DemandeAbsence extends Model
 {
     use HasFactory;
 
@@ -52,15 +52,20 @@ class Absence extends Model
     ];
 
     /**
-     * Get the member (user) associated with the absence.
+     * Specify the table name.
+     */
+    protected $table = 'demande_absences';
+
+    /**
+     * Get the member associated with the demande absence.
      */
     public function member(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'member_id');
+        return $this->belongsTo(Member::class, 'member_id');
     }
 
     /**
-     * Get the enterprise associated with the absence.
+     * Get the enterprise associated with the demande absence.
      */
     public function enterprise(): BelongsTo
     {
@@ -68,10 +73,10 @@ class Absence extends Model
     }
 
     /**
-     * Get the creator of the absence record.
+     * Get the creator of the demande absence record.
      */
     public function creator(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'creator_member_id');
+        return $this->belongsTo(Member::class, 'creator_member_id');
     }
 }

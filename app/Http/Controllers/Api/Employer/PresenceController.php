@@ -3,8 +3,7 @@
 namespace App\Http\Controllers\Api\Employer;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Employer\Presences\StorePresenceRequest;
-use App\Http\Requests\Employer\Presences\UpdatePresenceRequest;
+use App\Http\Requests\Api\Employer\Presences\StorePresenceRequest;
 use App\Services\Presences\PresenceService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;

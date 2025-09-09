@@ -27,7 +27,15 @@ class UpdateProjectRequest extends FormRequest
             'name' => ['sometimes', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'status' => ['nullable', Rule::in(ProjectStatus::values())],
-            'project_lead_id' => ['nullable', 'exists:members,id'],
+            'lead_member_id' => [
+                'nullable', 
+                'exists:members,id',
+                function ($attribute, $value, $fail) {
+                    if ($value && !isMemberPartOfEnterprise($value)) {
+                        $fail('Le chef de projet sélectionné ne fait pas partie de votre entreprise.');
+                    }
+                }
+            ],
         ];
     }
 
@@ -40,7 +48,7 @@ class UpdateProjectRequest extends FormRequest
             'name.string' => 'Le nom du projet doit être une chaîne de caractères.',
             'name.max' => 'Le nom du projet ne doit pas dépasser 255 caractères.',
             'status.in' => 'Le statut du projet sélectionné est invalide.',
-            'project_lead_id.exists' => 'Le chef de projet sélectionné n\'existe pas.',
+            'lead_member_id.exists' => 'Le chef de projet sélectionné n\'existe pas.',
         ];
     }
 }

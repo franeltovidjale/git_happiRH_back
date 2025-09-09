@@ -22,8 +22,8 @@ class ProjectService
                 'name' => $data['name'],
                 'description' => $data['description'] ?? null,
                 'status' => $status,
-                'project_lead_id' => $data['project_lead_id'] ?? null,
-                'creator_id' => auth()->id(),
+                'lead_member_id' => $data['lead_member_id'] ?? null,
+                'creator_member_id' => member()->getId(),
                 'enterprise_id' => auth()->user()->activeEnterprise->id,
             ]);
 

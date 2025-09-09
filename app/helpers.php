@@ -67,3 +67,50 @@ if (!function_exists('decodeModelStatusStory')) {
         ];
     }
 }
+
+if (!function_exists('member')) {
+    /**
+     * Get the current authenticated user's member record for the active enterprise
+     *
+     * @return \App\Models\Member|null
+     */
+    function member(array $attributes = ['*']): ?\App\Models\Member
+    {
+        $user = auth()->user();
+
+        if (!$user || !$user->activeEnterprise) {
+            return null;
+        }
+
+        return \App\Models\Member::where('user_id', $user->id)
+            ->where('enterprise_id', $user->activeEnterprise->id)
+            ->latest()
+            ->first($attributes);
+    }
+}
+
+if (!function_exists('isMemberPartOfEnterprise')) {
+    /**
+     * Check if a member belongs to a specific enterprise
+     *
+     * @param int $memberId
+     * @param int|null $enterpriseId If null, uses the current user's active enterprise
+     * @return bool
+     */
+    function isMemberPartOfEnterprise(int $memberId, ?int $enterpriseId = null): bool
+    {
+        if (!$enterpriseId) {
+            $user = auth()->user();
+            
+            if (!$user || !$user->activeEnterprise) {
+                return false;
+            }
+            
+            $enterpriseId = $user->activeEnterprise->id;
+        }
+
+        return \App\Models\Member::where('id', $memberId)
+            ->where('enterprise_id', $enterpriseId)
+            ->exists();
+    }
+}

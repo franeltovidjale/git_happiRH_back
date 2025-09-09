@@ -15,8 +15,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string $name
  * @property string|null $description
  * @property string $status
- * @property int|null $project_lead_id
- * @property int $creator_id
+ * @property int|null $lead_member_id
+ * @property int $creator_member_id
  * @property int $enterprise_id
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
@@ -38,8 +38,8 @@ class Project extends Model
         'name',
         'description',
         'status',
-        'project_lead_id',
-        'creator_id',
+        'lead_member_id',
+        'creator_member_id',
         'enterprise_id',
     ];
 
@@ -57,7 +57,7 @@ class Project extends Model
      */
     public function creator(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'creator_id');
+        return $this->belongsTo(Member::class, 'creator_member_id');
     }
 
     /**
@@ -65,7 +65,7 @@ class Project extends Model
      */
     public function projectLead(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'project_lead_id');
+        return $this->belongsTo(Member::class, 'lead_member_id');
     }
 
     /**

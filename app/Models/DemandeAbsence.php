@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\AbsenceStatus;
+use App\Enums\DemandeAbsenceType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -11,12 +12,16 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * DemandeAbsence Model
  *
  * @property int $id
- * @property \Carbon\Carbon $absence_date
+ * @property \Carbon\Carbon $start_date
+ * @property \Carbon\Carbon|null $end_date
+ * @property string $type
+ * @property string $period
  * @property string $status
  * @property int $member_id
  * @property int $enterprise_id
  * @property int $creator_member_id
  * @property string|null $reason
+ * @property string|null $description
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
  * @property-read Member $member
@@ -33,12 +38,16 @@ class DemandeAbsence extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'absence_date',
+        'start_date',
+        'end_date',
+        'type',
+        'period',
         'status',
         'member_id',
         'enterprise_id',
         'creator_member_id',
         'reason',
+        'description',
     ];
 
     /**
@@ -47,7 +56,9 @@ class DemandeAbsence extends Model
      * @var array<string, string>
      */
     protected $casts = [
-        'absence_date' => 'datetime',
+        'start_date' => 'datetime',
+        'end_date' => 'datetime',
+        'type' => DemandeAbsenceType::class,
         'status' => AbsenceStatus::class,
     ];
 

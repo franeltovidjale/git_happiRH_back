@@ -49,7 +49,7 @@ class DocumentController extends Controller
 
             return $this->created('Document créé avec succès', $document->load('documentable.user'));
         } catch (\Throwable $e) {
-            logger()->error('Erreur lors de la création du document: ' . $e->getMessage(), [
+            logger()->error('Erreur lors de la création du document: '.$e->getMessage(), [
                 'exception' => $e,
                 'request_data' => $request->except(['file']),
             ]);
@@ -91,7 +91,7 @@ class DocumentController extends Controller
 
             return $this->ok('Document supprimé avec succès');
         } catch (\Throwable $e) {
-            logger()->error('Erreur lors de la suppression du document: ' . $e->getMessage(), [
+            logger()->error('Erreur lors de la suppression du document: '.$e->getMessage(), [
                 'exception' => $e,
                 'document_id' => $document->id,
             ]);

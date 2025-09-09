@@ -3,7 +3,6 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
@@ -20,8 +19,6 @@ class PasswordChangedMail extends Mailable
 
     /**
      * Create a new message instance.
-     *
-     * @param string|null $firstName
      */
     public function __construct(
         public ?string $firstName = null
@@ -35,7 +32,7 @@ class PasswordChangedMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Mot de passe modifié - ' . config('app.name'),
+            subject: 'Mot de passe modifié - '.config('app.name'),
         );
     }
 

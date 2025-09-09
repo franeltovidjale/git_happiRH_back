@@ -3,7 +3,6 @@
 namespace App\Http\Requests\Api\Employer\Departements;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class StoreDepartmentRequest extends FormRequest
 {

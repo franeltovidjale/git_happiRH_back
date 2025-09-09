@@ -7,17 +7,22 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Str;
 use Livewire\Component;
 
 class LoginWithOtp extends Component
 {
     public $email = '';
+
     public $password = '';
+
     public $otp = '';
+
     public $currentStep = 1; // 1: email/password, 2: OTP
+
     public $isProcessing = false;
+
     public $errorMessage = '';
+
     public $user = null;
 
     public function rules()
@@ -37,9 +42,10 @@ class LoginWithOtp extends Component
         try {
             $user = User::where('email', $this->email)->first();
 
-            if (!$user || !Hash::check($this->password, $user->password)) {
+            if (! $user || ! Hash::check($this->password, $user->password)) {
                 $this->errorMessage = 'Invalid email or password.';
                 $this->isProcessing = false;
+
                 return;
             }
 
@@ -67,6 +73,7 @@ class LoginWithOtp extends Component
 
         if (strlen($this->otp) !== 6) {
             $this->errorMessage = 'Please enter a valid 6-digit OTP.';
+
             return;
         }
 
@@ -76,9 +83,10 @@ class LoginWithOtp extends Component
         try {
             $isValid = Otp::verify($this->user->email, $this->otp, 'login');
 
-            if (!$isValid) {
+            if (! $isValid) {
                 $this->errorMessage = 'Invalid or expired OTP.';
                 $this->isProcessing = false;
+
                 return;
             }
 
@@ -101,7 +109,7 @@ class LoginWithOtp extends Component
 
     public function resendOtp()
     {
-        if (!$this->user) {
+        if (! $this->user) {
             return;
         }
 
@@ -129,8 +137,6 @@ class LoginWithOtp extends Component
         $this->errorMessage = '';
         $this->user = null;
     }
-
-
 
     public function render()
     {

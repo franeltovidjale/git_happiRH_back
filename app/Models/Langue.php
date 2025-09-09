@@ -18,7 +18,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property bool $active Whether the language is active
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- *
  * @property-read Country|null $country
  */
 class Langue extends Model
@@ -48,8 +47,6 @@ class Langue extends Model
 
     /**
      * Get the country that owns this language.
-     *
-     * @return BelongsTo
      */
     public function country(): BelongsTo
     {

@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests\Api\Employer\Members;
 
-use App\Models\Member;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
@@ -38,7 +37,7 @@ class UpdateEmployeeRequest extends FormRequest
                 'sometimes',
                 'required',
                 'date',
-                'before_or_equal:' . now()->subYears(18)->format('Y-m-d'),
+                'before_or_equal:'.now()->subYears(18)->format('Y-m-d'),
             ],
             'marital_status' => 'sometimes|nullable|in:single,married,divorced,widowed',
             'gender' => 'sometimes|nullable|in:male,female,other',
@@ -55,7 +54,7 @@ class UpdateEmployeeRequest extends FormRequest
                 'sometimes',
                 'nullable',
                 'string',
-                'unique:members,username,' . $memberId,
+                'unique:members,username,'.$memberId,
             ],
             'role' => 'sometimes|required|string|max:255',
             'joining_date' => 'sometimes|required|date',

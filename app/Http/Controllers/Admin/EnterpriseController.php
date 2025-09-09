@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Enterprise;
-use App\Models\Member;
 use Inertia\Inertia;
 
 class EnterpriseController extends Controller
@@ -47,7 +46,7 @@ class EnterpriseController extends Controller
 
         $tab = request('tab', 'dashboard');
 
-        if (!array_key_exists($tab, $tabs)) {
+        if (! array_key_exists($tab, $tabs)) {
             $tab = 'dashboard';
         }
 

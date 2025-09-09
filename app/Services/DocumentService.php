@@ -104,8 +104,6 @@ class DocumentService
         return $document->delete();
     }
 
-
-
     /**
      * Get documents for an enterprise with filters.
      */
@@ -135,16 +133,14 @@ class DocumentService
             ->paginate($filters['per_page'] ?? 15);
     }
 
-
-
     /**
      * Upload a file and return the storage path.
      */
     protected function uploadFile(UploadedFile $file, Enterprise $enterprise, Documentable $documentable, $disk = 'public'): string
     {
-        $fileName = time() . '_' . $file->getClientOriginalName();
+        $fileName = time().'_'.$file->getClientOriginalName();
         $path = $file->storeAs(
-            "documents/{$enterprise->id}/" . class_basename($documentable) . "/{$documentable->getId()}",
+            "documents/{$enterprise->id}/".class_basename($documentable)."/{$documentable->getId()}",
             $fileName,
             $disk
         );

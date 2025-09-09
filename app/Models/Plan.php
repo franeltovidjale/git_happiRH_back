@@ -32,7 +32,6 @@ class Plan extends Model
 
     public const BILLING_CYCLE_YEARLY = 'yearly';
 
-
     public const BILLING_CYCLES = [
         self::BILLING_CYCLE_MONTHLY => self::BILLING_CYCLE_MONTHLY,
         self::BILLING_CYCLE_YEARLY => self::BILLING_CYCLE_YEARLY,
@@ -91,7 +90,6 @@ class Plan extends Model
     {
         return $this->hasMany(Enterprise::class);
     }
-
 
     /**
      * Scope to get only active plans.

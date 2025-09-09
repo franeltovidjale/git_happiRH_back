@@ -1,19 +1,16 @@
 <?php
 
-use App\Http\Controllers\Api\Employer\{
-    AbsenceController,
-    DepartmentController,
-    DocumentController,
-    EmployeeController,
-    ExperienceController,
-    PlanningController,
-    PresenceController,
-    ProfileController,
-    ProjectController,
-    TaskController,
-    TransactionController
-};
-
+use App\Http\Controllers\Api\Employer\DemandeAbsenceController;
+use App\Http\Controllers\Api\Employer\DepartmentController;
+use App\Http\Controllers\Api\Employer\DocumentController;
+use App\Http\Controllers\Api\Employer\EmployeeController;
+use App\Http\Controllers\Api\Employer\ExperienceController;
+use App\Http\Controllers\Api\Employer\PlanningController;
+use App\Http\Controllers\Api\Employer\PresenceController;
+use App\Http\Controllers\Api\Employer\ProfileController;
+use App\Http\Controllers\Api\Employer\ProjectController;
+use App\Http\Controllers\Api\Employer\TaskController;
+use App\Http\Controllers\Api\Employer\TransactionController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('employer')->group(function () {
@@ -48,8 +45,8 @@ Route::prefix('employer')->group(function () {
         Route::put('tasks/{id}', [TaskController::class, 'update']);
         Route::delete('tasks/{id}', [TaskController::class, 'destroy']);
 
-        // Absence routes
-        Route::post('absences', [AbsenceController::class, 'store']);
+        // Demande Absence routes
+        Route::post('demande-absences', [DemandeAbsenceController::class, 'store']);
 
         // Planning routes
         Route::post('plannings', [PlanningController::class, 'store']);

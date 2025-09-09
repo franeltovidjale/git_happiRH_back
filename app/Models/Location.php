@@ -18,7 +18,6 @@ use Illuminate\Support\Str;
  * @property string $slug
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
- *
  * @property-read Enterprise $enterprise
  * @property-read \Illuminate\Database\Eloquent\Collection|Employee[] $employees
  */
@@ -63,10 +62,6 @@ class Location extends Model
 
     /**
      * Generate a unique slug for the location.
-     *
-     * @param string $name
-     * @param int $enterpriseId
-     * @return string
      */
     protected static function generateUniqueSlug(string $name, int $enterpriseId): string
     {
@@ -75,7 +70,7 @@ class Location extends Model
         $counter = 1;
 
         while (static::where('enterprise_id', $enterpriseId)->where('slug', $slug)->exists()) {
-            $slug = $baseSlug . '-' . $counter;
+            $slug = $baseSlug.'-'.$counter;
             $counter++;
         }
 
@@ -84,8 +79,6 @@ class Location extends Model
 
     /**
      * Get the enterprise that owns the location.
-     *
-     * @return BelongsTo
      */
     public function enterprise(): BelongsTo
     {
@@ -94,8 +87,6 @@ class Location extends Model
 
     /**
      * Get the employees that belong to the location.
-     *
-     * @return HasMany
      */
     public function employees(): HasMany
     {

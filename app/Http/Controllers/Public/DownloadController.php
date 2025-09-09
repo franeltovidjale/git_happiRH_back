@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers\Public;
 
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-use Barryvdh\DomPDF\Facade\Pdf;
 use App\Http\Controllers\Controller;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Http\Response;
 
 class DownloadController extends Controller
 {
@@ -27,6 +26,7 @@ class DownloadController extends Controller
         ];
 
         $pdf = Pdf::loadView('pdf.payslip.benin_payslip', $data);
+
         return $pdf->stream();
     }
 }

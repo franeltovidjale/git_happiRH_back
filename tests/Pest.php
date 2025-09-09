@@ -52,7 +52,7 @@ if (! function_exists('createUniqueSector')) {
 
         return Sector::create([
             'name' => $name,
-            'slug' => strtolower($name) . '-' . $counter,
+            'slug' => strtolower($name).'-'.$counter,
         ]);
     }
 }
@@ -64,9 +64,9 @@ if (! function_exists('createUniqueCountry')) {
         $counter++;
 
         return Country::create([
-            'name' => $name . ' ' . $counter,
+            'name' => $name.' '.$counter,
             'flag' => '🇺🇸',
-            'code' => $code . $counter,
+            'code' => $code.$counter,
             'lang' => 'en',
             'active' => true,
         ]);

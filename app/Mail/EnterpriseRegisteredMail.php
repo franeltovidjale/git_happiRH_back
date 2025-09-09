@@ -35,7 +35,7 @@ class EnterpriseRegisteredMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Bienvenue sur ' . config('app.name') . ' - Vos identifiants de connexion',
+            subject: 'Bienvenue sur '.config('app.name').' - Vos identifiants de connexion',
         );
     }
 

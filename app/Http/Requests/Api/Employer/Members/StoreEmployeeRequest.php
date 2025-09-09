@@ -32,7 +32,7 @@ class StoreEmployeeRequest extends FormRequest
             'birth_date' => [
                 'required',
                 'date',
-                'before_or_equal:' . now()->subYears(18)->format('Y-m-d'),
+                'before_or_equal:'.now()->subYears(18)->format('Y-m-d'),
             ],
             'marital_status' => 'nullable|in:single,married,divorced,widowed',
             'gender' => 'required|in:male,female,other',

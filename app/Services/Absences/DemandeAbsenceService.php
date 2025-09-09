@@ -20,11 +20,15 @@ class DemandeAbsenceService
             $status = $data['status'] ?? AbsenceStatus::APPROVED;
 
             $demandeAbsence = DemandeAbsence::create([
-                'absence_date' => $data['absence_date'],
+                'start_date' => $data['start_date'],
+                'end_date' => $data['end_date'] ?? null,
+                'type' => $data['type'],
+                'period' => $data['period'],
                 'member_id' => $data['member_id'],
                 'enterprise_id' => activeEnterprise()->id,
                 'status' => $status,
                 'reason' => $data['reason'] ?? null,
+                'description' => $data['description'] ?? null,
                 'creator_member_id' => member()->getId(),
             ]);
 

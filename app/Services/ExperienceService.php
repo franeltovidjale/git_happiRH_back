@@ -44,7 +44,7 @@ class ExperienceService
             throw $e;
         } catch (\Exception $e) {
             DB::rollback();
-            logger()->error('Error creating experience: ' . $e->getMessage());
+            logger()->error('Error creating experience: '.$e->getMessage());
             throw $e;
         }
     }
@@ -66,7 +66,6 @@ class ExperienceService
                 ->where('id', $experienceId)
                 ->firstOrFail();
 
-
             $experience->update([
                 'member_id' => $data['member_id'] ?? $experience->member_id,
                 'job_title' => $data['job_title'] ?? $experience->job_title,
@@ -85,7 +84,7 @@ class ExperienceService
             throw $e;
         } catch (\Exception $e) {
             DB::rollback();
-            logger()->error('Error updating experience: ' . $e->getMessage());
+            logger()->error('Error updating experience: '.$e->getMessage());
             throw $e;
         }
     }
@@ -117,7 +116,7 @@ class ExperienceService
             throw $e;
         } catch (\Exception $e) {
             DB::rollback();
-            logger()->error('Error deleting experience: ' . $e->getMessage());
+            logger()->error('Error deleting experience: '.$e->getMessage());
             throw $e;
         }
     }

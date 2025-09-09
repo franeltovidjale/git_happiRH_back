@@ -114,3 +114,17 @@ if (!function_exists('isMemberPartOfEnterprise')) {
             ->exists();
     }
 }
+
+if (!function_exists('activeEnterprise')) {
+    /**
+     * Get the current authenticated user's active enterprise
+     *
+     * @return \App\Models\Enterprise|null
+     */
+    function activeEnterprise(): ?\App\Models\Enterprise
+    {
+        $user = auth()->user();
+        
+        return $user?->activeEnterprise;
+    }
+}

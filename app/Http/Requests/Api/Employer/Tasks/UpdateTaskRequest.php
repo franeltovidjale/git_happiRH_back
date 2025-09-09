@@ -46,7 +46,15 @@ class UpdateTaskRequest extends FormRequest
             'end_time' => ['nullable', 'date_format:H:i', 'after:start_time'],
             'priority' => ['nullable', Rule::in(TaskPriority::values())],
             'status' => ['sometimes', Rule::in(TaskStatus::values())],
-            'assigned_to' => ['nullable', 'exists:users,id'],
+            'assigned_member_id' => [
+                'nullable', 
+                'exists:members,id',
+                function ($attribute, $value, $fail) {
+                    if ($value && !isMemberPartOfEnterprise($value)) {
+                        $fail('Le membre assigné ne fait pas partie de votre entreprise.');
+                    }
+                }
+            ],
             'notifications' => ['boolean'],
         ];
     }
@@ -68,7 +76,7 @@ class UpdateTaskRequest extends FormRequest
             'end_time.after' => 'L\'heure de fin doit être postérieure à l\'heure de début.',
             'priority.in' => 'La priorité sélectionnée est invalide.',
             'status.in' => 'Le statut sélectionné est invalide.',
-            'assigned_to.exists' => 'L\'utilisateur assigné n\'existe pas.',
+            'assigned_member_id.exists' => 'Le membre assigné n\'existe pas.',
             'notifications.boolean' => 'La notification doit être un booléen.',
         ];
     }

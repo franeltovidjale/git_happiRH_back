@@ -12,8 +12,8 @@ class TaskService
      */
     public function store(array $data): Task
     {
+        DB::beginTransaction();
         try {
-            DB::beginTransaction();
 
             // Use provided priority or default to 'medium'
             $priority = $data['priority'] ?? 'medium';
@@ -25,8 +25,8 @@ class TaskService
                 'start_time' => $data['start_time'] ?? null,
                 'end_time' => $data['end_time'] ?? null,
                 'priority' => $priority,
-                'assigned_to' => $data['assigned_to'] ?? null,
-                'creator_id' => auth()->id(),
+                'assigned_member_id' => $data['assigned_member_id'] ?? null,
+                'creator_member_id' => member()->id,
                 'enterprise_id' => auth()->user()->activeEnterprise->id,
                 'attachments' => $data['attachments'] ?? null,
                 'notifications' => $data['notifications'] ?? false,
@@ -47,8 +47,8 @@ class TaskService
      */
     public function update(int $taskId, array $data): Task
     {
+        DB::beginTransaction();
         try {
-            DB::beginTransaction();
 
             $task = Task::findOrFail($taskId);
 
@@ -75,8 +75,8 @@ class TaskService
      */
     public function destroy(int $taskId): bool
     {
+        DB::beginTransaction();
         try {
-            DB::beginTransaction();
 
             $task = Task::findOrFail($taskId);
             $deleted = $task->delete();

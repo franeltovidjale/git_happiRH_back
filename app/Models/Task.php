@@ -18,8 +18,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property \Carbon\Carbon|null $start_time
  * @property \Carbon\Carbon|null $end_time
  * @property string $priority
- * @property int|null $assigned_to
- * @property int $creator_id
+ * @property int|null $assigned_member_id
+ * @property int $creator_member_id
  * @property int $enterprise_id
  * @property array|null $attachments
  * @property bool $notifications
@@ -47,8 +47,8 @@ class Task extends Model
         'start_time',
         'end_time',
         'priority',
-        'assigned_to',
-        'creator_id',
+        'assigned_member_id',
+        'creator_member_id',
         'enterprise_id',
         'attachments',
         'notifications',
@@ -83,7 +83,7 @@ class Task extends Model
      */
     public function assignedUser(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'assigned_to');
+        return $this->belongsTo(Member::class, 'assigned_member_id');
     }
 
     /**
@@ -91,7 +91,7 @@ class Task extends Model
      */
     public function creator(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'creator_id');
+        return $this->belongsTo(Member::class, 'creator_member_id');
     }
 
     /**

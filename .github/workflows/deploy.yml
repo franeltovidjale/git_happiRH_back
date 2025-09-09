@@ -43,7 +43,7 @@ jobs:
 
             # Install/update Composer dependencies
             echo "📦 Installing Composer dependencies..."
-            composer install --no-dev --optimize-autoloader --no-interaction --ignore-platform-reqs
+            composer install --no-dev --optimize-autoloader --no-interaction --ignore-platform-reqs --no-cache
 
             # Install/update npm dependencies and build assets
             npm install --production

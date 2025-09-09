@@ -9,7 +9,9 @@ use Livewire\Component;
 class Plans extends Component
 {
     public $billingCycle = 'monthly';
+
     public $businessType = 'tpe_pme'; // 'tpe_pme' or 'custom'
+
     public $employeeCount = 0;
 
     public $yearlyPlanRate;
@@ -76,10 +78,10 @@ class Plans extends Component
         $price = $plan->price;
         $pricePerEmployee = $plan->price_per_employee;
 
-        $formattedPrice = number_format($price, 0, ',', ' ') . ' ' . $plan->currency;
+        $formattedPrice = number_format($price, 0, ',', ' ').' '.$plan->currency;
 
         if ($pricePerEmployee > 0) {
-            $formattedPrice .= ' + ' . number_format($pricePerEmployee, 0, ',', ' ') . ' ' . $plan->currency . '/employé';
+            $formattedPrice .= ' + '.number_format($pricePerEmployee, 0, ',', ' ').' '.$plan->currency.'/employé';
         }
 
         return $formattedPrice;
@@ -111,14 +113,15 @@ class Plans extends Component
             return 'Sur devis';
         }
 
-        return number_format($totalPrice, 0, ',', ' ') . ' ' . $plan->currency;
+        return number_format($totalPrice, 0, ',', ' ').' '.$plan->currency;
     }
 
     public function getTrialInfo($plan)
     {
         if ($plan->trial_period_months > 0) {
-            return $plan->trial_period_months . ' mois d\'essai gratuit';
+            return $plan->trial_period_months.' mois d\'essai gratuit';
         }
+
         return null;
     }
 

@@ -1,8 +1,7 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\Api\Auth;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\{Auth, Employer, Employee};
 
 /*
 |--------------------------------------------------------------------------
@@ -15,7 +14,6 @@ use App\Http\Controllers\Api\{Auth, Employer, Employee};
 |
 */
 
-Route::post('/register', [Auth\RegisterController::class, 'register']);
 Route::post('/login', [Auth\LoginController::class, 'login']);
 Route::post('/login/verify-otp', [Auth\LoginController::class, 'verifyByOtp']);
 Route::post('/login/resend-otp', [Auth\LoginController::class, 'resendLoginOtp']);
@@ -26,4 +24,4 @@ Route::post('/forgot-password/check-email', [Auth\ForgotPasswordController::clas
 Route::post('/forgot-password/resend-otp', [Auth\ForgotPasswordController::class, 'resendOtp']);
 Route::post('/forgot-password/change-password', [Auth\ForgotPasswordController::class, 'changePassword']);
 
-require_once __DIR__ . '/employer.php';
+require_once __DIR__.'/employer.php';

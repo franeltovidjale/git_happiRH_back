@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\ResendLoginOtpRequest;
 use App\Http\Requests\Auth\VerifyOtpRequest;
 use App\Mail\OtpMail;
@@ -28,12 +27,15 @@ class LoginController extends Controller
     /**
      * Handle user login
      */
-    public function login(LoginRequest $request): JsonResponse
+    public function login(Request $request): JsonResponse
     {
+        DB::beginTransaction();
         try {
-            DB::beginTransaction();
 
-            $credentials = $request->validated();
+            $credentials = $request->validate([
+                'email' => ['required', 'email'],
+                'password' => ['required', 'string'],
+            ]);
 
             if (! Auth::attempt($credentials)) {
                 DB::rollback();
@@ -262,14 +264,12 @@ class LoginController extends Controller
         }
     }
 
-
-
     /**
      * Set the active enterprise for the user based on their type
      */
     private function setActiveEnterprise(User $user): void
     {
-        if (!$user->activeEnterprise) {
+        if (! $user->activeEnterprise) {
             $latestEnterprise = $user->enterprises()->latest()->first();
             if ($latestEnterprise) {
                 $user->update(['active_enterprise_id' => $latestEnterprise->id]);

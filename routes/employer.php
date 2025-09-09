@@ -1,12 +1,16 @@
 <?php
 
-use App\Http\Controllers\Api\Employer\{
-    DepartmentController,
-    DocumentController,
-    EmployeeController,
-    ExperienceController,
-    ProfileController
-};
+use App\Http\Controllers\Api\Employer\DemandeAbsenceController;
+use App\Http\Controllers\Api\Employer\DepartmentController;
+use App\Http\Controllers\Api\Employer\DocumentController;
+use App\Http\Controllers\Api\Employer\EmployeeController;
+use App\Http\Controllers\Api\Employer\ExperienceController;
+use App\Http\Controllers\Api\Employer\PlanningController;
+use App\Http\Controllers\Api\Employer\PresenceController;
+use App\Http\Controllers\Api\Employer\ProfileController;
+use App\Http\Controllers\Api\Employer\ProjectController;
+use App\Http\Controllers\Api\Employer\TaskController;
+use App\Http\Controllers\Api\Employer\TransactionController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('employer')->group(function () {
@@ -30,5 +34,27 @@ Route::prefix('employer')->group(function () {
             Route::apiResource('experiences', ExperienceController::class)
                 ->only(['store', 'update', 'destroy']);
         });
+
+        // Project routes
+        Route::post('projects', [ProjectController::class, 'store']);
+        Route::put('projects/{id}', [ProjectController::class, 'update']);
+        Route::delete('projects/{id}', [ProjectController::class, 'destroy']);
+
+        // Task routes
+        Route::post('tasks', [TaskController::class, 'store']);
+        Route::put('tasks/{id}', [TaskController::class, 'update']);
+        Route::delete('tasks/{id}', [TaskController::class, 'destroy']);
+
+        // Demande Absence routes
+        Route::post('demande-absences', [DemandeAbsenceController::class, 'store']);
+
+        // Planning routes
+        Route::post('plannings', [PlanningController::class, 'store']);
+
+        // Presence routes
+        Route::post('presences', [PresenceController::class, 'store']);
+
+        // Transaction routes
+        Route::get('transactions', [TransactionController::class, 'index']);
     });
 });

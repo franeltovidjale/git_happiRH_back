@@ -49,7 +49,7 @@ class HomeController extends Controller
             $plan = Plan::active()->where('slug', $request->get('plan'))->first();
         }
 
-        if (!$plan) {
+        if (! $plan) {
             return redirect()->route('tarifs');
         }
 

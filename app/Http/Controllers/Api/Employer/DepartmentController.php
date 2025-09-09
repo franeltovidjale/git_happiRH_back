@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Api\Employer;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Employer\StoreDepartmentRequest;
-use App\Http\Requests\Employer\UpdateDepartmentRequest;
+use App\Http\Requests\Api\Employer\Departements\StoreDepartmentRequest;
+use App\Http\Requests\Api\Employer\Departements\UpdateDepartmentRequest;
 use App\Http\Resources\DepartmentResource;
 use App\Models\Department;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -27,10 +27,10 @@ class DepartmentController extends Controller
                 ->orderBy('name')
                 ->get();
 
-
             return $this->ok('Liste des départements récupérée avec succès', DepartmentResource::collection($departments));
         } catch (\Exception $e) {
             logger()->error($e);
+
             return $this->serverError('Erreur lors de la récupération des départements');
         }
     }
@@ -67,6 +67,7 @@ class DepartmentController extends Controller
         } catch (\Exception $e) {
             DB::rollback();
             logger()->error($e);
+
             return $this->serverError('Erreur lors de la création du département');
         }
     }
@@ -83,12 +84,14 @@ class DepartmentController extends Controller
                 ->where('enterprise_id', $enterprise->id)
                 ->where('id', $id)
                 ->firstOrFail();
+
             return $this->ok('Département récupéré avec succès', new DepartmentResource($department));
         } catch (\Exception $e) {
             Log::error($e);
             if ($e instanceof ModelNotFoundException) {
                 return $this->notFound('Département introuvable');
             }
+
             return $this->serverError('Erreur lors de la récupération du département');
         }
     }
@@ -124,6 +127,7 @@ class DepartmentController extends Controller
         } catch (\Exception $e) {
             DB::rollback();
             logger()->error($e);
+
             return $this->serverError('Erreur lors de la mise à jour du département');
         }
     }
@@ -151,7 +155,6 @@ class DepartmentController extends Controller
 
             DB::commit();
 
-
             return $this->ok('Département supprimé avec succès');
         } catch (\Exception $e) {
             DB::rollback();
@@ -159,6 +162,7 @@ class DepartmentController extends Controller
                 return $this->notFound('Département introuvable');
             }
             logger()->error($e);
+
             return $this->serverError('Erreur lors de la suppression du département');
         }
     }

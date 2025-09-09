@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Api\Employer;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Employer\StoreExperienceRequest;
-use App\Http\Requests\Employer\UpdateExperienceRequest;
+use App\Http\Requests\Api\Employer\Members\StoreExperienceRequest;
+use App\Http\Requests\Api\Employer\Members\UpdateExperienceRequest;
 use App\Http\Resources\ExperienceResource;
 use App\Services\ExperienceService;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -23,7 +23,7 @@ class ExperienceController extends Controller
     {
         try {
             $enterprise = $this->getActiveEnterprise();
-            $experience = $this->experienceService->create($request->validated(), $enterprise);
+            $experience = $this->experienceService->store($request->validated(), $enterprise);
 
             return $this->created('Expérience créée avec succès', new ExperienceResource($experience));
         } catch (ModelNotFoundException $e) {

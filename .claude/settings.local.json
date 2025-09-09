@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(php artisan make:controller:*)",
+      "Bash(php artisan make:request:*)",
+      "Bash(php artisan make:migration:*)",
+      "Bash(php artisan make:model:*)",
+      "Bash(php artisan make:resource:*)",
+      "Bash(php artisan make:factory:*)",
+      "Bash(php artisan make:seeder:*)",
+      "Bash(./vendor/bin/pint:*)",
+      "Bash(php artisan make:test:*)",
+      "mcp__laravel-boost__database-schema",
+      "Bash(php artisan test:*)"
+    ],
+    "deny": [],
+    "ask": []
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "laravel-boost"
+  ]
+}

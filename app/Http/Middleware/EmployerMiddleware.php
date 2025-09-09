@@ -30,10 +30,10 @@ class EmployerMiddleware
         $activeEnterprise = $user->activeEnterprise;
 
         if (! $activeEnterprise) {
-            return response()->json(['message' => 'Unauthorized. Employer access required.'], 403);
+            return response()->json(['message' => 'Unauthorized. Empty company.'], 403);
         }
 
-        if ($activeEnterprise->owner_id !== $user->id) {
+        if ($activeEnterprise->gerant_id !== $user->id) {
             return response()->json(['message' => 'Unauthorized. Employer access required.'], 403);
         }
 

@@ -3,7 +3,6 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
@@ -20,11 +19,6 @@ class OtpMail extends Mailable
 
     /**
      * Create a new message instance.
-     *
-     * @param string $otpCode
-     * @param string|null $firstName
-     * @param string $emailSubject
-     * @param string $purpose
      */
     public function __construct(
         public string $otpCode,
@@ -41,7 +35,7 @@ class OtpMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: $this->emailSubject . ' - ' . config('app.name'),
+            subject: $this->emailSubject.' - '.config('app.name'),
         );
     }
 

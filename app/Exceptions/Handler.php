@@ -42,9 +42,7 @@ class Handler extends ExceptionHandler
     /**
      * Handle validation exceptions for API routes
      *
-     * @param Request $request
-     * @param ValidationException $exception
-     * @return JsonResponse
+     * @param  Request  $request
      */
     protected function invalidJson($request, ValidationException $exception): JsonResponse
     {
@@ -57,9 +55,9 @@ class Handler extends ExceptionHandler
     /**
      * Render an exception into an HTTP response
      *
-     * @param Request $request
-     * @param Throwable $e
+     * @param  Request  $request
      * @return \Symfony\Component\HttpFoundation\Response
+     *
      * @throws Throwable
      */
     public function render($request, Throwable $e)
@@ -72,7 +70,7 @@ class Handler extends ExceptionHandler
         if ($request->is('api/*')) {
             if ($e instanceof \Illuminate\Auth\AuthenticationException) {
                 return response()->json([
-                    'message' => "Votre session a expiré, veuillez vous reconnecter",
+                    'message' => 'Votre session a expiré, veuillez vous reconnecter',
                     'success' => false,
                 ], 401);
             }
@@ -83,9 +81,13 @@ class Handler extends ExceptionHandler
                     'success' => false,
                 ], 403);
             }
+            if ($e instanceof \Illuminate\Database\Eloquent\ModelNotFoundException) {
+                return response()->json([
+                    'message' => 'Ressource non trouvée ou non disponible',
+                    'success' => false,
+                ], 404);
+            }
         }
-
-
 
         return parent::render($request, $e);
     }

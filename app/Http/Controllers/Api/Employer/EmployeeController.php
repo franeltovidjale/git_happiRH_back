@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Api\Employer;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Employer\ChangeEmployeeStatusRequest;
-use App\Http\Requests\Employer\StoreEmployeeRequest;
-use App\Http\Requests\Employer\UpdateEmployeeRequest;
+use App\Http\Requests\Api\Employer\Members\ChangeEmployeeStatusRequest;
+use App\Http\Requests\Api\Employer\Members\StoreEmployeeRequest;
+use App\Http\Requests\Api\Employer\Members\UpdateEmployeeRequest;
 use App\Http\Resources\EmployeeResource;
 use App\Mail\EmployeeRegisteredMail;
 use App\Mail\EmployeeStatusChangedMail;
@@ -51,10 +51,9 @@ class EmployeeController extends Controller
 
             $invalidSnippets = array_diff($snippets, $allowedSnippets);
             if (! empty($invalidSnippets)) {
-                return $this->badRequest('Snippets invalides: ' . implode(', ', $invalidSnippets));
+                return $this->badRequest('Snippets invalides: '.implode(', ', $invalidSnippets));
             }
         }
-
 
         $enterprise = $this->getActiveEnterprise();
 
@@ -100,6 +99,7 @@ class EmployeeController extends Controller
                 'joining_date' => $request->joining_date,
                 'status_by' => auth()->id(),
                 'status_date' => now(),
+                'department_id' => $request->department_id,
             ]);
 
             // Create address information
@@ -154,11 +154,6 @@ class EmployeeController extends Controller
                 ]);
             }
 
-            // Associate department if provided
-            if ($request->filled('department_id')) {
-                $member->departments()->attach($request->department_id);
-            }
-
             Mail::to($user->email)->send(new EmployeeRegisteredMail(
                 $user->first_name,
                 $user->last_name,
@@ -174,12 +169,12 @@ class EmployeeController extends Controller
             return $this->created('Employé créé avec succès', new EmployeeResource($member));
         } catch (\Exception $e) {
             DB::rollback();
-            logger()->error('Erreur lors de la création de l\'employé: ' . $e->getMessage(), [
+            logger()->error('Erreur lors de la création de l\'employé: '.$e->getMessage(), [
                 'exception' => $e,
                 'request_data' => $request->validated(),
             ]);
 
-            return $this->serverError('Erreur lors de la création de l\'employé: ' . $e->getMessage());
+            return $this->serverError('Erreur lors de la création de l\'employé: '.$e->getMessage());
         }
     }
 
@@ -201,7 +196,7 @@ class EmployeeController extends Controller
 
                 $invalidSnippets = array_diff($snippets, $allowedSnippets);
                 if (! empty($invalidSnippets)) {
-                    return $this->badRequest('Snippets invalides: ' . implode(', ', $invalidSnippets));
+                    return $this->badRequest('Snippets invalides: '.implode(', ', $invalidSnippets));
                 }
             }
 
@@ -260,6 +255,7 @@ class EmployeeController extends Controller
                 'role',
                 'joining_date',
                 'location_id',
+                'department_id',
             ]));
             if (! empty($memberData)) {
                 $member->update($memberData);
@@ -323,11 +319,6 @@ class EmployeeController extends Controller
                 );
             }
 
-            // Update department association if provided
-            if ($request->filled('department_id')) {
-                $member->departments()->sync([$request->department_id]);
-            }
-
             DB::commit();
 
             $member->load(['user', 'enterprise', 'location', 'address', 'banking', 'salary', 'employment', 'contactPerson']);
@@ -341,7 +332,7 @@ class EmployeeController extends Controller
             }
             logger()->error($e);
 
-            return $this->serverError('Erreur lors de la mise à jour de l\'employé: ' . $e->getMessage());
+            return $this->serverError('Erreur lors de la mise à jour de l\'employé: '.$e->getMessage());
         }
     }
 
@@ -366,7 +357,7 @@ class EmployeeController extends Controller
             $oldStatus = $member->status;
             $newStatus = $request->status;
             if ($newStatus === $oldStatus) {
-                return $this->ok('Le statut de l\'employé est déjà ' . $newStatus);
+                return $this->ok('Le statut de l\'employé est déjà '.$newStatus);
             }
 
             // Update member status
@@ -410,7 +401,7 @@ class EmployeeController extends Controller
             }
             logger()->error($e);
 
-            return $this->serverError('Erreur lors du changement de statut de l\'employé: ' . $e->getMessage());
+            return $this->serverError('Erreur lors du changement de statut de l\'employé: '.$e->getMessage());
         }
     }
 
@@ -426,6 +417,10 @@ class EmployeeController extends Controller
 
             $member = Member::where('enterprise_id', $enterprise->id)
                 ->findOrFail($id);
+
+            if ($member->type === User::TYPE_GERANT) {
+                return $this->badRequest('Impossible de supprimer le gérant de l\'entreprise');
+            }
 
             $user = $member->user;
             $member->delete();

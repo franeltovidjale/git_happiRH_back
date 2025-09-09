@@ -1,0 +1,86 @@
+<?php
+
+namespace App\Models;
+
+use App\Enums\ProjectStatus;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+
+/**
+ * Project Model
+ *
+ * @property int $id
+ * @property string $name
+ * @property string|null $description
+ * @property string $status
+ * @property int|null $lead_member_id
+ * @property int $creator_member_id
+ * @property int $enterprise_id
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
+ * @property-read User|null $projectLead
+ * @property-read User $creator
+ * @property-read Enterprise $enterprise
+ * @property-read \Illuminate\Database\Eloquent\Collection|Task[] $tasks
+ */
+class Project extends Model
+{
+    use HasFactory;
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $fillable = [
+        'name',
+        'description',
+        'status',
+        'lead_member_id',
+        'creator_member_id',
+        'enterprise_id',
+    ];
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'status' => ProjectStatus::class,
+    ];
+
+    /**
+     * Get the creator of the project.
+     */
+    public function creator(): BelongsTo
+    {
+        return $this->belongsTo(Member::class, 'creator_member_id');
+    }
+
+    /**
+     * Get the project lead.
+     */
+    public function projectLead(): BelongsTo
+    {
+        return $this->belongsTo(Member::class, 'lead_member_id');
+    }
+
+    /**
+     * Get the enterprise that owns the project.
+     */
+    public function enterprise(): BelongsTo
+    {
+        return $this->belongsTo(Enterprise::class);
+    }
+
+    /**
+     * Get the tasks for the project.
+     */
+    public function tasks(): HasMany
+    {
+        return $this->hasMany(Task::class);
+    }
+}

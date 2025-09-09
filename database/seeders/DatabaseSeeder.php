@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             LangueSeeder::class,
             PlanSeeder::class,
             SectorSeeder::class,
+            DevUserSeeder::class,
         ]);
     }
 }

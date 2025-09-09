@@ -17,7 +17,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property bool $active
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
- *
  * @property-read Member $member
  */
 class WorkingDay extends Model
@@ -50,8 +49,6 @@ class WorkingDay extends Model
 
     /**
      * Get the member that owns the working day.
-     *
-     * @return BelongsTo
      */
     public function member(): BelongsTo
     {

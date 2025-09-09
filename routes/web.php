@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'welcome'])->name('welcome');
 
-
 Route::get('/features', [HomeController::class, 'features'])->name('features');
 Route::get('/tarifs', [HomeController::class, 'tarifs'])->name('tarifs');
 Route::get('/demo', [HomeController::class, 'demo'])->name('demo');
@@ -25,4 +24,4 @@ Route::get(
     [HomeController::class, 'getStarted']
 )->name('public.register');
 
-require __DIR__ . '/admin.php';
+require __DIR__.'/admin.php';

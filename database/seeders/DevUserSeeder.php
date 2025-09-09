@@ -9,7 +9,6 @@ use App\Models\Member;
 use App\Models\PaymentReminder;
 use App\Models\Plan;
 use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -22,19 +21,20 @@ class DevUserSeeder extends Seeder
     public function run(): void
     {
         DB::beginTransaction();
-        
+
         try {
             // Check if dev user already exists
             $existingUser = User::where('email', 'dev.claudy@gmail.com')->first();
             if ($existingUser) {
                 $this->command->info('Dev user already exists. Skipping...');
                 DB::rollBack();
+
                 return;
             }
 
             // Get first active plan or create a basic one if none exists
             $plan = Plan::active()->first();
-            if (!$plan) {
+            if (! $plan) {
                 $plan = Plan::create([
                     'name' => 'Plan de Base',
                     'price' => 50000,
@@ -49,7 +49,7 @@ class DevUserSeeder extends Seeder
 
             // Get first active country or create Morocco if none exists
             $country = Country::active()->first();
-            if (!$country) {
+            if (! $country) {
                 $country = Country::create([
                     'name' => 'Morocco',
                     'code' => 'MA',
@@ -103,7 +103,7 @@ class DevUserSeeder extends Seeder
                 'payment_date' => now(),
                 'next_payment_date' => $nextPaymentDate,
                 'amount' => $plan->price,
-                'transaction_id' => 'DEV-' . uniqid(),
+                'transaction_id' => 'DEV-'.uniqid(),
                 'status' => EnterprisePayment::STATUS_PAID,
             ]);
 
@@ -128,11 +128,11 @@ class DevUserSeeder extends Seeder
             $this->command->info('✅ Dev user created successfully!');
             $this->command->info('📧 Email: dev.claudy@gmail.com');
             $this->command->info('🔑 Password: 12345678');
-            $this->command->info('🏢 Enterprise: ' . $enterprise->name);
+            $this->command->info('🏢 Enterprise: '.$enterprise->name);
 
         } catch (\Exception $e) {
             DB::rollBack();
-            $this->command->error('❌ Error creating dev user: ' . $e->getMessage());
+            $this->command->error('❌ Error creating dev user: '.$e->getMessage());
             throw $e;
         }
     }

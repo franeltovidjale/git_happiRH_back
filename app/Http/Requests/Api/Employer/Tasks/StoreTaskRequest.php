@@ -28,7 +28,7 @@ class StoreTaskRequest extends FormRequest
                 'required',
                 'string',
                 'max:255',
-                Rule::unique('tasks', 'name')->where('project_id', $this->input('project_id'))
+                Rule::unique('tasks', 'name')->where('project_id', $this->input('project_id')),
             ],
             'project_id' => ['required', 'exists:projects,id'],
             'due_date' => ['nullable', 'date', 'after_or_equal:today'],
@@ -36,13 +36,13 @@ class StoreTaskRequest extends FormRequest
             'end_time' => ['nullable', 'date_format:H:i', 'after:start_time'],
             'priority' => ['nullable', Rule::in(TaskPriority::values())],
             'assigned_member_id' => [
-                'nullable', 
+                'nullable',
                 'exists:members,id',
                 function ($attribute, $value, $fail) {
-                    if ($value && !isMemberPartOfEnterprise($value)) {
+                    if ($value && ! isMemberPartOfEnterprise($value)) {
                         $fail('Le membre assigné ne fait pas partie de votre entreprise.');
                     }
-                }
+                },
             ],
             'notifications' => ['boolean'],
         ];

@@ -27,7 +27,8 @@ class SettingController extends Controller
 
             return $this->ok('Settings retrieved successfully', $settingsArray);
         } catch (\Exception $e) {
-            Log::error('Error retrieving settings: ' . $e->getMessage());
+            Log::error('Error retrieving settings: '.$e->getMessage());
+
             return $this->serverError('Failed to retrieve settings', null, $e->getMessage());
         }
     }
@@ -35,14 +36,12 @@ class SettingController extends Controller
     /**
      * Update a setting value
      *
-     * @param Request $request
-     * @param string $key
      * @return \Illuminate\Http\JsonResponse
      */
     public function update(Request $request, string $key)
     {
         try {
-            if (!Setting::isValidKey($key)) {
+            if (! Setting::isValidKey($key)) {
                 return $this->badRequest('Invalid setting key');
             }
 
@@ -56,18 +55,21 @@ class SettingController extends Controller
 
             $success = Setting::setSetting($key, $value);
 
-            if (!$success) {
+            if (! $success) {
                 DB::rollback();
+
                 return $this->notFound('Setting not found or not editable');
             }
 
             DB::commit();
 
             $updatedValue = Setting::getSetting($key);
+
             return $this->ok('Setting updated successfully', [$key => $updatedValue]);
         } catch (\Exception $e) {
             DB::rollback();
-            Log::error('Error updating setting: ' . $e->getMessage());
+            Log::error('Error updating setting: '.$e->getMessage());
+
             return $this->serverError('Failed to update setting', null, $e->getMessage());
         }
     }

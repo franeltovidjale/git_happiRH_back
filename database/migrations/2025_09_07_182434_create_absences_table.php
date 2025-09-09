@@ -13,12 +13,18 @@ return new class extends Migration
     {
         Schema::create('demande_absences', function (Blueprint $table) {
             $table->id();
-            $table->dateTime('absence_date');
+            $table->dateTime('start_date');
             $table->string('status')->default('pending');
             $table->foreignId('member_id')->constrained('members')->cascadeOnDelete();
             $table->foreignId('enterprise_id')->constrained('enterprises')->cascadeOnDelete();
             $table->foreignId('creator_member_id')->constrained('members')->cascadeOnDelete();
             $table->text('reason')->nullable();
+
+            // Add new columns
+            $table->dateTime('end_date')->nullable();
+            $table->string('type')->default('leave'); // leave, absence, holiday
+            $table->string('period'); // 3h, 1day, 1week, 2month, etc.
+            $table->text('description')->nullable();
             $table->timestamps();
         });
     }

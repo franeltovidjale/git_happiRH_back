@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class EnterpriseTransactionSeeder extends Seeder
@@ -18,11 +17,11 @@ class EnterpriseTransactionSeeder extends Seeder
 
         if ($enterprises->isEmpty() || $users->isEmpty()) {
             $this->command->warn('Aucune entreprise ou utilisateur trouvé. Création de données de base...');
-            
+
             // Créer quelques entreprises et utilisateurs si nécessaire
             $enterprise = \App\Models\Enterprise::factory()->create();
             $user = \App\Models\User::factory()->create();
-            
+
             $enterprises = collect([$enterprise]);
             $users = collect([$user]);
         }
@@ -30,7 +29,7 @@ class EnterpriseTransactionSeeder extends Seeder
         // Créer 50 transactions réparties sur les entreprises existantes
         foreach ($enterprises->take(3) as $enterprise) {
             $enterpriseUsers = $users->random(min($users->count(), 5));
-            
+
             foreach ($enterpriseUsers as $user) {
                 // Transactions complétées (70%)
                 \App\Models\EnterpriseTransaction::factory()

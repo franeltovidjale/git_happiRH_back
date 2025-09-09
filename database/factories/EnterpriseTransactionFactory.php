@@ -18,7 +18,7 @@ class EnterpriseTransactionFactory extends Factory
     {
         $amount = $this->faker->randomFloat(2, 10000, 500000);
         $statuses = ['pending', 'completed', 'failed', 'cancelled'];
-        
+
         return [
             'amount' => $amount,
             'status' => $this->faker->randomElement($statuses),

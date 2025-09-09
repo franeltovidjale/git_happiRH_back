@@ -5,7 +5,6 @@ namespace App\Http\Requests\Api\Employer\Departements;
 use App\Models\Department;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Str;
-use Illuminate\Validation\Rule;
 
 class UpdateDepartmentRequest extends FormRequest
 {
@@ -48,7 +47,7 @@ class UpdateDepartmentRequest extends FormRequest
             'active' => 'boolean',
 
             'late_penalty' => 'boolean',
-            'work_model' => 'nullable|in:' . implode(',', Department::WORK_MODEL_OPTIONS),
+            'work_model' => 'nullable|in:'.implode(',', Department::WORK_MODEL_OPTIONS),
             'meeting_participation_score' => 'boolean',
             'attendance_score' => 'boolean',
             'overtime_recording_score' => 'nullable|string|max:255',

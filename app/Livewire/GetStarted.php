@@ -123,7 +123,7 @@ class GetStarted extends Component
                 'payment_date' => now(),
                 'next_payment_date' => $nextPaymentDate,
                 'amount' => $this->calculateTotalPrice(),
-                'transaction_id' => 'INIT-' . uniqid(),
+                'transaction_id' => 'INIT-'.uniqid(),
                 'status' => EnterprisePayment::STATUS_PAID,
             ]);
 
@@ -213,10 +213,10 @@ class GetStarted extends Component
             $discount = $yearlyPrice * $yearlyPlanRate;
             $finalPrice = $yearlyPrice - $discount;
 
-            return number_format($finalPrice, 0, ',', ' ') . ' ' . $this->selectedPlan->currency . ' /an';
+            return number_format($finalPrice, 0, ',', ' ').' '.$this->selectedPlan->currency.' /an';
         }
 
-        return number_format($totalPrice, 0, ',', ' ') . ' ' . $this->selectedPlan->currency . ' /mois';
+        return number_format($totalPrice, 0, ',', ' ').' '.$this->selectedPlan->currency.' /mois';
     }
 
     public function getMonthlyPriceFromYearly()
@@ -235,7 +235,7 @@ class GetStarted extends Component
         $discount = $yearlyPrice * $yearlyPlanRate;
         $finalPrice = $yearlyPrice - $discount;
 
-        return number_format($finalPrice / 12, 0, ',', ' ') . ' ' . $this->selectedPlan->currency . ' /mois';
+        return number_format($finalPrice / 12, 0, ',', ' ').' '.$this->selectedPlan->currency.' /mois';
     }
 
     public function formatBasePrice()
@@ -246,10 +246,10 @@ class GetStarted extends Component
             $discount = $yearlyPrice * $yearlyPlanRate;
             $finalPrice = $yearlyPrice - $discount;
 
-            return number_format($finalPrice, 0, ',', ' ') . ' ' . $this->selectedPlan->currency . ' /an';
+            return number_format($finalPrice, 0, ',', ' ').' '.$this->selectedPlan->currency.' /an';
         }
 
-        return number_format($this->selectedPlan->price, 0, ',', ' ') . ' ' . $this->selectedPlan->currency . ' /mois';
+        return number_format($this->selectedPlan->price, 0, ',', ' ').' '.$this->selectedPlan->currency.' /mois';
     }
 
     public function formatPricePerEmployee()
@@ -264,10 +264,10 @@ class GetStarted extends Component
             $discount = $yearlyPrice * $yearlyPlanRate;
             $finalPrice = $yearlyPrice - $discount;
 
-            return number_format($finalPrice, 0, ',', ' ') . ' ' . $this->selectedPlan->currency . ' /an';
+            return number_format($finalPrice, 0, ',', ' ').' '.$this->selectedPlan->currency.' /an';
         }
 
-        return number_format($this->selectedPlan->price_per_employee, 0, ',', ' ') . ' ' . $this->selectedPlan->currency . ' /mois';
+        return number_format($this->selectedPlan->price_per_employee, 0, ',', ' ').' '.$this->selectedPlan->currency.' /mois';
     }
 
     public function render()

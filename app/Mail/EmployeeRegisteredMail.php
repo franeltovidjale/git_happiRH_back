@@ -3,7 +3,6 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
@@ -20,12 +19,6 @@ class EmployeeRegisteredMail extends Mailable
 
     /**
      * Create a new message instance.
-     *
-     * @param string $firstName
-     * @param string $lastName
-     * @param string $email
-     * @param string $password
-     * @param string $employerName
      */
     public function __construct(
         public string $firstName,
@@ -43,7 +36,7 @@ class EmployeeRegisteredMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Bienvenue dans l\'équipe - ' . config('app.name'),
+            subject: 'Bienvenue dans l\'équipe - '.config('app.name'),
         );
     }
 

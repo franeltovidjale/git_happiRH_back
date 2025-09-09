@@ -2,13 +2,9 @@
 
 use App\Models\Setting;
 
-if (!function_exists('getSettings')) {
+if (! function_exists('getSettings')) {
     /**
      * Retrieve multiple settings in one call, with defaults for missing keys
-     *
-     * @param array $keys
-     * @param array $defaults
-     * @return array
      */
     function getSettings(array $keys, array $defaults = []): array
     {
@@ -26,7 +22,7 @@ if (!function_exists('getSettings')) {
 
         foreach ($keys as $key) {
             // Skip invalid keys
-            if (!Setting::isValidKey($key)) {
+            if (! Setting::isValidKey($key)) {
                 continue;
             }
 
@@ -40,22 +36,22 @@ if (!function_exists('getSettings')) {
     }
 }
 
-if (!function_exists('encodeModelStatusStory')) {
+if (! function_exists('encodeModelStatusStory')) {
     function encodeModelStatusStory(string $status, ?string $note, int $statusBy): array
     {
         return [
             'date' => now(),
             'note' => $note,
             'status' => $status,
-            'status_by' => $statusBy
+            'status_by' => $statusBy,
         ];
     }
 }
 
-if (!function_exists('decodeModelStatusStory')) {
+if (! function_exists('decodeModelStatusStory')) {
     function decodeModelStatusStory(?array $statusStory): array
     {
-        if (!$statusStory) {
+        if (! $statusStory) {
             return [];
         }
 
@@ -63,22 +59,20 @@ if (!function_exists('decodeModelStatusStory')) {
             'date' => $statusStory['date'] ?? null,
             'note' => $statusStory['note'] ?? null,
             'status' => $statusStory['status'] ?? null,
-            'status_by' => $statusStory['status_by'] ?? null
+            'status_by' => $statusStory['status_by'] ?? null,
         ];
     }
 }
 
-if (!function_exists('member')) {
+if (! function_exists('member')) {
     /**
      * Get the current authenticated user's member record for the active enterprise
-     *
-     * @return \App\Models\Member|null
      */
     function member(array $attributes = ['*']): ?\App\Models\Member
     {
         $user = auth()->user();
 
-        if (!$user || !$user->activeEnterprise) {
+        if (! $user || ! $user->activeEnterprise) {
             return null;
         }
 
@@ -89,23 +83,21 @@ if (!function_exists('member')) {
     }
 }
 
-if (!function_exists('isMemberPartOfEnterprise')) {
+if (! function_exists('isMemberPartOfEnterprise')) {
     /**
      * Check if a member belongs to a specific enterprise
      *
-     * @param int $memberId
-     * @param int|null $enterpriseId If null, uses the current user's active enterprise
-     * @return bool
+     * @param  int|null  $enterpriseId  If null, uses the current user's active enterprise
      */
     function isMemberPartOfEnterprise(int $memberId, ?int $enterpriseId = null): bool
     {
-        if (!$enterpriseId) {
+        if (! $enterpriseId) {
             $user = auth()->user();
-            
-            if (!$user || !$user->activeEnterprise) {
+
+            if (! $user || ! $user->activeEnterprise) {
                 return false;
             }
-            
+
             $enterpriseId = $user->activeEnterprise->id;
         }
 
@@ -115,16 +107,14 @@ if (!function_exists('isMemberPartOfEnterprise')) {
     }
 }
 
-if (!function_exists('activeEnterprise')) {
+if (! function_exists('activeEnterprise')) {
     /**
      * Get the current authenticated user's active enterprise
-     *
-     * @return \App\Models\Enterprise|null
      */
     function activeEnterprise(): ?\App\Models\Enterprise
     {
         $user = auth()->user();
-        
+
         return $user?->activeEnterprise;
     }
 }

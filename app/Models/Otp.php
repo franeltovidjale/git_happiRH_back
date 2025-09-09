@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Carbon\Carbon;
 
 /**
  * OTP Model
@@ -50,8 +50,6 @@ class Otp extends Model
 
     /**
      * Generate a random 6-digit OTP code
-     *
-     * @return string
      */
     public static function generateCode(): string
     {
@@ -61,10 +59,9 @@ class Otp extends Model
     /**
      * Create a new OTP for the given identifier
      *
-     * @param string $identifier Email or phone
-     * @param string $type OTP type
-     * @param int $expiryMinutes Minutes until expiry (default: 10)
-     * @return static
+     * @param  string  $identifier  Email or phone
+     * @param  string  $type  OTP type
+     * @param  int  $expiryMinutes  Minutes until expiry (default: 10)
      */
     public static function createForIdentifier(string $identifier, string $type = 'verification', int $expiryMinutes = 10): static
     {
@@ -85,10 +82,9 @@ class Otp extends Model
     /**
      * Verify the OTP code for the given identifier
      *
-     * @param string $identifier Email or phone
-     * @param string $code OTP code
-     * @param string $type OTP type
-     * @return bool
+     * @param  string  $identifier  Email or phone
+     * @param  string  $code  OTP code
+     * @param  string  $type  OTP type
      */
     public static function verify(string $identifier, string $code, string $type = 'verification'): bool
     {
@@ -101,6 +97,7 @@ class Otp extends Model
 
         if ($otp) {
             $otp->delete();
+
             return true;
         }
 
@@ -109,8 +106,6 @@ class Otp extends Model
 
     /**
      * Check if the OTP is expired
-     *
-     * @return bool
      */
     public function isExpired(): bool
     {
@@ -119,11 +114,9 @@ class Otp extends Model
 
     /**
      * Check if the OTP is valid (not expired and marked as valid)
-     *
-     * @return bool
      */
     public function isValid(): bool
     {
-        return $this->is_valid && !$this->isExpired();
+        return $this->is_valid && ! $this->isExpired();
     }
 }

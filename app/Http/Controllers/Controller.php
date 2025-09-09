@@ -21,7 +21,6 @@ class Controller extends BaseController
         $request ??= request();
         $user = $request->user();
 
-
         if (! $user || ! $user->active_enterprise_id) {
             return null;
         }

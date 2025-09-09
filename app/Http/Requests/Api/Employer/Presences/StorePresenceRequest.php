@@ -30,7 +30,7 @@ class StorePresenceRequest extends FormRequest
                 'date',
                 Rule::unique('presences')->where(function ($query) {
                     return $query->where('member_id', $this->input('member_id'));
-                })
+                }),
             ],
             'check_in_time' => ['nullable', 'date_format:H:i'],
             'check_out_time' => ['nullable', 'date_format:H:i', 'after:check_in_time'],

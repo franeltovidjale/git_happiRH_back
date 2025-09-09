@@ -28,7 +28,7 @@ class UpdateTaskRequest extends FormRequest
         $projectId = $this->input('project_id');
 
         // Si project_id n'est pas fourni, récupère celui de la tâche existante
-        if (!$projectId && $taskId) {
+        if (! $projectId && $taskId) {
             $existingTask = \App\Models\Task::find($taskId);
             $projectId = $existingTask ? $existingTask->project_id : null;
         }
@@ -38,7 +38,7 @@ class UpdateTaskRequest extends FormRequest
                 'sometimes',
                 'string',
                 'max:255',
-                $projectId ? Rule::unique('tasks', 'name')->where('project_id', $projectId)->ignore($taskId) : 'string'
+                $projectId ? Rule::unique('tasks', 'name')->where('project_id', $projectId)->ignore($taskId) : 'string',
             ],
             'project_id' => ['sometimes', 'exists:projects,id'],
             'due_date' => ['nullable', 'date', 'after_or_equal:today'],
@@ -47,13 +47,13 @@ class UpdateTaskRequest extends FormRequest
             'priority' => ['nullable', Rule::in(TaskPriority::values())],
             'status' => ['sometimes', Rule::in(TaskStatus::values())],
             'assigned_member_id' => [
-                'nullable', 
+                'nullable',
                 'exists:members,id',
                 function ($attribute, $value, $fail) {
-                    if ($value && !isMemberPartOfEnterprise($value)) {
+                    if ($value && ! isMemberPartOfEnterprise($value)) {
                         $fail('Le membre assigné ne fait pas partie de votre entreprise.');
                     }
-                }
+                },
             ],
             'notifications' => ['boolean'],
         ];

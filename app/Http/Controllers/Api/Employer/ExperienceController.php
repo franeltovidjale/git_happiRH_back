@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Api\Employer;
 
-use Illuminate\Http\JsonResponse;
-use App\Services\ExperienceService;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\ExperienceResource;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Http\Requests\Api\Employer\Members\StoreExperienceRequest;
 use App\Http\Requests\Api\Employer\Members\UpdateExperienceRequest;
+use App\Http\Resources\ExperienceResource;
+use App\Services\ExperienceService;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\JsonResponse;
 
 class ExperienceController extends Controller
 {

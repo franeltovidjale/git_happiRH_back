@@ -5,7 +5,7 @@ use App\Models\Member;
 
 describe('MemberResource Tests', function () {
     it('transforms member data correctly', function () {
-        $member = new Member();
+        $member = new Member;
         $member->id = 1;
         $member->user_id = 10;
         $member->type = 'employee';
@@ -37,7 +37,7 @@ describe('MemberResource Tests', function () {
     });
 
     it('includes user data when user relation is loaded', function () {
-        $member = new Member();
+        $member = new Member;
         $member->id = 1;
         $member->user_id = 10;
         $member->type = 'employee';
@@ -52,7 +52,7 @@ describe('MemberResource Tests', function () {
             'first_name' => 'John',
             'last_name' => 'Doe',
             'email' => 'john@example.com',
-            'phone' => '1234567890'
+            'phone' => '1234567890',
         ]);
 
         $resource = new MemberResource($member);
@@ -73,7 +73,7 @@ describe('MemberResource Tests', function () {
     });
 
     it('has correct resource structure', function () {
-        $member = new Member();
+        $member = new Member;
         $member->id = 1;
         $member->user_id = 10;
         $member->type = 'employee';

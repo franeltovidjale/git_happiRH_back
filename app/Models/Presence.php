@@ -91,7 +91,7 @@ class Presence extends Model
      */
     public function getWorkingHoursAttribute(): ?float
     {
-        if (!$this->check_in_time || !$this->check_out_time) {
+        if (! $this->check_in_time || ! $this->check_out_time) {
             return null;
         }
 

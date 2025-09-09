@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Employer\Presences\StorePresenceRequest;
 use App\Services\Presences\PresenceService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 class PresenceController extends Controller
 {

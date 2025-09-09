@@ -26,7 +26,7 @@ class ChangeEmployeeStatusRequest extends FormRequest
             'status' => [
                 'required',
                 'string',
-                'in:' . implode(',', [
+                'in:'.implode(',', [
                     Member::STATUS_REQUESTED,
                     Member::STATUS_REJECTED,
                     Member::STATUS_ACTIVE,

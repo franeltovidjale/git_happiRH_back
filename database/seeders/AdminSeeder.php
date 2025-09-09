@@ -2,11 +2,10 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
 use App\Models\User;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class AdminSeeder extends Seeder
 {
@@ -21,7 +20,7 @@ class AdminSeeder extends Seeder
             // Check if admin already exists
             $adminExists = User::where('email', 'admin@happyhr.com')->exists();
 
-            if (!$adminExists) {
+            if (! $adminExists) {
                 User::create([
                     'first_name' => 'Admin',
                     'last_name' => 'HappyHR',
@@ -39,7 +38,7 @@ class AdminSeeder extends Seeder
             DB::commit();
         } catch (\Exception $e) {
             DB::rollback();
-            $this->command->error('Error creating admin user: ' . $e->getMessage());
+            $this->command->error('Error creating admin user: '.$e->getMessage());
         }
     }
 }

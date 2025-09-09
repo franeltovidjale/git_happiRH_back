@@ -22,7 +22,7 @@ enum PresenceStatus: string
      */
     public function label(): string
     {
-        return match($this) {
+        return match ($this) {
             self::Present => 'Présent',
             self::Absent => 'Absent',
             self::Late => 'Retard',

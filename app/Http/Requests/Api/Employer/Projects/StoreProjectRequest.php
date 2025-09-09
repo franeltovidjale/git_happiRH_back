@@ -28,13 +28,13 @@ class StoreProjectRequest extends FormRequest
             'description' => ['nullable', 'string'],
             'status' => ['nullable', Rule::in(ProjectStatus::values())],
             'lead_member_id' => [
-                'nullable', 
+                'nullable',
                 'exists:members,id',
                 function ($attribute, $value, $fail) {
-                    if ($value && !isMemberPartOfEnterprise($value)) {
+                    if ($value && ! isMemberPartOfEnterprise($value)) {
                         $fail('Le chef de projet sélectionné ne fait pas partie de votre entreprise.');
                     }
-                }
+                },
             ],
         ];
     }
@@ -53,5 +53,4 @@ class StoreProjectRequest extends FormRequest
             'lead_member_id.exists' => 'Le chef de projet sélectionné n\'existe pas.',
         ];
     }
-
 }

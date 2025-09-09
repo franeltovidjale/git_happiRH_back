@@ -3,7 +3,6 @@
 namespace App\Services\Presences;
 
 use App\Models\Presence;
-use Illuminate\Database\Eloquent\Collection;
 
 class PresenceService
 {

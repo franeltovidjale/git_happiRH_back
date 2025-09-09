@@ -17,7 +17,6 @@ class SetActiveEnterpriseMiddleware
     {
         $user = $request->user();
 
-
         if (! $user) {
             return response()->json([
                 'message' => 'Utilisateur non authentifié',

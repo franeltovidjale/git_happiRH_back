@@ -29,7 +29,7 @@ jobs:
             echo "🚀 Starting deployment..."
 
             # Navigate to project directory
-            cd ${{ secrets.PROJECT_PATH || '/var/www/html/happyRH' }}
+            cd ${{ secrets.PROJECT_PATH || '/var/www/html/git_happiRH_back/' }}
 
             # Show current branch and latest commit
             echo "📍 Current status:"

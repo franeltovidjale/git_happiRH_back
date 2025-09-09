@@ -25,8 +25,7 @@ class StoreAbsenceRequest extends FormRequest
     {
         return [
             'absence_date' => ['required', 'date'],
-            'member_id' => ['required', 'exists:users,id'],
-            'enterprise_id' => ['required', 'exists:enterprises,id'],
+            'member_id' => ['required', 'exists:members,id'],
             'status' => ['nullable', Rule::in(AbsenceStatus::values())],
             'reason' => ['nullable', 'string', 'max:1000'],
         ];

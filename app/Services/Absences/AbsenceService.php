@@ -2,6 +2,7 @@
 
 namespace App\Services\Absences;
 
+use App\Enums\AbsenceStatus;
 use App\Models\Absence;
 use Illuminate\Support\Facades\DB;
 
@@ -12,19 +13,19 @@ class AbsenceService
      */
     public function store(array $data): Absence
     {
+        DB::beginTransaction();
         try {
-            DB::beginTransaction();
 
             // Use provided status or default to 'pending'
-            $status = $data['status'] ?? 'pending';
+            $status = $data['status'] ?? AbsenceStatus::APPROVED;
 
             $absence = Absence::create([
                 'absence_date' => $data['absence_date'],
                 'member_id' => $data['member_id'],
-                'enterprise_id' => $data['enterprise_id'],
+                'enterprise_id' => activeEnterprise()->id,
                 'status' => $status,
                 'reason' => $data['reason'] ?? null,
-                'created_by' => auth()->id(),
+                'creator_member_id' => member()->getId(),
             ]);
 
             DB::commit();

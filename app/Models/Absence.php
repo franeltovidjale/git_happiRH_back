@@ -37,7 +37,7 @@ class Absence extends Model
         'status',
         'member_id',
         'enterprise_id',
-        'created_by',
+        'creator_member_id',
         'reason',
     ];
 
@@ -72,6 +72,6 @@ class Absence extends Model
      */
     public function creator(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'created_by');
+        return $this->belongsTo(User::class, 'creator_member_id');
     }
 }

@@ -67,8 +67,6 @@ jobs:
 
             # Set proper permissions
             echo "🔐 Setting permissions..."
-            chown -R www-data:www-data storage bootstrap/cache
-            chmod -R 775 storage bootstrap/cache
 
             # Restart services if needed (optional)
             if command -v supervisorctl >/dev/null 2>&1; then

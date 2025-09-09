@@ -13,9 +13,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  *
  * @property int $id
  * @property \Carbon\Carbon $start_date
- * @property \Carbon\Carbon|null $end_date
+ * @property \Carbon\Carbon $end_date
  * @property string $type
- * @property string $period
  * @property string $status
  * @property int $member_id
  * @property int $enterprise_id
@@ -41,7 +40,6 @@ class DemandeAbsence extends Model
         'start_date',
         'end_date',
         'type',
-        'period',
         'status',
         'member_id',
         'enterprise_id',

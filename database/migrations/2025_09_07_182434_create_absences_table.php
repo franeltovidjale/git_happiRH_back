@@ -21,9 +21,9 @@ return new class extends Migration
             $table->text('reason')->nullable();
 
             // Add new columns
-            $table->dateTime('end_date')->nullable();
+            $table->dateTime('end_date');
             $table->string('type')->default('leave'); // leave, absence, holiday
-            $table->string('period'); // 3h, 1day, 1week, 2month, etc.
+
             $table->text('description')->nullable();
             $table->timestamps();
         });

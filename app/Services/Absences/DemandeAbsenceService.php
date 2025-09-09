@@ -21,9 +21,8 @@ class DemandeAbsenceService
 
             $demandeAbsence = DemandeAbsence::create([
                 'start_date' => $data['start_date'],
-                'end_date' => $data['end_date'] ?? null,
+                'end_date' => $data['end_date'],
                 'type' => $data['type'],
-                'period' => $data['period'],
                 'member_id' => $data['member_id'],
                 'enterprise_id' => activeEnterprise()->id,
                 'status' => $status,

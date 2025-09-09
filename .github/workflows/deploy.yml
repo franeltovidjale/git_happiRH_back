@@ -46,7 +46,7 @@ jobs:
             composer install --no-dev --optimize-autoloader --no-interaction --ignore-platform-reqs --no-cache
 
             # Install/update npm dependencies and build assets
-            npm install --production
+            npm install
             npm run build
 
             # Clear all caches before migration

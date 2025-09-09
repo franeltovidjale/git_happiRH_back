@@ -19,3 +19,5 @@ yarn-error.log
 /.cursor
 /CLAUDE.md
 /issues-template
+composer.lock
+package-lock.json

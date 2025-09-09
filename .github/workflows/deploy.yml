@@ -14,7 +14,7 @@ jobs:
   deploy:
     name: Deploy to Server
     runs-on: ubuntu-latest
-    environment: production
+    environment: Happi-RH
 
     steps:
       - name: Deploy to server

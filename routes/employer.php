@@ -46,7 +46,9 @@ Route::prefix('employer')->group(function () {
         Route::delete('tasks/{id}', [TaskController::class, 'destroy']);
 
         // Demande Absence routes
+        Route::get('demande-absences', [DemandeAbsenceController::class, 'index']);
         Route::post('demande-absences', [DemandeAbsenceController::class, 'store']);
+        Route::put('demande-absences/{id}/status', [DemandeAbsenceController::class, 'changeStatus']);
 
         // Planning routes
         Route::post('plannings', [PlanningController::class, 'store']);

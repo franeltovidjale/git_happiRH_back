@@ -9,12 +9,53 @@ use Illuminate\Support\Facades\DB;
 class DemandeAbsenceService
 {
     /**
+     * Get paginated list of demandes absences for the current enterprise
+     */
+    public function paginate(int $perPage = 15): \Illuminate\Contracts\Pagination\LengthAwarePaginator
+    {
+        return DemandeAbsence::query()
+            ->where('enterprise_id', activeEnterprise()->id)
+            ->with(['member.user', 'creator.user'])
+            ->orderBy('created_at', 'desc')
+            ->paginate($perPage);
+    }
+
+    /**
+     * Change the status of a demande absence
+     */
+    public function changeStatus(int $demandeAbsenceId, array $data): DemandeAbsence
+    {
+        DB::beginTransaction();
+        try {
+            $demandeAbsence = DemandeAbsence::where('id', $demandeAbsenceId)
+                ->where('enterprise_id', activeEnterprise()->id)
+                ->firstOrFail();
+
+            $demandeAbsence->update([
+                'status' => $data['status'],
+                'reason' => $data['reason'] ?? $demandeAbsence->reason,
+            ]);
+
+            DB::commit();
+
+            return $demandeAbsence->load(['member.user', 'enterprise', 'creator.user']);
+        } catch (\Exception $e) {
+            DB::rollback();
+            throw $e;
+        }
+    }
+
+    /**
      * Store a new demande absence
      */
     public function store(array $data): DemandeAbsence
     {
         DB::beginTransaction();
         try {
+            // Verify that the member belongs to the current enterprise
+            if (!isMemberPartOfEnterprise($data['member_id'])) {
+                throw new \InvalidArgumentException('Le membre spécifié ne fait pas partie de l\'entreprise courante.');
+            }
 
             // Use provided status or default to 'pending'
             $status = $data['status'] ?? AbsenceStatus::APPROVED;
@@ -33,7 +74,7 @@ class DemandeAbsenceService
 
             DB::commit();
 
-            return $demandeAbsence->load(['member', 'enterprise', 'creator']);
+            return $demandeAbsence->load(['member.user', 'enterprise', 'creator.user']);
         } catch (\Exception $e) {
             DB::rollback();
             throw $e;

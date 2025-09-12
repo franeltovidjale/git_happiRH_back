@@ -25,3 +25,4 @@ Route::post('/forgot-password/resend-otp', [Auth\ForgotPasswordController::class
 Route::post('/forgot-password/change-password', [Auth\ForgotPasswordController::class, 'changePassword']);
 
 require_once __DIR__.'/employer.php';
+require_once __DIR__.'/member.php';

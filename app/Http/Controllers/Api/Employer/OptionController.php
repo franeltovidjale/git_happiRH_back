@@ -34,9 +34,10 @@ class OptionController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateOptionRequest $request, string $key): JsonResponse
+    public function update(UpdateOptionRequest $request): JsonResponse
     {
         DB::beginTransaction();
+        $key = $request->input('key');
         try {
             $option = $this->optionService->update($key, $request->input('value'));
             DB::commit();

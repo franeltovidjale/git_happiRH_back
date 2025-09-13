@@ -58,6 +58,6 @@ Route::prefix('employer')->group(function () {
 
         // Option routes
         Route::get('options', [OptionController::class, 'index']);
-        Route::put('options/{key}', [OptionController::class, 'update']);
+        Route::put('options', [OptionController::class, 'update']);
     });
 });

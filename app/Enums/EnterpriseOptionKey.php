@@ -36,9 +36,9 @@ enum EnterpriseOptionKey: string
     public function description(): string
     {
         return match ($this) {
-            self::StartWorkTime => 'Heure de début de la journée de travail (format HH:mm)',
-            self::EndWorkTime => 'Heure de fin de la journée de travail (format HH:mm)',
-            self::WorkDays => 'Jours de travail de la semaine (ex: lundi,mardi,mercredi,jeudi,vendredi)',
+            self::StartWorkTime => 'Heure de début standard',
+            self::EndWorkTime => 'Heure de fin standard',
+            self::WorkDays => 'Vos jours de travail',
             self::RestMinute => 'Durée de la pause en minutes',
         };
     }

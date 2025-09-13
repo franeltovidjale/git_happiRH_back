@@ -30,7 +30,13 @@ class UpdateOptionRequest extends FormRequest
             'key' => ['bail', 'required', 'string', Rule::in(EnterpriseOptionKey::values())],
         ];
         $optionRules = EnterpriseOptionKey::rules();
-        $rules['value'] = $optionRules[$this->key];
+        if (isset($optionRules[$this->key])) {
+            $rules['value'] = $optionRules[$this->key];
+
+            if ($this->key === EnterpriseOptionKey::WorkDays->value) {
+                $rules['value.*'] = ['bail', 'required', Rule::in(['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'])];
+            }
+        }
 
         return $rules;
     }

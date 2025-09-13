@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Employer;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\Employer\SetActiveEnterpriseRequest;
 use App\Http\Resources\EnterpriseResource;
 use App\Models\Option;
 use App\Models\User;
@@ -27,7 +28,7 @@ class ProfileController extends Controller
 
         $optionExists = Option::where('enterprise_id', $activeEnterprise?->id ?? '0')->exists();
 
-        if (!$optionExists) {
+        if (! $optionExists) {
             DB::beginTransaction();
             try {
                 $this->optionService->createDefaultOptions($activeEnterprise?->id ?? 0);
@@ -35,7 +36,8 @@ class ProfileController extends Controller
             } catch (\Exception $e) {
                 DB::rollBack();
                 logger()->error($e);
-                return $this->serverError("Erreur lors de la récupération du profil");
+
+                return $this->serverError('Erreur lors de la récupération du profil');
             }
         }
 
@@ -81,6 +83,40 @@ class ProfileController extends Controller
             logger()->error($e);
 
             return $this->serverError('Erreur lors de la mise à jour de la photo de profil');
+        }
+    }
+
+    /**
+     * Set active enterprise for the user.
+     */
+    public function setActiveEnterprise(SetActiveEnterpriseRequest $request): JsonResponse
+    {
+        try {
+            /** @var User $user */
+            $user = auth()->user();
+            $enterpriseId = $request->input('enterprise_id');
+
+            // Vérifier que l'utilisateur appartient à cette entreprise
+            $enterprise = $user->enterprises()->find($enterpriseId);
+
+            if (! $enterprise) {
+                return $this->forbidden('Vous n\'avez pas accès à cette entreprise');
+            }
+
+            // Mettre à jour l'entreprise active
+            $user->update(['active_enterprise_id' => $enterpriseId]);
+
+            return $this->ok('Entreprise active mise à jour avec succès', [
+                'active_enterprise' => [
+                    'id' => $enterprise->id,
+                    'name' => $enterprise->name,
+                    'logo' => $enterprise->logo,
+                ],
+            ]);
+        } catch (\Exception $e) {
+            logger()->error($e);
+
+            return $this->serverError('Erreur lors de la mise à jour de l\'entreprise active');
         }
     }
 }

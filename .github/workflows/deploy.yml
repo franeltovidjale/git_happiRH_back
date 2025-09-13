@@ -48,7 +48,7 @@ jobs:
             # Clear old build assets before building
             rm -f public/build/manifest.json
             rm -rf public/build/assets/
-            
+
             # Install/update npm dependencies and build assets
             npm install
             npm run build
@@ -66,9 +66,6 @@ jobs:
             # Optimize application
             echo "⚡ Optimizing application..."
             php artisan optimize:clear
-            php artisan config:cache
-            php artisan route:cache
-            php artisan view:cache
 
             # Set proper permissions
             echo "🔐 Setting permissions..."
@@ -77,12 +74,6 @@ jobs:
             if command -v supervisorctl >/dev/null 2>&1; then
               echo "🔄 Restarting queue workers..."
               supervisorctl restart all
-            fi
-
-            # Clear OPcache if available
-            if php -m | grep -q "opcache"; then
-              echo "🚀 Clearing OPcache..."
-              php artisan optimize
             fi
 
             echo "✅ Deployment completed successfully!"

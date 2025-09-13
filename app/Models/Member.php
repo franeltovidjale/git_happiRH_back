@@ -307,4 +307,9 @@ class Member extends Model implements Documentable
             }
         );
     }
+
+    public function workingHours()
+    {
+        return $this->hasMany(WorkingHour::class);
+    }
 }

@@ -21,6 +21,7 @@ return new class extends Migration
             $table->timestamps();
 
             $table->unique(['member_id', 'weekday', 'start_hour']);
+            $table->foreignId('enterprise_id')->constrained()->onDelete('cascade');
         });
     }
 

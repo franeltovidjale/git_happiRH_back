@@ -2,15 +2,18 @@
 
 namespace App\Http\Controllers\Api\Auth;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\Api\Members\RegistrationFormRequest;
 use App\Services\EmployeeService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use App\Services\WorkingHourService;
+use App\Http\Requests\Api\Members\RegistrationFormRequest;
 
 class MemberRegistrationController extends Controller
 {
     public function __construct(
-        private readonly EmployeeService $employeeService
+        private readonly EmployeeService $employeeService,
+        private readonly WorkingHourService $workingHourService
     ) {}
 
     /**
@@ -18,11 +21,16 @@ class MemberRegistrationController extends Controller
      */
     public function register(RegistrationFormRequest $request): JsonResponse
     {
+        DB::beginTransaction();
         try {
             $member = $this->employeeService->store($request->validated());
 
+            // Create default working hours for the new member
+            $this->workingHourService->createDefaults($member->id);
+
             event(new \Illuminate\Auth\Events\Registered($member->user));
 
+            DB::commit();
             return $this->created(
                 'Inscription réussie. Votre demande est en attente d\'approbation.',
                 [
@@ -32,6 +40,7 @@ class MemberRegistrationController extends Controller
                 ]
             );
         } catch (\Exception $e) {
+            DB::rollBack();
             return $this->serverError(
                 'Une erreur s\'est produite lors de l\'inscription.',
                 null,

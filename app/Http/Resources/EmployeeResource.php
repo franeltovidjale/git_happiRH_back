@@ -121,15 +121,9 @@ class EmployeeResource extends JsonResource
                     'zip_code' => $this->location->zip_code,
                 ];
             }),
-            'work_days' => $this->whenLoaded('workDays', function () {
-                return $this->workDays->map(function ($workDay) {
-                    return [
-                        'id' => $workDay->id,
-                        'weekday' => $workDay->weekday,
-                        'start_hour' => $workDay->start_hour,
-                        'end_hour' => $workDay->end_hour,
-                        'active' => $workDay->active,
-                    ];
+            'working_hours' => $this->whenLoaded('workingHours', function () {
+                return $this->workingHours->map(function ($workHour) {
+                    return  WorkingHourResource::make($workHour);
                 });
             }),
             'experiences' => $this->whenLoaded('experiences', function () {

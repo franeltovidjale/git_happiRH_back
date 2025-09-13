@@ -66,9 +66,9 @@ class Option extends Model
      * @param  mixed  $default
      * @return mixed
      */
-    public static function getOption(int $enterpriseId, EnterpriseOptionKey $key, $default = null)
+    public static function getOption(EnterpriseOptionKey $key, ?int $enterpriseId = null,  $default = null)
     {
-        $option = static::where('enterprise_id', $enterpriseId)
+        $option = static::where('enterprise_id', $enterpriseId ?? activeEnterprise()->id)
             ->where('key', $key->value)
             ->first();
 

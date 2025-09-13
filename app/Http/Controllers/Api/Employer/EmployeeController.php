@@ -18,6 +18,7 @@ use App\Models\MemberSalary;
 use App\Models\User;
 use App\Services\EmployeeService;
 use App\Services\UserService;
+use App\Services\WorkingHourService;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -31,7 +32,8 @@ class EmployeeController extends Controller
 {
     public function __construct(
         private EmployeeService $employeeService,
-        private UserService $userService
+        private UserService $userService,
+        private WorkingHourService $workingHourService
     ) {}
 
     /**
@@ -51,7 +53,7 @@ class EmployeeController extends Controller
 
             $invalidSnippets = array_diff($snippets, $allowedSnippets);
             if (! empty($invalidSnippets)) {
-                return $this->badRequest('Snippets invalides: '.implode(', ', $invalidSnippets));
+                return $this->badRequest('Snippets invalides: ' . implode(', ', $invalidSnippets));
             }
         }
 
@@ -154,6 +156,9 @@ class EmployeeController extends Controller
                 ]);
             }
 
+            // Create default working hours for the new member
+            $this->workingHourService->createDefaults($member->id);
+
             Mail::to($user->email)->send(new EmployeeRegisteredMail(
                 $user->first_name,
                 $user->last_name,
@@ -169,12 +174,12 @@ class EmployeeController extends Controller
             return $this->created('Employé créé avec succès', new EmployeeResource($member));
         } catch (\Exception $e) {
             DB::rollback();
-            logger()->error('Erreur lors de la création de l\'employé: '.$e->getMessage(), [
+            logger()->error('Erreur lors de la création de l\'employé: ' . $e->getMessage(), [
                 'exception' => $e,
                 'request_data' => $request->validated(),
             ]);
 
-            return $this->serverError('Erreur lors de la création de l\'employé: '.$e->getMessage());
+            return $this->serverError('Erreur lors de la création de l\'employé: ' . $e->getMessage());
         }
     }
 
@@ -184,7 +189,7 @@ class EmployeeController extends Controller
     public function show(Request $request, string $id): JsonResponse
     {
         try {
-            $allowedSnippets = ['address', 'banking', 'salary', 'employment', 'contactPerson', 'departments', 'workDays', 'experiences'];
+            $allowedSnippets = ['address', 'banking', 'salary', 'employment', 'contactPerson', 'departments', 'experiences', 'workingHours'];
 
             $snippets = [];
 
@@ -196,7 +201,7 @@ class EmployeeController extends Controller
 
                 $invalidSnippets = array_diff($snippets, $allowedSnippets);
                 if (! empty($invalidSnippets)) {
-                    return $this->badRequest('Snippets invalides: '.implode(', ', $invalidSnippets));
+                    return $this->badRequest('Snippets invalides: ' . implode(', ', $invalidSnippets));
                 }
             }
 
@@ -332,7 +337,7 @@ class EmployeeController extends Controller
             }
             logger()->error($e);
 
-            return $this->serverError('Erreur lors de la mise à jour de l\'employé: '.$e->getMessage());
+            return $this->serverError('Erreur lors de la mise à jour de l\'employé: ' . $e->getMessage());
         }
     }
 
@@ -357,7 +362,7 @@ class EmployeeController extends Controller
             $oldStatus = $member->status;
             $newStatus = $request->status;
             if ($newStatus === $oldStatus) {
-                return $this->ok('Le statut de l\'employé est déjà '.$newStatus);
+                return $this->ok('Le statut de l\'employé est déjà ' . $newStatus);
             }
 
             // Update member status
@@ -401,7 +406,7 @@ class EmployeeController extends Controller
             }
             logger()->error($e);
 
-            return $this->serverError('Erreur lors du changement de statut de l\'employé: '.$e->getMessage());
+            return $this->serverError('Erreur lors du changement de statut de l\'employé: ' . $e->getMessage());
         }
     }
 

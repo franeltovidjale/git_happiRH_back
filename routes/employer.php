@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\Employer\ProfileController;
 use App\Http\Controllers\Api\Employer\ProjectController;
 use App\Http\Controllers\Api\Employer\TaskController;
 use App\Http\Controllers\Api\Employer\TransactionController;
+use App\Http\Controllers\Api\Employer\WorkingHourController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('employer')->group(function () {
@@ -53,11 +54,17 @@ Route::prefix('employer')->group(function () {
         // Planning routes
         Route::post('plannings', [PlanningController::class, 'store']);
 
+
         // Transaction routes
         Route::get('transactions', [TransactionController::class, 'index']);
 
         // Option routes
         Route::get('options', [OptionController::class, 'index']);
         Route::put('options', [OptionController::class, 'update']);
+
+        // Working Hours routes
+        Route::get('working-hours', [WorkingHourController::class, 'index']);
+        Route::post('working-hours', [WorkingHourController::class, 'store']);
+        Route::put('working-hours/{id}', [WorkingHourController::class, 'update']);
     });
 });

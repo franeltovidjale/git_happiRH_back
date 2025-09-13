@@ -34,6 +34,7 @@ class WorkingDay extends Model
         'start_hour',
         'end_hour',
         'active',
+        'break_minutes'
     ];
 
     /**

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->enum('weekday', ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']);
             $table->time('start_hour');
             $table->time('end_hour');
+            $table->integer('break_minutes')->default(60);
             $table->boolean('active')->default(true);
             $table->timestamps();
 

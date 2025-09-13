@@ -72,6 +72,7 @@ class WorkingHourService
             ->where('enterprise_id', activeEnterprise()->id)
             ->exists();
 
+
         // Don't create default hours if records already exist
         if ($existingHours) {
             return;

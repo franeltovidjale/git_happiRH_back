@@ -157,23 +157,6 @@ class SettingSeeder extends Seeder
                 'description' => 'Application slogan or tagline',
                 'editable' => true,
             ],
-            [
-                'key' => 'workDays',
-                'value' => json_encode(['monday', 'tuesday', 'wednesday', 'thursday', 'friday']),
-                'type' => 'array',
-                'label' => 'Working Days',
-                'description' => 'Days of the week considered as working days',
-                'editable' => true,
-                'options' => [
-                    'sunday' => 'Sunday',
-                    'monday' => 'Monday',
-                    'tuesday' => 'Tuesday',
-                    'wednesday' => 'Wednesday',
-                    'thursday' => 'Thursday',
-                    'friday' => 'Friday',
-                    'saturday' => 'Saturday',
-                ],
-            ],
 
             [
                 'key' => 'yearlyPlanRate',

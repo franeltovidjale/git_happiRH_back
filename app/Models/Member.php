@@ -134,7 +134,7 @@ class Member extends Model implements Documentable
 
         static::creating(function (Member $model) {
             do {
-                $code = $model->user_id.str_pad(rand(1, 999999), 4, '0', STR_PAD_LEFT);
+                $code = $model->user_id . str_pad(rand(1, 999999), 4, '0', STR_PAD_LEFT);
             } while (static::where('code', $code)->exists());
 
             $model->code = $code;
@@ -241,15 +241,7 @@ class Member extends Model implements Documentable
         return $this->hasOne(MemberContactPerson::class);
     }
 
-    /**
-     * Get the working days for the member.
-     *
-     * @return HasMany<WorkingDay>
-     */
-    public function workDays(): HasMany
-    {
-        return $this->hasMany(WorkingDay::class);
-    }
+
 
     /**
      * Get the experiences for the member.

@@ -7,7 +7,8 @@ enum EnterpriseOptionKey: string
     case StartWorkTime = 'startWorkTime';
     case EndWorkTime = 'endWorkTime';
     case WorkDays = 'workDays';
-    case RestMinute = 'restMinute';
+    case RestStartTime = 'restStartTime';
+    case RestEndTime = 'restEndTime';
 
     /**
      * Get all enum values
@@ -26,7 +27,8 @@ enum EnterpriseOptionKey: string
             self::StartWorkTime => 'Heure de début de travail',
             self::EndWorkTime => 'Heure de fin de travail',
             self::WorkDays => 'Jours de travail',
-            self::RestMinute => 'Minutes de pause',
+            self::RestStartTime => 'Début de la pause (heure)',
+            self::RestEndTime => 'Fin de la pause (heure)',
         };
     }
 
@@ -39,7 +41,8 @@ enum EnterpriseOptionKey: string
             self::StartWorkTime => 'Heure de début standard',
             self::EndWorkTime => 'Heure de fin standard',
             self::WorkDays => 'Vos jours de travail',
-            self::RestMinute => 'Durée de la pause en minutes',
+            self::RestStartTime => 'Début de la pause (heure)',
+            self::RestEndTime => 'Fin de la pause (heure)',
         };
     }
 
@@ -51,7 +54,8 @@ enum EnterpriseOptionKey: string
         return match ($this) {
             self::StartWorkTime, self::EndWorkTime => 'time',
             self::WorkDays => 'array',
-            self::RestMinute => 'number',
+            self::RestStartTime => 'time',
+            self::RestEndTime => 'time',
         };
     }
 
@@ -64,7 +68,8 @@ enum EnterpriseOptionKey: string
             self::StartWorkTime->value => ['required', 'date_format:H:i'],
             self::EndWorkTime->value => ['required', 'date_format:H:i'],
             self::WorkDays->value => ['required', 'array'],
-            self::RestMinute->value => ['required', 'integer', 'min:30'],
+            self::RestStartTime->value => ['required', 'date_format:H:i'],
+            self::RestEndTime->value => ['required', 'date_format:H:i'],
         ];
     }
 }

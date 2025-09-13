@@ -50,7 +50,6 @@ class Setting extends Model
         'appDescription',
         'appSlogan',
         'workDays',
-        'standardWorkingHours',
         'yearlyPlanRate',
     ];
 

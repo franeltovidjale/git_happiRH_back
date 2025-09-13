@@ -11,13 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('working_days', function (Blueprint $table) {
+        Schema::create('working_hours', function (Blueprint $table) {
             $table->id();
             $table->foreignId('member_id')->constrained('members')->cascadeOnDelete();
             $table->enum('weekday', ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']);
             $table->time('start_hour');
             $table->time('end_hour');
-            $table->integer('break_minutes')->default(60);
             $table->boolean('active')->default(true);
             $table->timestamps();
 
@@ -30,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('working_days');
+        Schema::dropIfExists('working_hours');
     }
 };

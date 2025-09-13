@@ -51,7 +51,8 @@ class OptionService
             EnterpriseOptionKey::StartWorkTime->value => '09:00',
             EnterpriseOptionKey::EndWorkTime->value => '17:00',
             EnterpriseOptionKey::WorkDays->value => ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'],
-            EnterpriseOptionKey::RestMinute->value => 120,
+            EnterpriseOptionKey::RestStartTime->value => '13:00',
+            EnterpriseOptionKey::RestEndTime->value => '15:00',
         ];
 
         foreach ($defaultOptions as $key => $value) {

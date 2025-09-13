@@ -186,7 +186,7 @@ class EmployeeController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Request $request, string $id): JsonResponse
+    public function show(Request $request, int $id): JsonResponse
     {
         try {
             $allowedSnippets = ['address', 'banking', 'salary', 'employment', 'contactPerson', 'departments', 'experiences', 'workingHours'];
@@ -203,12 +203,16 @@ class EmployeeController extends Controller
                 if (! empty($invalidSnippets)) {
                     return $this->badRequest('Snippets invalides: ' . implode(', ', $invalidSnippets));
                 }
+
+                if (in_array('workingHours', $snippets)) {
+                    $this->workingHourService->createDefaults($id);
+                }
             }
 
             $enterprise = $this->getActiveEnterprise();
 
             $member = $this->employeeService->fetchOne(
-                (int) $id,
+                $id,
                 ['enterprise_id' => $enterprise->id],
                 $snippets
             );

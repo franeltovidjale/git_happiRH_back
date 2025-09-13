@@ -25,6 +25,7 @@ class WorkingHourController extends Controller
             'member_id' => 'required|integer|exists:members,id',
         ]);
         try {
+            $this->workingHourService->createDefaults($request->input('member_id'));
             $workingHours = $this->workingHourService->fetchList($request->all());
 
             return $this->ok('Liste des heures de travail récupérée avec succès', WorkingHourResource::collection($workingHours));

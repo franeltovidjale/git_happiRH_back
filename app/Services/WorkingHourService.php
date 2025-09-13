@@ -67,6 +67,16 @@ class WorkingHourService
         $restStartTime = $options[EnterpriseOptionKey::RestStartTime->value] ?? '12:00';
         $restEndTime = $options[EnterpriseOptionKey::RestEndTime->value] ?? '13:00';
 
+        // Check if working hours already exist for this member
+        $existingHours = WorkingHour::where('member_id', $memberId)
+            ->where('enterprise_id', activeEnterprise()->id)
+            ->exists();
+
+        // Don't create default hours if records already exist
+        if ($existingHours) {
+            return;
+        }
+
         foreach ($workDays as $weekday) {
             // Première période: StartWorkTime à RestStartTime
             WorkingHour::create([

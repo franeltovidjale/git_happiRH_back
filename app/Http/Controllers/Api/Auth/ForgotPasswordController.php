@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Auth\ChangePasswordRequest;
-use App\Http\Requests\Auth\CheckEmailRequest;
-use App\Http\Requests\Auth\ResendOtpRequest;
+use App\Http\Requests\Api\ChangePasswordRequest;
+use App\Http\Requests\Api\CheckEmailRequest;
+use App\Http\Requests\Api\ResendOtpRequest;
 use App\Mail\OtpMail;
 use App\Mail\PasswordChangedMail;
 use App\Models\Otp;

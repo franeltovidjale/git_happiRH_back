@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Auth\ResendLoginOtpRequest;
-use App\Http\Requests\Auth\VerifyOtpRequest;
+use App\Http\Requests\Api\ResendLoginOtpRequest;
+use App\Http\Requests\Api\VerifyOtpRequest;
 use App\Mail\OtpMail;
 use App\Models\Otp;
 use App\Models\Setting;

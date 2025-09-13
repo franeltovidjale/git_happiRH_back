@@ -4,15 +4,19 @@ namespace App\Http\Controllers\Api\Employer;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\EnterpriseResource;
+use App\Models\Option;
 use App\Models\User;
+use App\Services\OptionService;
 use App\Services\UserService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ProfileController extends Controller
 {
     public function __construct(
-        private UserService $userService
+        private UserService $userService,
+        private OptionService $optionService
     ) {}
 
     public function show(): JsonResponse
@@ -20,6 +24,20 @@ class ProfileController extends Controller
         $activeEnterprise = $this->getActiveEnterprise();
 
         $user = auth()->user();
+
+        $optionExists = Option::where('enterprise_id', $activeEnterprise?->id ?? '0')->exists();
+
+        if (!$optionExists) {
+            DB::beginTransaction();
+            try {
+                $this->optionService->createDefaultOptions($activeEnterprise?->id ?? 0);
+                DB::commit();
+            } catch (\Exception $e) {
+                DB::rollBack();
+                logger()->error($e);
+                return $this->serverError("Erreur lors de la récupération du profil");
+            }
+        }
 
         return $this->ok('Profile fetched successfully', [
             'user' => [
@@ -35,6 +53,7 @@ class ProfileController extends Controller
                 'logo' => $activeEnterprise?->logo,
             ],
             'enterprises' => EnterpriseResource::collection($user->enterprises),
+            'options' => $this->optionService->asArray(),
         ]);
     }
 

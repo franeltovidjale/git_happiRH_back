@@ -174,18 +174,7 @@ class SettingSeeder extends Seeder
                     'saturday' => 'Saturday',
                 ],
             ],
-            [
-                'key' => 'standardWorkingHours',
-                'value' => json_encode(['08:00', '17:00']),
-                'type' => 'array',
-                'label' => 'Standard Working Hours',
-                'description' => 'Standard working hours [startTime, endTime]',
-                'editable' => true,
-                'options' => [
-                    'startTime' => 'Start Time (HH:MM)',
-                    'endTime' => 'End Time (HH:MM)',
-                ],
-            ],
+
             [
                 'key' => 'yearlyPlanRate',
                 'value' => '0.1',

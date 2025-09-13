@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\Auth\MemberRegistrationController;
+use App\Http\Controllers\Api\Employee\PresenceController;
 use App\Http\Controllers\Api\Employee\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -25,5 +26,6 @@ Route::prefix('employee')->group(function () {
         Route::get('/profile', [ProfileController::class, 'show']);
         Route::put('/profile', [ProfileController::class, 'update']);
         Route::post('/profile/photo', [ProfileController::class, 'updateProfilePhoto']);
+        Route::post('presences', [PresenceController::class, 'store']);
     });
 });

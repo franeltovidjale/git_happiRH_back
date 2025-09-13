@@ -5,8 +5,8 @@ use App\Http\Controllers\Api\Employer\DepartmentController;
 use App\Http\Controllers\Api\Employer\DocumentController;
 use App\Http\Controllers\Api\Employer\EmployeeController;
 use App\Http\Controllers\Api\Employer\ExperienceController;
+use App\Http\Controllers\Api\Employer\OptionController;
 use App\Http\Controllers\Api\Employer\PlanningController;
-use App\Http\Controllers\Api\Employer\PresenceController;
 use App\Http\Controllers\Api\Employer\ProfileController;
 use App\Http\Controllers\Api\Employer\ProjectController;
 use App\Http\Controllers\Api\Employer\TaskController;
@@ -53,10 +53,11 @@ Route::prefix('employer')->group(function () {
         // Planning routes
         Route::post('plannings', [PlanningController::class, 'store']);
 
-        // Presence routes
-        Route::post('presences', [PresenceController::class, 'store']);
-
         // Transaction routes
         Route::get('transactions', [TransactionController::class, 'index']);
+
+        // Option routes
+        Route::get('options', [OptionController::class, 'index']);
+        Route::put('options/{key}', [OptionController::class, 'update']);
     });
 });

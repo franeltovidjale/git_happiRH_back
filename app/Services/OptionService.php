@@ -32,11 +32,7 @@ class OptionService
 
         $option = Option::forEnterprise($enterprise->id)
             ->where('key', $key)
-            ->first();
-
-        if (!$option) {
-            throw new \Exception('Option non trouvée');
-        }
+            ->firstOrFail();
 
         $option->update([
             'value' => $value,

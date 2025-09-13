@@ -48,6 +48,9 @@ class OptionController extends Controller
             );
         } catch (\Exception $e) {
             DB::rollBack();
+            if ($e instanceof \Illuminate\Database\Eloquent\ModelNotFoundException) {
+                return $this->notFound('Option non trouvée');
+            }
             logger()->error($e);
 
             return $this->serverError('Erreur lors de la mise à jour de l\'option');
